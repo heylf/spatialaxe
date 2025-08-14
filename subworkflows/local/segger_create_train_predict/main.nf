@@ -2,6 +2,7 @@
 // Run segger create_dataset, train and predict modules & parquet_to_csv
 //
 
+include { SEGGER2XR             } from '../../../modules/local/utility/segger2xr/main'
 include { SEGGER_TRAIN          } from '../../../modules/local/segger/train/main'
 include { SEGGER_PREDICT        } from '../../../modules/local/segger/predict/main'
 include { SEGGER_CREATE_DATASET } from '../../../modules/local/segger/create_dataset/main'
