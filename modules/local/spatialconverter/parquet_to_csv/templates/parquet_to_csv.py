@@ -32,7 +32,7 @@ if __name__ == '__main__':
         extension=extension
     )
 
-    #Output version information
+    #Output versions.yml
     with open("versions.yml", "w") as f:
         f.write('"${task.process}":\\n')
-        f.write(f'spatialconverter: "v0.0.1"\\n')
+        f.write('spatialconverter: "v0.0.1"\\n')

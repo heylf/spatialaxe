@@ -49,7 +49,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     }
 
     // run cellpose on the enhanced tiff
-    if ( params.nucleus_segmentation_only ) {
+    if ( params.cell_segmentation_only ) {
 
         CELLPOSE_CELLS ( ch_image, cellpose_model, 'cells' )
         ch_versions = ch_versions.mix( CELLPOSE_CELLS.out.versions )
@@ -66,33 +66,40 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     }
 
-    CELLPOSE_NUCLEI ( ch_image, 'nuclei', 'nuclei' )
-    ch_versions = ch_versions.mix( CELLPOSE_NUCLEI.out.versions )
+    if ( params.nucleus_segmentation_only ) {
 
-    ch_cellpose_nuclei_cells = CELLPOSE_NUCLEI.out.cells.map {
-        _meta, cells -> return [ cells ]
-    }
-    ch_cellpose_nuclei_mask = CELLPOSE_NUCLEI.out.mask.map {
-        _meta, mask -> return [ mask ]
-    }
-    ch_cellpose_nuclei_flows = CELLPOSE_NUCLEI.out.flows.map {
-        _meta, flows -> return [ flows ]
+        CELLPOSE_NUCLEI ( ch_image, 'nuclei', 'nuclei' )
+        ch_versions = ch_versions.mix( CELLPOSE_NUCLEI.out.versions )
+
+        ch_cellpose_nuclei_cells = CELLPOSE_NUCLEI.out.cells.map {
+            _meta, cells -> return [ cells ]
+        }
+        ch_cellpose_nuclei_mask = CELLPOSE_NUCLEI.out.mask.map {
+            _meta, mask -> return [ mask ]
+        }
+        ch_cellpose_nuclei_flows = CELLPOSE_NUCLEI.out.flows.map {
+            _meta, flows -> return [ flows ]
+        }
+
     }
 
 
     // filter transcripts.parquet based on thresholds
-    BAYSOR_PREPROCESS_TRANSCRIPTS (
-        ch_transcripts_parquet,
-        params.min_qv,
-        params.max_x,
-        params.min_x,
-        params.max_y,
-        params.min_y
-    )
-    ch_versions = ch_versions.mix ( BAYSOR_PREPROCESS_TRANSCRIPTS.out.versions )
+    if ( params.filter_transcripts ) {
 
-    ch_filtered_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+        BAYSOR_PREPROCESS_TRANSCRIPTS (
+            ch_transcripts_parquet,
+            params.min_qv,
+            params.max_x,
+            params.min_x,
+            params.max_y,
+            params.min_y
+        )
+        ch_versions = ch_versions.mix ( BAYSOR_PREPROCESS_TRANSCRIPTS.out.versions )
 
+        ch_filtered_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+
+    }
 
     // run baysor with cellpose results
     if ( params.nucleus_segmentation_only ) {
