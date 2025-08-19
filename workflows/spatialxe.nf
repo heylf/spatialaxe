@@ -153,6 +153,14 @@ workflow SPATIALXE {
         )
     }
 
+    // get custom cellpose model if provided with the --cellpose_model for the cellpose method
+    if ( params.cellpose_model ) {
+        ch_features = Channel.fromPath (
+            params.cellpose_model,
+            checkIfExists: true
+        )
+    }
+
     // get gene_panel.json if provided with --gene_panel, sets relabel_genes to true
     if (( params.gene_panel )) {
 
@@ -352,16 +360,12 @@ workflow SPATIALXE {
     // run spatialdata modules to generate sd objects in image or coordinate mode
     if ( params.mode == 'image' || params.mode == 'coordinate' ) {
 
-        ch_segmented_object = Channel.value('cells_and_nuclei')
-
         SPATIALDATA_WRITE_META_MERGE (
             ch_bundle_path,
-            ch_redefined_bundle,
-            ch_segmented_object
+            ch_redefined_bundle
         )
 
     }
-
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
