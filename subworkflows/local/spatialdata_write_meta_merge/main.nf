@@ -12,11 +12,13 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     take:
     ch_bundle_path          // channel: [ val(meta), [ "path-to-xenium-bundle" ] ]
     ch_redefined_bundle     // channel: [ val(meta), [ "redefined-xenium-bundle" ] ]
+    ch_coordinate_space     // channel: [ "pixels" or "microns" ]
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions         = Channel.empty()
     ch_segmented_object = Channel.empty()
+    ch_cells_as_circles = Channel.empty()
 
     // check segmentation - only nuclei, cells or both cells & nuclei
     if ( params.mode == 'image') {
@@ -56,7 +58,8 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     SPATIALDATA_WRITE_RAW_BUNDLE (
         ch_bundle_path,
         'spatialdata_raw',
-        ch_segmented_object
+        ch_segmented_object,
+        ch_coordinate_space
     )
     ch_versions = ch_versions.mix ( SPATIALDATA_WRITE_RAW_BUNDLE.out.versions )
 
@@ -65,7 +68,8 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     SPATIALDATA_WRITE_REDEFINED_BUNDLE (
         ch_redefined_bundle,
         'spatialdata_redefined',
-        ch_segmented_object
+        ch_segmented_object,
+        ch_coordinate_space
     )
     ch_versions = ch_versions.mix ( SPATIALDATA_WRITE_REDEFINED_BUNDLE.out.versions )
 

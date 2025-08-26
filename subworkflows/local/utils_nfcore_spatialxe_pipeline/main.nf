@@ -67,7 +67,7 @@ workflow PIPELINE_INITIALISATION {
     // Custom validation for pipeline parameters
     //
     validateInputParameters()
-    log.info "INFO Input params validated  ✅ "
+    log.info "INFO Pipeline parameters validated  ✅ "
 
     //
     // Create channel from input file provided through params.input
@@ -81,7 +81,7 @@ workflow PIPELINE_INITIALISATION {
         }
         .set { ch_samplesheet }
 
-        log.info "INFO Samplesheet validated   ✅ "
+        log.info "INFO Samplesheet fields validated   ✅ "
 
     } catch (Exception e) {
 
@@ -268,7 +268,7 @@ def validateXeniumBundle(ch_samplesheet) {
             }
         }
     }
-    log.info "INFO Xenium bundle validated ✅ \n"
+    log.info "INFO Xenium bundle validated        ✅ \n"
 }
 
 //

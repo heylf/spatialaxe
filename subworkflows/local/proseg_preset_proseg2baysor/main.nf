@@ -17,6 +17,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
     main:
 
     ch_versions = Channel.empty()
+    ch_coordinate_space = Channel.value("microns")
 
     // run parquet-to-csv
     PARQUET_TO_CSV ( ch_transcripts_parquet, ".gz" )
@@ -43,7 +44,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
         [],
         ch_metadata,
         ch_polygons,
-        "microns"
+        ch_coordinate_space
     )
     ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
@@ -53,6 +54,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
 
     xr_polygons           = PROSEG2BAYSOR.out.xr_polygons               // channel: [ val(meta), [ "xr-cell-polygons.geojson" ] ]
     xr_metadata           = PROSEG2BAYSOR.out.xr_metadata               // channel: [ [ "xr-transcript-metadata.csv" ] ]
+    coordinate_space      = ch_coordinate_space                         // channel: [ "microns" ]
 
     redefined_bundle      = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
 

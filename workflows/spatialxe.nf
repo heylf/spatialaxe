@@ -64,6 +64,7 @@ workflow SPATIALXE {
     ch_versions            = Channel.empty()
 
     ch_input               = Channel.empty()
+    ch_space               = Channel.empty()
     ch_bundle              = Channel.empty()
     ch_config              = Channel.empty()
     ch_features            = Channel.empty()
@@ -232,6 +233,7 @@ workflow SPATIALXE {
                 ch_config
             )
             ch_redefined_bundle = CELLPOSE_BAYSOR_IMPORT_SEGMENTATION.out.redefined_bundle
+            ch_space = CELLPOSE_BAYSOR_IMPORT_SEGMENTATION.out.coordinate_space
         }
 
         // check it the provided method is part of the methods list
@@ -295,6 +297,7 @@ workflow SPATIALXE {
                 ch_transcripts_parquet
             )
             ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR.out.redefined_bundle
+            ch_space = PROSEG_PRESET_PROSEG2BAYSOR.out.coordinate_space
 
         }
 
@@ -309,6 +312,7 @@ workflow SPATIALXE {
                     ch_transcripts_parquet
                 )
                 ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR.out.redefined_bundle
+                ch_space = PROSEG_PRESET_PROSEG2BAYSOR.out.coordinate_space
 
             }
 
@@ -362,7 +366,8 @@ workflow SPATIALXE {
 
         SPATIALDATA_WRITE_META_MERGE (
             ch_bundle_path,
-            ch_redefined_bundle
+            ch_redefined_bundle,
+            ch_space
         )
 
     }
