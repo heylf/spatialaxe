@@ -27,6 +27,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     ch_htmls                = Channel.empty()
 
     ch_redefined_bundle     = Channel.empty()
+    ch_coordinate_space     = Channel.value("microns")
 
     // filter transcripts.parquet based on thresholds
     if ( params.filter_transcripts ) {
@@ -72,7 +73,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
         [],
         ch_just_segmentation,
         ch_polygons2d,
-        "microns"
+        ch_coordinate_space
     )
     ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
@@ -83,6 +84,8 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     segmentation     = ch_segmentation        // channel: [ val(meta), ["segmentation.csv"] ]
     polygons2d       = ch_polygons2d          // channel: [ ["segmentation_polygons_2d.json"] ]
     htmls            = ch_htmls               // channel: [ ["*.html"] ]
+
+    coordinate_space = ch_coordinate_space    // channel: [ "microns" ]
 
     redefined_bundle = ch_redefined_bundle    // channel: [ val(meta), "redefined-xenium-bundle" ]
 

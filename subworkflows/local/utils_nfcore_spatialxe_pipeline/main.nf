@@ -198,7 +198,7 @@ def validateInputParameters() {
     // check if segmentation mask is provided in image mode and baysor method
     if ( params.mode == 'image' && params.method == 'baysor' )
         if (!params.segmentation_mask ) {
-        log.error "❌  Error: Missing segmentation mask with `--segmentation_mask` when pipeline is run in ${params.mode} and with the ${params.method}."
+        log.warn "⚠️  Missing segmentation mask with `--segmentation_mask` when pipeline is run in ${params.mode} and with the ${params.method}. Running in coordinate mode."
     }
 
 }

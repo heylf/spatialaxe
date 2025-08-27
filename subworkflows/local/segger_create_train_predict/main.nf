@@ -21,6 +21,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     ch_versions           = Channel.empty()
     ch_redefined_bundle   = Channel.empty()
     ch_segger_transcripts = Channel.empty()
+    ch_coordinate_space   = Channel.value("pixels")
 
     // create dataset
     SEGGER_CREATE_DATASET ( ch_basedir )
@@ -52,12 +53,13 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
         _meta, transcripts -> return [ transcripts ]
     }
 
+
     // replace transcripts.parquet in xenium bundle
-    ch_updated_bundle = ch_bundle.map { fobj ->
-        if (fobj.name == 'transcripts.parquet') {
+    ch_updated_bundle = ch_bundle.map { fileobj ->
+        if (fileobj.name == 'transcripts.parquet') {
             ch_segger_transcripts.val
         } else {
-            fobj
+            fileobj
         }
     }
 
@@ -70,7 +72,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
             [],
             [],
             [],
-            "pixel"
+            ch_coordinate_space
         )
         ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
 
@@ -83,6 +85,8 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     trained_models     = SEGGER_TRAIN.out.trained_models      // channel: [ val(meta), [ trained_models ] ]
     benchmarks         = SEGGER_PREDICT.out.benchmarks        // channel: [ val(meta), [ benchmarks ] ]
     segger_transcripts = ch_segger_transcripts                // channel: [ [ transcripts.parquet ] ]
+
+    coordinate_space   = ch_coordinate_space                  // channel: [ ["pixels"] ]
 
     redefined_bundle   = ch_redefined_bundle                  // channel: [ val(meta), ["redefined-xenium-bundle"] ]
 

@@ -35,7 +35,7 @@ def main():
     else:
         cells_as_circles = False
 
-    # set variables based on the coordinate space
+    # set sd variables based on the coordinate space
     if ( coordinate_space == "pixels" ):
         cells_labels = True
         nucleus_labels = True
