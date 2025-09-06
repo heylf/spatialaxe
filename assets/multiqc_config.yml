@@ -13,3 +13,11 @@ report_section_order:
 export_plots: true
 
 disable_version_detection: true
+
+log_filesize_limit: 5000000000 # 5GB
+
+run_modules:
+  - xenium
+
+module_order:
+  - xenium

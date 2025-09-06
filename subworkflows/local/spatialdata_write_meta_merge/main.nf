@@ -2,10 +2,10 @@
 // generate spatialdata object from the spatialxe layers
 //
 
-include { SPATIALDATA_WRITE as SPATIALDATA_WRITE_RAW_BUNDLE       } from '../../../modules/local/spatialdata/write/main'
-include { SPATIALDATA_WRITE as SPATIALDATA_WRITE_REDEFINED_BUNDLE } from '../../../modules/local/spatialdata/write/main'
-include { SPATIALDATA_MERGE as SPATIALDATA_MERGE_RAW_REDEFINED    } from '../../../modules/local/spatialdata/merge/main'
 include { SPATIALDATA_META                                        } from '../../../modules/local/spatialdata/meta/main'
+include { SPATIALDATA_WRITE as SPATIALDATA_WRITE_RAW_BUNDLE       } from '../../../modules/local/spatialdata/write/main'
+include { SPATIALDATA_MERGE as SPATIALDATA_MERGE_RAW_REDEFINED    } from '../../../modules/local/spatialdata/merge/main'
+include { SPATIALDATA_WRITE as SPATIALDATA_WRITE_REDEFINED_BUNDLE } from '../../../modules/local/spatialdata/write/main'
 
 workflow SPATIALDATA_WRITE_META_MERGE {
 
@@ -18,7 +18,6 @@ workflow SPATIALDATA_WRITE_META_MERGE {
 
     ch_versions         = Channel.empty()
     ch_segmented_object = Channel.empty()
-    ch_cells_as_circles = Channel.empty()
 
     // check segmentation - only nuclei, cells or both cells & nuclei
     if ( params.mode == 'image') {
@@ -90,17 +89,17 @@ workflow SPATIALDATA_WRITE_META_MERGE {
         _meta, bundle -> return [ bundle ]
     }
     SPATIALDATA_META (
-        SPATIALDATA_MERGE_RAW_REDEFINED.out.spatialxe_bundle,
+        SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle,
         ch_just_bundle_path
     )
     ch_versions = ch_versions.mix ( SPATIALDATA_META.out.versions )
 
     emit:
 
-    ch_sd_raw       = SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata         // channel: [ val(meta), "spatialdata_raw" ]
-    ch_sd_redefined = SPATIALDATA_WRITE_REDEFINED_BUNDLE.out.spatialdata   // channel: [ val(meta), "spatialdata_redefined" ]
-    ch_sd_merged    = SPATIALDATA_MERGE_RAW_REDEFINED.out.spatialxe_bundle // channel: [ val(meta), "spatialdata_spatialxe" ]
-    ch_sd_meta      = SPATIALDATA_META.out.spatialxe_bundle                // channel: [ val(meta), "spatialdata_spatialxe_final" ]
+    sd_raw_bundle       = SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata        // channel: [ val(meta), "spatialdata_raw" ]
+    sd_redefined_bundle = SPATIALDATA_WRITE_REDEFINED_BUNDLE.out.spatialdata  // channel: [ val(meta), "spatialdata_redefined" ]
+    sd_merged_bundle    = SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle   // channel: [ val(meta), "spatialdata_merged" ]
+    sd_metadata         = SPATIALDATA_META.out.metadata                       // channel: [ val(meta), "spatialdata_meta" ]
 
-    versions        = ch_versions                                          // channel: [ versions.yml ]
+    versions        = ch_versions                                             // channel: [ versions.yml ]
 }
