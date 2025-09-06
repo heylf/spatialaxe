@@ -16,8 +16,8 @@ disable_version_detection: true
 
 log_filesize_limit: 5000000000 # 5GB
 
-run_modules:
-  - xenium
+# run_modules:
+#   - xenium
 
-module_order:
-  - xenium
+# module_order:
+#   - xenium
