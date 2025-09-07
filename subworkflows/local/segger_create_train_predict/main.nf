@@ -19,6 +19,8 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     main:
 
     ch_versions           = Channel.empty()
+
+    ch_updated_bundle     = Channel.empty()
     ch_redefined_bundle   = Channel.empty()
     ch_segger_transcripts = Channel.empty()
     ch_coordinate_space   = Channel.value("pixels")
@@ -49,27 +51,29 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     SEGGER2XR ( SEGGER_PREDICT.out.transcripts )
     ch_versions = ch_versions.mix( SEGGER2XR.out.versions )
 
-    ch_segger_transcripts = SEGGER2XR.out.transcripts_parquet.map {
+    ch_segger_transcripts_parquet = SEGGER2XR.out.transcripts_parquet.map {
         _meta, transcripts -> return [ transcripts ]
     }
 
 
-    // replace transcripts.parquet in xenium bundle
-    ch_updated_bundle = ch_bundle.map { fileobj ->
-        if (fileobj.name == 'transcripts.parquet') {
-            ch_segger_transcripts.val
-        } else {
-            fileobj
-        }
+    // swap transscripts.parquet with segger transcripts
+    ch_updated_bundle = ch_bundle.map { _meta, fileobj ->
+        fileobj == "transcripts.parquet" ? ch_segger_transcripts_parquet : fileobj
     }
 
 
     // run xeniumranger import-segmentation
-    XENIUMRANGER_IMPORT_SEGMENTATION (
+    cells = ch_updated_bundle.map { _meta, bundle ->
+        return [ bundle + "/cells.zarr.zip" ]
+    }
+
+    if ( params.nucleus_segmentation_only ) {
+
+        XENIUMRANGER_IMPORT_SEGMENTATION (
             ch_updated_bundle,
             [],
-            [],
-            [],
+            cells,
+            cells,
             [],
             [],
             ch_coordinate_space
@@ -78,6 +82,22 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
 
         ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
+    } else {
+
+        XENIUMRANGER_IMPORT_SEGMENTATION (
+            ch_updated_bundle,
+            [],
+            [],
+            cells,
+            [],
+            [],
+            ch_coordinate_space
+        )
+        ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
+
+        ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
+
+    }
 
     emit:
 
