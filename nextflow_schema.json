@@ -240,7 +240,7 @@
                     "default": 1
                 },
                 "cc_analysis": {
-                    "type": "integer",
+                    "type": "boolean",
                     "description": "Whether to use connected components for grouping transcripts without direct nucleus association",
                     "default": false
                 }
