@@ -87,7 +87,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     coordinate_space = ch_coordinate_space    // channel: [ "microns" ]
 
-    redefined_bundle = ch_redefined_bundle    // channel: [ val(meta), "redefined-xenium-bundle" ]
+    redefined_bundle = ch_redefined_bundle    // channel: [ val(meta), ["redefined-xenium-bundle"] ]
 
     versions = ch_versions                    // channel: [ versions.yml ]
 }
