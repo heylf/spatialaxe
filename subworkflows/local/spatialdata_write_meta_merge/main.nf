@@ -23,35 +23,22 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     if ( params.mode == 'image') {
 
         if ( params.nucleus_segmentation_only && params.cell_segmentation_only ) {
-
             ch_segmented_object = Channel.value('cells_and_nuclei')
-
         }
-
         else if ( params.nucleus_segmentation_only ) {
-
             ch_segmented_object = Channel.value('nuclei')
-
         }
-
         else if ( params.cell_segmentation_only ) {
-
             ch_segmented_object = Channel.value('cells')
-
         } else {
-
             ch_segmented_object = Channel.value([])
-
         }
     }
 
     // set all boundaries as false - default
     if ( params.mode == 'coordinate') {
-
         ch_segmented_object = Channel.value([])
-
     }
-
 
     // write spatialdata object from the raw xenium bundle
     SPATIALDATA_WRITE_RAW_BUNDLE (

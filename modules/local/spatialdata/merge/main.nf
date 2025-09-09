@@ -10,7 +10,7 @@ process SPATIALDATA_MERGE {
 
     output:
     tuple val(meta), path("spatialdata_merged"), emit: merged_bundle
-    path("versions.yml")                       , emit: versions
+    path("versions.yml")                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

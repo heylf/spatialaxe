@@ -28,8 +28,8 @@ process SPATIALDATA_META {
     stub:
 
     """
-    mkdir -p "spatialdata_spatialxe_final/"
-    touch "spatialdata_spatialxe_final/fake_file.txt"
+    mkdir -p "spatialdata_meta/"
+    touch "spatialdata_meta/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

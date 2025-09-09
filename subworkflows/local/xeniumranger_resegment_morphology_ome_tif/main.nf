@@ -50,9 +50,9 @@ workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
 
     emit:
 
-    coordinate_space = ch_coordinate_space // channel: [ ["pixels"] ]
-
     redefined_bundle = ch_redefined_bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
+
+    coordinate_space = ch_coordinate_space // channel: [ ["pixels"] ]
 
     versions = ch_versions                 // channel: [ versions.yml ]
 }

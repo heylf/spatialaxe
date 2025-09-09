@@ -12,9 +12,9 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
 
     take:
 
-    ch_basedir             // channel: [ val(meta), [ "basedir" ] ]
-    ch_transcripts_parquet // channel: [ val(meta), [bundle + "/transcripts.parquet"]]
     ch_bundle              // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    ch_transcripts_parquet // channel: [ val(meta), [bundle + "/transcripts.parquet"]]
+
 
     main:
 
@@ -26,7 +26,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     ch_coordinate_space   = Channel.value("pixels")
 
     // create dataset
-    SEGGER_CREATE_DATASET ( ch_basedir )
+    SEGGER_CREATE_DATASET ( ch_bundle )
     ch_versions = ch_versions.mix ( SEGGER_CREATE_DATASET.out.versions )
 
     // train a model with the dataset created
