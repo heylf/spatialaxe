@@ -103,4 +103,3 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
 
     versions          = ch_versions         // channel: [ versions.yml ]
 }
-

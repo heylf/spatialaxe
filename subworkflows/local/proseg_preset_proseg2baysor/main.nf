@@ -60,4 +60,3 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
 
     versions              = ch_versions                                 // channel: [ versions.yml ]
 }
-

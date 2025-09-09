@@ -56,4 +56,3 @@ workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
 
     versions = ch_versions                 // channel: [ versions.yml ]
 }
-
