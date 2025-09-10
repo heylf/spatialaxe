@@ -149,15 +149,15 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     emit:
 
-    cells_mask  = ch_cellpose_cells_mask                           // channel: [ val(meta), [ "*masks.tif" ] ]
-    cells_flows = ch_cellpose_cells_flows                          // channel: [ val(meta), [ "*flows.tif" ] ]
-    cells_cells = ch_cellpose_cells_cells                          // channel: [ val(meta), [ "*seg.npy" ] ]
-    nuclei_mask  = ch_cellpose_nuclei_mask                         // channel: [ val(meta), [ "*masks.tif" ] ]
-    nuclei_flows = ch_cellpose_nuclei_flows                        // channel: [ val(meta), [ "*flows.tif" ] ]
-    nuclei_cells = ch_cellpose_nuclei_cells                        // channel: [ val(meta), [ "*seg.npy" ] ]
+    cells_mask        = ch_cellpose_cells_mask                     // channel: [ val(meta), [ "*masks.tif" ] ]
+    cells_flows       = ch_cellpose_cells_flows                    // channel: [ val(meta), [ "*flows.tif" ] ]
+    cells_cells       = ch_cellpose_cells_cells                    // channel: [ val(meta), [ "*seg.npy" ] ]
+    nuclei_mask       = ch_cellpose_nuclei_mask                    // channel: [ val(meta), [ "*masks.tif" ] ]
+    nuclei_flows      = ch_cellpose_nuclei_flows                   // channel: [ val(meta), [ "*flows.tif" ] ]
+    nuclei_cells      = ch_cellpose_nuclei_cells                   // channel: [ val(meta), [ "*seg.npy" ] ]
 
-    segmentation_mask = ch_segmentation                            // channel: [ val(meta), [ *segmentation.csv ] ]
-    polygons          = ch_polygons                                // channel: [ val(meta), [ *polygons.json ] ]
+    segmentation      = ch_segmentation                            // channel: [ val(meta), [ *segmentation.csv ] ]
+    polygons2d        = ch_polygons                                // channel: [ val(meta), [ *segmentation_polygons_2d.json ] ]
 
     coordinate_space = ch_coordinate_space                         // channel: [ val("microns") ]
 

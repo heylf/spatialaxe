@@ -341,8 +341,7 @@ workflow SPATIALXE {
 
                 SEGGER_CREATE_TRAIN_PREDICT (
                     ch_bundle_path,
-                    ch_transcripts_parquet,
-                    ch_bundle_path
+                    ch_transcripts_parquet
                 )
                 ch_redefined_bundle = SEGGER_CREATE_TRAIN_PREDICT.out.redefined_bundle
                 ch_coordinate_space = SEGGER_CREATE_TRAIN_PREDICT.out.coordinate_space
@@ -487,6 +486,13 @@ workflow SPATIALXE {
             sort: true
         )
     )
+
+    // get all files from the redefined bundle
+    ch_redefined_bundle_files = ch_redefined_bundle.flatMap { _meta, path ->
+        file("${path}/*")
+    }
+
+    ch_multiqc_files = ch_multiqc_files.mix ( ch_redefined_bundle_files.collect() )
 
     MULTIQC (
         ch_multiqc_files.collect(),

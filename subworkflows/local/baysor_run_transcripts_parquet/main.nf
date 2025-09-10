@@ -3,8 +3,8 @@
 //
 
 // include { SPLIT_TRANSCRIPTS             } from '../../../modules/local/utility/split_transcripts/main'
-include { BAYSOR_PREPROCESS_TRANSCRIPTS    } from '../../../modules/local/baysor/preprocess/main'
 include { BAYSOR_RUN                       } from '../../../modules/local/baysor/run/main'
+include { BAYSOR_PREPROCESS_TRANSCRIPTS    } from '../../../modules/local/baysor/preprocess/main'
 include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeniumranger/import-segmentation/main'
 
 

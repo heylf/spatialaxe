@@ -4,7 +4,6 @@
 
 include { PROSEG                           } from '../../../modules/local/proseg/preset/main'
 include { PROSEG2BAYSOR                    } from '../../../modules/local/proseg/proseg2baysor/main'
-include { PARQUET_TO_CSV                   } from '../../../modules/local/spatialconverter/parquet_to_csv/main'
 include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeniumranger/import-segmentation/main'
 
 workflow PROSEG_PRESET_PROSEG2BAYSOR {
@@ -19,12 +18,8 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
     ch_versions = Channel.empty()
     ch_coordinate_space = Channel.value("microns")
 
-    // run parquet-to-csv
-    PARQUET_TO_CSV ( ch_transcripts_parquet, ".gz" )
-    ch_versions = ch_versions.mix( PARQUET_TO_CSV.out.versions )
-
     // run proseg with the xenium format
-    PROSEG ( PARQUET_TO_CSV.out.transcripts_csv )
+    PROSEG ( ch_transcripts_parquet )
     ch_versions = ch_versions.mix( PROSEG.out.versions )
 
     // run proseg-to-baysor on the data generated with the proseg run
