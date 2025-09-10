@@ -51,4 +51,3 @@ process PROSEG2BAYSOR {
     END_VERSIONS
     """
 }
-
