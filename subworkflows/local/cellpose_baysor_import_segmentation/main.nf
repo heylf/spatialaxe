@@ -165,4 +165,3 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     versions         = ch_versions                                 // channel: [ versions.yml ]
 }
-

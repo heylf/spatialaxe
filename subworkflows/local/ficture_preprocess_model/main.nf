@@ -51,4 +51,3 @@ workflow FICTURE_PREPROCESS_MODEL {
 
     versions = ch_versions                                          // channel: [ versions.yml ]
 }
-
