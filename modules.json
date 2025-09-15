@@ -16,6 +16,21 @@
                         "git_sha": "e10b76ca0c66213581bec2833e30d31f239dec0b",
                         "installed_by": ["modules"]
                     },
+                    "opt/flip": {
+                        "branch": "master",
+                        "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
+                        "installed_by": ["modules"]
+                    },
+                    "opt/stat": {
+                        "branch": "master",
+                        "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
+                        "installed_by": ["modules"]
+                    },
+                    "opt/track": {
+                        "branch": "master",
+                        "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
+                        "installed_by": ["modules"]
+                    },
                     "untar": {
                         "branch": "master",
                         "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
