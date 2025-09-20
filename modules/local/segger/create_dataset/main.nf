@@ -8,13 +8,14 @@ process SEGGER_CREATE_DATASET {
     tuple val(meta), path(base_dir)
 
     output:
-    tuple val(meta), path("${meta.id}") , emit: datasetdir
-    path("versions.yml")                , emit: versions
+    tuple val(meta), path("${meta.id}"), emit: datasetdir
+    path("versions.yml")               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
@@ -25,7 +26,7 @@ process SEGGER_CREATE_DATASET {
 
     // check for platform values
     if ( !(params.format in ['xenium']) ) {
-        error "${params.format} is an invalid platform type. Please specify xenium, cosmx, or merscope"
+        error "${params.format} is an invalid platform type."
     }
 
     """
@@ -45,9 +46,16 @@ process SEGGER_CREATE_DATASET {
     """
 
     stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
     def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
     mkdir -p ${prefix}/
+    touch "${prefix}/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

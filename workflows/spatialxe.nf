@@ -492,7 +492,7 @@ workflow SPATIALXE {
         file("${path}/*")
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix ( ch_redefined_bundle_files.collect() )
+    ch_multiqc_files = ch_multiqc_files.mix ( ch_redefined_bundle_files.flatten() )
 
     MULTIQC (
         ch_multiqc_files.collect(),

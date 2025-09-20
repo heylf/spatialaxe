@@ -61,12 +61,8 @@ workflow SPATIALDATA_WRITE_META_MERGE {
 
 
     // merge raw & redefined spatialdata objects
-    ch_just_redefined_bundle = SPATIALDATA_WRITE_REDEFINED_BUNDLE.out.spatialdata.map {
-        _meta, bundle -> return [ bundle ]
-    }
     SPATIALDATA_MERGE_RAW_REDEFINED (
-        SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata,
-        ch_just_redefined_bundle
+        SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata.combine(ch_redefined_bundle, by: 0)
     )
     ch_versions = ch_versions.mix ( SPATIALDATA_MERGE_RAW_REDEFINED.out.versions )
 
@@ -76,8 +72,7 @@ workflow SPATIALDATA_WRITE_META_MERGE {
         _meta, bundle -> return [ bundle ]
     }
     SPATIALDATA_META (
-        SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle,
-        ch_just_bundle_path
+        SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle.combine(ch_just_bundle_path, by: 0)
     )
     ch_versions = ch_versions.mix ( SPATIALDATA_META.out.versions )
 

@@ -8,9 +8,9 @@ process PROSEG2BAYSOR {
     tuple val(meta), path(cell_polygons), path(transcript_metadata)
 
     output:
-    tuple val(meta), path("${meta}/cell-polygons.geojson")  , emit: xr_polygons
-    tuple val(meta), path("${meta}/transcript-metadata.csv"), emit: xr_metadata
-    path("versions.yml")                                    , emit: versions
+    tuple val(meta), path("${meta.id}/cell-polygons.geojson")  , emit: xr_polygons
+    tuple val(meta), path("${meta.id}/transcript-metadata.csv"), emit: xr_metadata
+    path("versions.yml")                                       , emit: versions
 
     script:
     // Exit if running this module with -profile conda / -profile mamba
@@ -22,6 +22,8 @@ process PROSEG2BAYSOR {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    mkdir -p ${prefix}
+
     proseg-to-baysor  \\
         ${transcript_metadata} \\
         ${cell_polygons} \\
@@ -39,7 +41,7 @@ process PROSEG2BAYSOR {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "PROSEG module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error "PROSEG2BAYSOR module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
     def prefix = task.ext.prefix ?: "${meta.id}"

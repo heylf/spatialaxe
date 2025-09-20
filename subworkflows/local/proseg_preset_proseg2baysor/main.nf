@@ -26,7 +26,9 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
     PROSEG2BAYSOR ( PROSEG.out.seg_outs )
     ch_versions = ch_versions.mix( PROSEG2BAYSOR.out.versions )
 
-    ch_metadata = PROSEG2BAYSOR.out.xr_metadata
+    ch_metadata = PROSEG2BAYSOR.out.xr_metadata.map {
+        _meta, trans_meta -> return [ trans_meta ]
+    }
     ch_polygons = PROSEG2BAYSOR.out.xr_polygons.map {
         _meta, polygons -> return [ polygons ]
     }

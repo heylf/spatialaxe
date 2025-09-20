@@ -9,7 +9,8 @@ def filter_transcripts (
     min_x: float = 0.0,
     max_x: float = 24000.0,
     min_y: float = 0.0,
-    max_y: float = 24000.0
+    max_y: float = 24000.0,
+    prefix: str = ""
 ) -> None:
     """
     Filter transcripts based on the specified thresholds
@@ -48,7 +49,7 @@ def filter_transcripts (
 
     # Output filtered transcripts to parquet
     filtered_df.to_parquet(
-        '_'.join(["X"+str(min_x)+"-"+str(max_x), "Y"+str(min_y)+"-"+str(max_y), "filtered_transcripts.parquet"]),
+        '_'.join(["X"+str(min_x)+"-"+str(max_x), "Y"+str(min_y)+"-"+str(max_y), f"{prefix}/filtered_transcripts.parquet"]),
         index=False
     )
 
@@ -66,9 +67,11 @@ def generate_version_yml() -> None:
 if __name__ == "__main__":
 
     transcripts: str = "${transcripts}"
+    prefix: str = "${meta.id}"
 
     filter_transcripts (
         transcripts=transcripts,
+        prefix=prefix
     )
 
     generate_version_yml()

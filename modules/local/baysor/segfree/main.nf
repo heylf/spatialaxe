@@ -10,7 +10,6 @@ process BAYSOR_SEGFREE {
 
     output:
     tuple val(meta), path("ncvs.loom"), emit: ncvs
-    path("ncvs_segfree_log.log")      , emit: ncvs_log
     path("versions.yml")              , emit: versions
 
     when:
@@ -21,12 +20,15 @@ process BAYSOR_SEGFREE {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "BAYSOR_SEGFREE module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
+
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     baysor segfree \\
     ${transcripts} \\
     --config ${config} \\
+    --output=${prefix} \\
     ${args}
 
     cat <<-END_VERSIONS > versions.yml
@@ -41,9 +43,11 @@ process BAYSOR_SEGFREE {
         error "BAYSOR_SEGFREE module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    touch ncvs.loom
-    touch ncvs_segfree_log.log
+    mkdir -p ${prefix}
+    touch "${prefix}/ncvs.loom"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

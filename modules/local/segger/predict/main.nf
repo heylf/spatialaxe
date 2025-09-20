@@ -11,14 +11,15 @@ process SEGGER_PREDICT {
 
 
     output:
-    tuple val(meta), path("${meta.id}_benchmarks_dir")                             , emit: benchmarks
-    tuple val(meta), path("${meta.id}_benchmarks_dir/*/segger_transcripts.parquet"), emit: transcripts
+    tuple val(meta), path("${meta.id}/benchmarks_dir")                             , emit: benchmarks
+    tuple val(meta), path("${meta.id}/benchmarks_dir/*/segger_transcripts.parquet"), emit: transcripts
     path("versions.yml")                                                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
@@ -32,7 +33,7 @@ process SEGGER_PREDICT {
         --models_dir ${models_dir} \\
         --segger_data_dir ${segger_dataset} \\
         --transcripts_file ${transcripts} \\
-        --benchmarks_dir ${prefix}_benchmarks_dir \\
+        --benchmarks_dir ${prefix}/benchmarks_dir \\
         --batch_size ${params.batch_size_predict} \\
         --use_cc ${params.cc_analysis} \\
         --knn_method ${params.segger_knn_method} \\
@@ -46,9 +47,16 @@ process SEGGER_PREDICT {
     """
 
     stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
     def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    mkdir -p ${prefix}_benchmarks_dir/
+    mkdir -p "${prefix}/benchmarks_dir"
+    touch "${prefix}/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

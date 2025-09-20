@@ -9,8 +9,8 @@ process BAYSOR_CREATE_DATASET {
     val(sample_fraction)
 
     output:
-    tuple val(meta), path("sampled_transcripts.csv"), emit: sampled_transcripts
-    path("versions.yml")                            , emit: versions
+    tuple val(meta), path("${meta.id}/sampled_transcripts.csv"), emit: sampled_transcripts
+    path("versions.yml")                                       , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,6 +21,8 @@ process BAYSOR_CREATE_DATASET {
         error "BAYSOR_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     template 'create_dataset.py'
 
     stub:
@@ -29,8 +31,11 @@ process BAYSOR_CREATE_DATASET {
         error "BAYSOR_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    touch sampled_transcripts.csv
+    mkdir -p ${prefix}
+    touch "${prefix}/sampled_transcripts.csv"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
