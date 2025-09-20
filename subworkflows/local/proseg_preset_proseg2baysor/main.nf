@@ -23,7 +23,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
     ch_versions = ch_versions.mix( PROSEG.out.versions )
 
     // run proseg-to-baysor on the data generated with the proseg run
-    PROSEG2BAYSOR ( PROSEG.out.cell_polygons_2d, PROSEG.out.transcript_metadata )
+    PROSEG2BAYSOR ( PROSEG.out.seg_outs )
     ch_versions = ch_versions.mix( PROSEG2BAYSOR.out.versions )
 
     ch_metadata = PROSEG2BAYSOR.out.xr_metadata
@@ -45,10 +45,6 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
 
     emit:
 
-    cell_polygons_2d      = PROSEG.out.cell_polygons_2d                 // channel: [ val(meta), [ "cell-polygons.geojson.gz" ] ]
-
-    xr_polygons           = PROSEG2BAYSOR.out.xr_polygons               // channel: [ val(meta), [ "xr-cell-polygons.geojson" ] ]
-    xr_metadata           = PROSEG2BAYSOR.out.xr_metadata               // channel: [ [ "xr-transcript-metadata.csv" ] ]
     coordinate_space      = ch_coordinate_space                         // channel: [ "microns" ]
 
     redefined_bundle      = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
