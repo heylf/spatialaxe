@@ -164,6 +164,12 @@ workflow PIPELINE_COMPLETION {
 //
 def validateInputParameters() {
 
+    // check if the samplesheet provided with the test config is assets/samplesheet.csv
+    if ( workflow.profile.contains('test') && params.input != "${projectDir}/assets/samplesheet.csv" ) {
+        log.error "❌ Error: Use the samplesheet at: ${projectDir}/assets/samplesheet.csv with `--input` when running the pipeline in test profile."
+        exit 1
+    }
+
     // check if the segmentation method provided is valid for a mode
     if ( params.mode == 'image' && params.method ) {
         if ( !params.image_seg_methods.contains(params.method) ) {

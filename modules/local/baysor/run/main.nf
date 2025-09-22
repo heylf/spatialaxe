@@ -31,11 +31,13 @@ process BAYSOR_RUN {
     def scaling_factor = scale ? "--scale=${scale}": ""
 
     """
+    mkdir -p ${prefix}
+
     baysor run \\
     ${transcripts} \\
     ${prior_seg} \\
     ${scaling_factor} \\
-    --output=${prefix} \\
+    --output="${prefix}/segmentation.csv" \\
     --config=${config} \\
     --plot \\
     --polygon-format=GeometryCollectionLegacy \\

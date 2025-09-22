@@ -20,9 +20,6 @@ process SPATIALDATA_META {
         exit 1, "SPATIALDATA_META module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-
     template 'meta.py'
 
     stub:

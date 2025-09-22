@@ -12,7 +12,7 @@ def main():
     spatialdata_bundle = "${spatialdata_bundle}"
     xenium_bundle = "${xenium_bundle}"
     output_path = "${meta.id}"
-    metadata = "${meta.id}"
+    metadata = "${meta}"
     output = "spatialdata_meta"
 
     sdata = sd.read_zarr(f"{spatialdata_bundle}")

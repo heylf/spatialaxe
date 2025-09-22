@@ -22,10 +22,6 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     ch_transcripts          = Channel.empty()
 
-    ch_segmentation         = Channel.empty()
-    ch_polygons2d           = Channel.empty()
-    ch_htmls                = Channel.empty()
-
     ch_redefined_bundle     = Channel.empty()
     ch_coordinate_space     = Channel.value("microns")
 
@@ -58,20 +54,21 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     )
     ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions )
 
-    ch_segmentation = BAYSOR_RUN.out.segmentation
-    ch_just_segmentation = ch_segmentation.map {
-        _meta, segmentation -> return [ segmentation ]
-    }
-    ch_polygons2d = BAYSOR_RUN.out.polygons2d
-    ch_htmls      = BAYSOR_RUN.out.htmls
-
     // run xeniumranger import-segmentation
+    ch_segmentation = BAYSOR_RUN.out.segmentation
+    ch_segmentation_csv = ch_segmentation.map { _meta, seg_csv, _seg_json ->
+        return [ seg_csv ]
+    }
+    ch_polygons2d = ch_segmentation.map { _meta, _seg_csv, seg_json ->
+       return [ seg_json ]
+    }
+
     XENIUMRANGER_IMPORT_SEGMENTATION (
         ch_bundle_path,
         [],
         [],
         [],
-        ch_just_segmentation,
+        ch_segmentation_csv,
         ch_polygons2d,
         ch_coordinate_space
     )
@@ -80,10 +77,6 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
 
     emit:
-
-    segmentation     = ch_segmentation        // channel: [ val(meta), ["segmentation.csv"] ]
-    polygons2d       = ch_polygons2d          // channel: [ ["segmentation_polygons_2d.json"] ]
-    htmls            = ch_htmls               // channel: [ ["*.html"] ]
 
     coordinate_space = ch_coordinate_space    // channel: [ "microns" ]
 
