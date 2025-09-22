@@ -70,6 +70,7 @@ workflow SPATIALXE {
     ch_raw_bundle            = Channel.empty()
     ch_gene_panel            = Channel.empty()
     ch_bundle_path           = Channel.empty()
+    ch_qupath_polygons       = Channel.empty()
     ch_gene_synonyms         = Channel.empty()
     ch_multiqc_files         = Channel.empty()
     ch_morphology_image      = Channel.empty()
@@ -139,13 +140,13 @@ workflow SPATIALXE {
     ch_config = Channel.fromPath (
         "${projectDir}/assets/config/xenium.toml",
         checkIfExists: true
-    )
+    ).flatten()
 
     // get segmentation mask if provided with --segmentation_mask for the baysor method
     if ( params.segmentation_mask ) {
         ch_segmentation_mask = Channel.fromPath (
             params.segmentation_mask, checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get a list of features if provided with the --features for the ficture method
@@ -153,7 +154,7 @@ workflow SPATIALXE {
         ch_features = Channel.fromPath (
             params.features,
             checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get custom cellpose model if provided with the --cellpose_model for the cellpose method
@@ -161,7 +162,7 @@ workflow SPATIALXE {
         ch_features = Channel.fromPath (
             params.cellpose_model,
             checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get panel probes fasta for off-target-probe tracking
@@ -169,15 +170,15 @@ workflow SPATIALXE {
         ch_panel_probes_fasta = Channel.fromPath (
             params.probes_fasta,
             checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get reference annotation files (gff,fa) for off-target-probe tracking
     if ( params.reference_annotations ) {
         ch_reference_annotations = Channel.fromPath (
-            params.reference_annotations,
+            "${params.reference_annotations}/*.{fa,gff}".toString(),
             checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get gene synonyms for off-target-probe tracking
@@ -185,7 +186,15 @@ workflow SPATIALXE {
         ch_gene_synonyms = Channel.fromPath (
             params.gene_synonyms,
             checkIfExists: true
-        )
+        ).flatten()
+    }
+
+    // get qupath ploygons
+    if ( params.qupath_polygons ) {
+        ch_qupath_polygons = Channel.fromPath (
+            "${params.qupath_polygons}/*.geojson",
+            checkIfExists: true
+        ).flatten()
     }
 
     // get gene_panel.json if provided with --gene_panel, sets relabel_genes to true
@@ -195,7 +204,7 @@ workflow SPATIALXE {
         ch_gene_panel = Channel.fromPath (
             params.gene_panel,
             checkIfExists: true
-        )
+        ).flatten()
 
     } else {
 
@@ -329,7 +338,7 @@ workflow SPATIALXE {
     */
     if ( params.mode == 'coordinate' ) {
 
-        // run proseg with transcripts.parquet if method = proseg or is not provided (default)
+        // run proseg with transcripts.parquet if method = proseg or is not provided (default workflow)
         if ( !params.method || params.method == 'proseg') {
 
             PROSEG_PRESET_PROSEG2BAYSOR (
@@ -400,8 +409,8 @@ workflow SPATIALXE {
     */
     if ( params.mode == 'segfree' ) {
 
-        // trigger the default segfree workflow if no method is specified
-        if ( !params.method ) {
+        // trigger the default segfree workflow if no method or if the method is baysor
+        if ( !params.method || params.method == 'baysor' ) {
 
             BAYSOR_GENERATE_SEGFREE (
                 ch_transcripts_parquet,
@@ -409,26 +418,13 @@ workflow SPATIALXE {
             )
         }
 
-        // check it the provided method is part of the methods list
-        if ( params.method in params.segfree_methods ) {
+        // run ficture with transcripts.parquet
+        if ( params.method == 'ficture' ) {
 
-            // run baysor with transcripts.parquet
-            if ( params.method == 'baysor' ) {
-
-                BAYSOR_GENERATE_SEGFREE (
-                    ch_transcripts_parquet,
-                    ch_config
-                )
-            }
-
-            // run ficture with transcripts.parquet
-            if ( params.method == 'ficture' ) {
-
-                FICTURE_PREPROCESS_MODEL (
-                    ch_transcripts_parquet,
-                    ch_features
-                )
-            }
+            FICTURE_PREPROCESS_MODEL (
+                ch_transcripts_parquet,
+                ch_features
+            )
         }
     }
 
@@ -453,7 +449,7 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     ch_multiqc_config        = Channel.fromPath (
-        "$projectDir/assets/multiqc_config.yml",
+        "${projectDir}/assets/multiqc_config.yml",
         checkIfExists: true
     )
 
@@ -477,7 +473,7 @@ workflow SPATIALXE {
 
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
         file( params.multiqc_methods_description, checkIfExists: true ) :
-        file( "$projectDir/assets/methods_description_template.yml", checkIfExists: true )
+        file( "${projectDir}/assets/methods_description_template.yml", checkIfExists: true )
 
     ch_methods_description                = Channel.value (
         methodsDescriptionText ( ch_multiqc_custom_methods_description )

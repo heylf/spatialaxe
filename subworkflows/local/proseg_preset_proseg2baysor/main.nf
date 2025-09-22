@@ -20,18 +20,18 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
 
     // run proseg with the xenium format
     PROSEG ( ch_transcripts_parquet )
-    ch_versions = ch_versions.mix( PROSEG.out.versions )
+    ch_versions = ch_versions.mix ( PROSEG.out.versions )
 
 
     // run proseg-to-baysor on the data generated with the proseg run
     PROSEG2BAYSOR ( PROSEG.out.seg_outs )
-    ch_versions = ch_versions.mix( PROSEG2BAYSOR.out.versions )
+    ch_versions = ch_versions.mix ( PROSEG2BAYSOR.out.versions )
 
 
     // run xeniumranger import-segmentation
     ch_imp_seg_inputs = ch_bundle_path
-                            .combine(PROSEG2BAYSOR.out.xr_metadata, by: 0)
-                            .combine(PROSEG2BAYSOR.out.xr_polygons, by: 0)
+                            .combine( PROSEG2BAYSOR.out.xr_metadata, by: 0 )
+                            .combine( PROSEG2BAYSOR.out.xr_polygons, by: 0 )
                             .map {
                                 meta, bundle, metadata, polygons2d -> tuple (
                                     meta,                    // meta
@@ -48,7 +48,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
     XENIUMRANGER_IMPORT_SEGMENTATION (
         ch_imp_seg_inputs
     )
-    ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
+    ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
     emit:
 

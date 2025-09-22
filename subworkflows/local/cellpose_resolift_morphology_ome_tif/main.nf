@@ -17,6 +17,7 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     main:
 
     ch_versions              = Channel.empty()
+    ch_imp_seg_inputs        = Channel.empty()
     ch_cellpose_nuclei_mask  = Channel.empty()
     ch_cellpose_cells_mask   = Channel.empty()
     ch_coordinate_space      = Channel.value("pixels")
@@ -53,6 +54,8 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
             _meta, flows -> return [ flows ]
         }
 
+
+
     }
 
     if ( params.nucleus_segmentation_only ) {
@@ -74,27 +77,46 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     // run import-segmentation with cellpose results
     if ( params.nucleus_segmentation_only ) {
 
+        ch_imp_seg_inputs = ch_bundle_path
+                            .combine(CELLPOSE_NUCLEI.out.cells, by:0)
+                            .map {
+                                meta, bundle, nuclei_seg -> tuple (
+                                    meta,                    // meta
+                                    bundle,                  // bundle
+                                    [],                      // coordinate_transform
+                                    nuclei_seg,              // nuclei
+                                    [],                      // cells
+                                    [],                      // transcript_assignment
+                                    [],                      // viz_polygons
+                                    ch_coordinate_space.val  // units
+                                )
+                            }
+
         XENIUMRANGER_IMPORT_SEGMENTATION (
-            ch_bundle_path,
-            [],
-            ch_cellpose_nuclei_mask,
-            [],
-            [],
-            [],
-            ch_coordinate_space
+            ch_imp_seg_inputs
         )
         ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
     } else {
 
+        ch_imp_seg_inputs = ch_bundle_path
+                            .combine(CELLPOSE_CELLS.out.cells, by:0)
+                            .combine(CELLPOSE_NUCLEI.out.cells, by:0)
+                            .map {
+                                meta, bundle, cells_seg, nuclei_seg -> tuple (
+                                    meta,                    // meta
+                                    bundle,                  // bundle
+                                    [],                      // coordinate_transform
+                                    nuclei_seg,              // nuclei
+                                    cells_seg,               // cells
+                                    [],                      // transcript_assignment
+                                    [],                      // viz_polygons
+                                    ch_coordinate_space.val  // units
+                                )
+                            }
+
         XENIUMRANGER_IMPORT_SEGMENTATION (
-            ch_bundle_path,
-            [],
-            ch_cellpose_nuclei_mask,
-            ch_cellpose_cells_mask,
-            [],
-            [],
-            ch_coordinate_space
+            ch_imp_seg_inputs
         )
         ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
     }

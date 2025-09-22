@@ -46,7 +46,8 @@
                 },
                 "qupath_polygons": {
                     "type": "string",
-                    "description": "Polygon segmentation results in GeoJSON format from QuPath."
+                    "description": "Path to qupath segmentation file in GeoJSON format.",
+                    "format": "file-path"
                 },
                 "alignment_csv": {
                     "type": "string",
