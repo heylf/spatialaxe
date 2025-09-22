@@ -45,7 +45,7 @@ process XENIUMRANGER_RELABEL {
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    mkdir -p "${prefix}/outs/"
+    mkdir -p "${prefix}/outs"
     touch "${prefix}/outs/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml

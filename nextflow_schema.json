@@ -63,6 +63,21 @@
                     "description": "Prior segmentation mask from other segmentation methods.",
                     "format": "file-path"
                 },
+                "probes_fasta": {
+                    "type": "string",
+                    "description": "Fasta file for the probe sequences used in the xenium experiment.",
+                    "format": "file-path"
+                },
+                "reference_annotations": {
+                    "type": "string",
+                    "description": "Path to the directory containing genomic features (.gff) and fasta (.fa) files used as reference annotations.",
+                    "format": "file-path"
+                },
+                "gene_synonyms": {
+                    "type": "string",
+                    "description": "Gene synonyms that may have been counted as off-targets but simply differ in name.",
+                    "format": "file-path"
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",

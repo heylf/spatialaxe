@@ -2,7 +2,7 @@ Changes in component 'nf-core/xeniumranger/import-segmentation'
 Changes in 'xeniumranger/import-segmentation/main.nf':
 --- modules/nf-core/xeniumranger/import-segmentation/main.nf
 +++ modules/nf-core/xeniumranger/import-segmentation/main.nf
-@@ -2,20 +2,20 @@
+@@ -2,20 +2,21 @@
      tag "$meta.id"
      label 'process_high'
  
@@ -10,24 +10,31 @@ Changes in 'xeniumranger/import-segmentation/main.nf':
 +    container "nf-core/xeniumranger:3.1.1"
  
      input:
-     tuple val(meta), path(xenium_bundle)
+-    tuple val(meta), path(xenium_bundle)
 -    val(expansion_distance)
-     path(coordinate_transform)
-     path(nuclei)
-     path(cells)
-     path(transcript_assignment)
-     path(viz_polygons)
-+    val(units)
+-    path(coordinate_transform)
+-    path(nuclei)
+-    path(cells)
+-    path(transcript_assignment)
+-    path(viz_polygons)
++    tuple val(meta),
++          path(xenium_bundle),
++          path(coordinate_transform),
++          path(nuclei),
++          path(cells),
++          path(transcript_assignment),
++          path(viz_polygons),
++          val(units)
  
      output:
 -    tuple val(meta), path("**/outs/**"), emit: outs
 -    path "versions.yml", emit: versions
 +    tuple val(meta), path("${meta.id}/outs"), emit: bundle
-+    path("versions.yml")                    , emit: versions
++    path("versions.yml")                , emit: versions
  
      when:
      task.ext.when == null || task.ext.when
-@@ -29,32 +29,33 @@
+@@ -29,32 +30,33 @@
      def prefix = task.ext.prefix ?: "${meta.id}"
  
      // image based segmentation options
@@ -73,6 +80,19 @@ Changes in 'xeniumranger/import-segmentation/main.nf':
 -        ${viz_polygons} \\
 -        ${units} \\
          ${args}
+ 
+     cat <<-END_VERSIONS > versions.yml
+@@ -68,9 +70,11 @@
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+         error "XENIUMRANGER_IMPORT-SEGMENTATION module does not support Conda. Please use Docker / Singularity / Podman instead."
+     }
++
+     def prefix = task.ext.prefix ?: "${meta.id}"
++    
+     """
+-    mkdir -p "${prefix}/outs/"
++    mkdir -p "${prefix}/outs"
+     touch "${prefix}/outs/fake_file.txt"
  
      cat <<-END_VERSIONS > versions.yml
 

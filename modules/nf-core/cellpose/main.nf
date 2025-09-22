@@ -10,10 +10,10 @@ process CELLPOSE {
     val(maskname)
 
     output:
-    tuple val(meta), path("*masks.tif") ,   emit: mask
-    tuple val(meta), path("*flows.tif") ,   emit: flows, optional: true
-    tuple val(meta), path("*seg.npy")   ,   emit: cells, optional: true
-    path "versions.yml"                 ,   emit: versions
+    tuple val(meta), path("${meta.id}/*masks.tif"), emit: mask
+    tuple val(meta), path("${meta.id}/*flows.tif"), emit: flows, optional: true
+    tuple val(meta), path("${meta.id}/*seg.npy")  , emit: cells, optional: true
+    path "versions.yml"                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -29,30 +29,38 @@ process CELLPOSE {
     """
     export OMP_NUM_THREADS=${task.cpus}
     export MKL_NUM_THREADS=${task.cpus}
+    export NPY_PROMOTION_STATE=legacy
     cellpose \\
         --image_path $image \\
         --save_tif \\
         $model_command \\
         $args
-    mv *masks.tif morphology.ome_${maskname}_masks.tif
+
+    mkdir -p ${prefix}
+    mv *masks.tif ${prefix}/morphology.ome_${maskname}_masks.tif
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         cellpose: \$(cellpose --version | awk 'NR==2 {print \$3}')
     END_VERSIONS
     """
+    
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "I did not manage to create a cellpose module in Conda that works in all OSes. Please use Docker / Singularity / Podman instead."
     }
+    
     def prefix = task.ext.prefix ?: "${meta.id}"
     def name = image.name
     def base = name.lastIndexOf('.') != -1 ? name[0..name.lastIndexOf('.') - 1] : name
+    
     """
+    mkdir -p ${prefix}
+    touch ${prefix}/morphology.ome_${maskname}_masks.tif
     touch ${base}_cp_masks.tif
 
-        cat <<-END_VERSIONS > versions.yml
+    cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         cellpose: \$(cellpose --version | awk 'NR==2 {print \$3}')
     END_VERSIONS

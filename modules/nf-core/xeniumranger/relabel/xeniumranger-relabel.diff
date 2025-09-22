@@ -1,5 +1,4 @@
 Changes in component 'nf-core/xeniumranger/relabel'
-'modules/nf-core/xeniumranger/relabel/meta.yml' is unchanged
 Changes in 'xeniumranger/relabel/main.nf':
 --- modules/nf-core/xeniumranger/relabel/main.nf
 +++ modules/nf-core/xeniumranger/relabel/main.nf
@@ -22,9 +21,19 @@ Changes in 'xeniumranger/relabel/main.nf':
  
      when:
      task.ext.when == null || task.ext.when
+@@ -45,7 +45,7 @@
+     }
+     def prefix = task.ext.prefix ?: "${meta.id}"
+     """
+-    mkdir -p "${prefix}/outs/"
++    mkdir -p "${prefix}/outs"
+     touch "${prefix}/outs/fake_file.txt"
+ 
+     cat <<-END_VERSIONS > versions.yml
 
-'modules/nf-core/xeniumranger/relabel/tests/main.nf.test.snap' is unchanged
-'modules/nf-core/xeniumranger/relabel/tests/tags.yml' is unchanged
-'modules/nf-core/xeniumranger/relabel/tests/nextflow.config' is unchanged
+'modules/nf-core/xeniumranger/relabel/meta.yml' is unchanged
 'modules/nf-core/xeniumranger/relabel/tests/main.nf.test' is unchanged
+'modules/nf-core/xeniumranger/relabel/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/xeniumranger/relabel/tests/nextflow.config' is unchanged
+'modules/nf-core/xeniumranger/relabel/tests/tags.yml' is unchanged
 ************************************************************

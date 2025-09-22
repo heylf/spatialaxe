@@ -13,7 +13,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
     take:
 
     ch_bundle_path          // channel: [ val(meta), ["xenium-bundle"] ]
-    ch_transcripts_parquet  // channel: [ val(meta), ["transcripts.csv.parquet"] ]
+    ch_transcripts_parquet  // channel: [ val(meta), ["transcripts.parquet"] ]
     ch_config               // channel: ["path-to-xenium.toml"]
 
     main:
@@ -85,22 +85,24 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
 
     // run xeniumranger import-segmentation
-    ch_segmentation = BAYSOR_RUN.out.segmentation
-    ch_segmentation_csv = ch_segmentation.map { _meta, seg_csv, _seg_json ->
-        return [ seg_csv ]
-    }
-    ch_polygons2d = ch_segmentation.map { _meta, _seg_csv, seg_json ->
-       return [ seg_json ]
-    }
+    ch_imp_seg_inputs = ch_bundle_path
+                            .combine(BAYSOR_RUN.out.segmentation[1], by:0)
+                            .combine(BAYSOR_RUN.out.segmentation[2], by:0)
+                            .map {
+                                meta, bundle, segmentation_csv, polygons2d -> tuple (
+                                    meta,                    // meta
+                                    bundle,                  // bundle
+                                    [],                      // coordinate_transform
+                                    [],                      // nuclei
+                                    [],                      // cells
+                                    segmentation_csv,        // transcript_assignment
+                                    polygons2d,              // viz_polygons
+                                    ch_coordinate_space.val  // units
+                                )
+                            }
 
     XENIUMRANGER_IMPORT_SEGMENTATION (
-        ch_bundle_path,
-        [],
-        [],
-        [],
-        ch_segmentation_csv,
-        ch_polygons2d,
-        ch_coordinate_space
+        ch_imp_seg_inputs
     )
     ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
