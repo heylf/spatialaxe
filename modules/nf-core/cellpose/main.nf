@@ -10,10 +10,10 @@ process CELLPOSE {
     val(maskname)
 
     output:
-    tuple val(meta), path("${prefix}/*masks.tif"), emit: mask
-    tuple val(meta), path("${prefix}/*flows.tif"), emit: flows, optional: true
-    tuple val(meta), path("${prefix}/*seg.npy")  , emit: cells, optional: true
-    path "versions.yml"                          , emit: versions
+    tuple val(meta), path("${meta.id}/*masks.tif"), emit: mask
+    tuple val(meta), path("${meta.id}/*flows.tif"), emit: flows, optional: true
+    tuple val(meta), path("${meta.id}/*seg.npy")  , emit: cells, optional: true
+    path "versions.yml"                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

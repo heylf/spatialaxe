@@ -8,8 +8,8 @@ process SEGGER2XR {
     tuple val(meta), path(transcripts)
 
     output:
-    tuple val(meta), path("${prefix}/transcripts.parquet"), emit: transcripts_parquet
-    path("versions.yml")                                  , emit: versions
+    tuple val(meta), path("${meta.id}/transcripts.parquet"), emit: transcripts_parquet
+    path("versions.yml")                                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

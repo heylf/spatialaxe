@@ -9,8 +9,8 @@ process PROSEG {
 
     output:
     tuple val(meta),
-          path("${prefix}/cell-polygons.geojson.gz"),
-          path("${prefix}/transcript-metadata.csv.gz"), emit: seg_outs
+          path("${meta.id}/cell-polygons.geojson.gz"),
+          path("${meta.id}/transcript-metadata.csv.gz"), emit: seg_outs
     path("versions.yml")                              , emit: versions
 
     when:

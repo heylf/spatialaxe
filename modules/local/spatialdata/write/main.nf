@@ -11,8 +11,8 @@ process SPATIALDATA_WRITE {
     val(coordinate_space)
 
     output:
-    tuple val(meta), path("${prefix}/${outputfolder}"), emit: spatialdata
-    path("versions.yml")                              , emit: versions
+    tuple val(meta), path("${meta.id}/${outputfolder}"), emit: spatialdata
+    path("versions.yml")                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

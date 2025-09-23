@@ -9,8 +9,8 @@ process PARQUET_TO_CSV {
     val(extension)
 
     output:
-    tuple val(meta), path("${prefix}/*.csv*"), emit: transcripts_csv
-    path("versions.yml")                     , emit: versions
+    tuple val(meta), path("${meta.id}/*.csv*"), emit: transcripts_csv
+    path("versions.yml")                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

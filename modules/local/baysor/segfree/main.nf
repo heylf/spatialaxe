@@ -9,8 +9,8 @@ process BAYSOR_SEGFREE {
     path(config)
 
     output:
-    tuple val(meta), path("${prefix}/ncvs.loom"), emit: ncvs
-    path("versions.yml")                        , emit: versions
+    tuple val(meta), path("${meta.id}/ncvs.loom"), emit: ncvs
+    path("versions.yml")                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

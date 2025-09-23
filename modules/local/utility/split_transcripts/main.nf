@@ -10,8 +10,8 @@ process SPLIT_TRANSCRIPTS {
     val(y_bins)
 
     output:
-    tuple val(meta), path("${prefix}/splits.csv"), emit: splits_csv
-    path("versions.yml")                         , emit: versions
+    tuple val(meta), path("${meta.id}/splits.csv"), emit: splits_csv
+    path("versions.yml")                          , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

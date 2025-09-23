@@ -12,9 +12,9 @@ process BAYSOR_RUN {
 
     output:
     tuple val(meta),
-          path("${prefix}/segmentation.csv"),
-          path("${prefix}/segmentation_polygons_2d.json"), emit: segmentation
-    path("versions.yml")                                 , emit: versions
+          path("${meta.id}/segmentation.csv"),
+          path("${meta.id}/segmentation_polygons_2d.json"), emit: segmentation
+    path("versions.yml")                                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

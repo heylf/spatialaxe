@@ -8,8 +8,8 @@ process SPATIALDATA_META {
     tuple val(meta), path(spatialdata_bundle, stageAs: "*"), path(xenium_bundle, stageAs: "*")
 
     output:
-    tuple val(meta), path("${prefix}/spatialdata_meta"), emit: metadata
-    path("versions.yml")                               , emit: versions
+    tuple val(meta), path("${meta.id}/spatialdata_meta"), emit: metadata
+    path("versions.yml")                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

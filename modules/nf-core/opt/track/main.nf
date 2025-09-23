@@ -9,8 +9,8 @@ process OPT_TRACK {
     tuple val(meta2), path(ref_annot_gff), path(ref_annot_fa)
 
     output:
-    tuple val(meta), path("${prefix}/probe2targets.tsv"), emit: probes2target
-    path "versions.yml"                                 , emit: versions
+    tuple val(meta), path("${meta.id}/probe2targets.tsv"), emit: probes2target
+    path "versions.yml"                                  , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

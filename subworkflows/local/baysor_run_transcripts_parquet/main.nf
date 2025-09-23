@@ -88,8 +88,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
     ch_imp_seg_inputs = ch_bundle_path
                             .combine(BAYSOR_RUN.out.segmentation, by: 0)
                             .map {
-                                meta, bundle, segmentation_outs ->
-                                def ( _meta, segmentation_csv, polygons2d ) = segmentation_outs
+                                meta, bundle, segmentation_csv, polygons2d ->
                                 tuple (
                                     meta,                    // meta
                                     bundle,                  // bundle

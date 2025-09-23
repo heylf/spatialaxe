@@ -8,7 +8,7 @@ process XENIUMRANGER_RESEGMENT {
     tuple val(meta), path(xenium_bundle)
 
     output:
-    tuple val(meta), path("${prefix}/outs"), emit: bundle
+    tuple val(meta), path("${meta.id}/outs"), emit: bundle
     path("versions.yml")                    , emit: versions
 
     when:

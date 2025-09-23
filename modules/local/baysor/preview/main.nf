@@ -9,7 +9,7 @@ process BAYSOR_PREVIEW {
     path(config)
 
     output:
-    tuple val(meta), path("${prefix}/preview.html"), emit: preview_html
+    tuple val(meta), path("${meta.id}/preview.html"), emit: preview_html
     path("versions.yml")                            , emit: versions
 
     when:
