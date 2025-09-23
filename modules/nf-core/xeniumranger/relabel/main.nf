@@ -9,7 +9,7 @@ process XENIUMRANGER_RELABEL {
     path(gene_panel)
 
     output:
-    tuple val(meta), path("${meta.id}/outs"), emit: bundle
+    tuple val(meta), path("${prefix}/outs"), emit: bundle
     path("versions.yml")                    , emit: versions
 
     when:

@@ -9,8 +9,8 @@ process PARQUET_TO_CSV {
     val(extension)
 
     output:
-    tuple val(meta), path("${meta.id}/*.csv*"), emit: transcripts_csv
-    path("versions.yml")                      , emit: versions
+    tuple val(meta), path("${prefix}/*.csv*"), emit: transcripts_csv
+    path("versions.yml")                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,6 +20,7 @@ process PARQUET_TO_CSV {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "PARQUET_TO_CSV module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
+    def prefix = task.ext.prefix ?: "${meta.id}"
 
     template 'parquet_to_csv.py'
 

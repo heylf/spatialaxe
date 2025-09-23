@@ -10,10 +10,10 @@ process CELLPOSE {
     val(maskname)
 
     output:
-    tuple val(meta), path("${meta.id}/*masks.tif"), emit: mask
-    tuple val(meta), path("${meta.id}/*flows.tif"), emit: flows, optional: true
-    tuple val(meta), path("${meta.id}/*seg.npy")  , emit: cells, optional: true
-    path "versions.yml"                           , emit: versions
+    tuple val(meta), path("${prefix}/*masks.tif"), emit: mask
+    tuple val(meta), path("${prefix}/*flows.tif"), emit: flows, optional: true
+    tuple val(meta), path("${prefix}/*seg.npy")  , emit: cells, optional: true
+    path "versions.yml"                          , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,7 +21,7 @@ process CELLPOSE {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "I did not manage to create a cellpose module in Conda that works in all OSes. Please use Docker / Singularity / Podman instead."
+        error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
@@ -48,7 +48,7 @@ process CELLPOSE {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "I did not manage to create a cellpose module in Conda that works in all OSes. Please use Docker / Singularity / Podman instead."
+        error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
     }
     
     def prefix = task.ext.prefix ?: "${meta.id}"

@@ -9,8 +9,8 @@ process BAYSOR_CREATE_DATASET {
     val(sample_fraction)
 
     output:
-    tuple val(meta), path("${meta.id}/sampled_transcripts.csv"), emit: sampled_transcripts
-    path("versions.yml")                                       , emit: versions
+    tuple val(meta), path("${prefix}/sampled_transcripts.csv"), emit: sampled_transcripts
+    path("versions.yml")                                      , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

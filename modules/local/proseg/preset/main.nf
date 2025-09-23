@@ -9,9 +9,9 @@ process PROSEG {
 
     output:
     tuple val(meta),
-          path("${meta.id}/cell-polygons.geojson.gz"),
-          path("${meta.id}/transcript-metadata.csv.gz"), emit: seg_outs
-    path("versions.yml")                               , emit: versions
+          path("${prefix}/cell-polygons.geojson.gz"),
+          path("${prefix}/transcript-metadata.csv.gz"), emit: seg_outs
+    path("versions.yml")                              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

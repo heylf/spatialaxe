@@ -19,17 +19,20 @@
                     "opt/flip": {
                         "branch": "master",
                         "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/opt/flip/opt-flip.diff"
                     },
                     "opt/stat": {
                         "branch": "master",
                         "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/opt/stat/opt-stat.diff"
                     },
                     "opt/track": {
                         "branch": "master",
                         "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules"],
+                        "patch": "modules/nf-core/opt/track/opt-track.diff"
                     },
                     "untar": {
                         "branch": "master",

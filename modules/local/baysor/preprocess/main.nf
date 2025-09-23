@@ -14,8 +14,8 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
 
     output:
     tuple val(meta),
-          path("${meta.id}/filtered_transcripts.parquet"), emit: transcripts_parquet
-    path("versions.yml")                                 , emit: versions
+          path("${prefix}/filtered_transcripts.parquet"), emit: transcripts_parquet
+    path("versions.yml")                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

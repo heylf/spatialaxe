@@ -8,8 +8,8 @@ process SPATIALDATA_MERGE {
     tuple val(meta), path(raw_bundle, stageAs: "*"), path(redefined_bundle, stageAs: "*")
 
     output:
-    tuple val(meta), path("${meta.id}/spatialdata_merged"), emit: merged_bundle
-    path("versions.yml")                                  , emit: versions
+    tuple val(meta), path("${prefix}/spatialdata_merged"), emit: merged_bundle
+    path("versions.yml")                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

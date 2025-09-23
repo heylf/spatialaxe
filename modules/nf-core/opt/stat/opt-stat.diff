@@ -1,0 +1,20 @@
+Changes in component 'nf-core/opt/stat'
+Changes in 'opt/stat/main.nf':
+--- modules/nf-core/opt/stat/main.nf
++++ modules/nf-core/opt/stat/main.nf
+@@ -10,8 +10,8 @@
+     path(gene_synonyms)
+ 
+     output:
+-    tuple val(meta), path("${meta.id}/collapsed_summary.tsv"), emit: summary
+-    path "versions.yml"           , emit: versions
++    tuple val(meta), path("${prefix}/collapsed_summary.tsv"), emit: summary
++    path "versions.yml"                                     , emit: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+
+'modules/nf-core/opt/stat/meta.yml' is unchanged
+'modules/nf-core/opt/stat/tests/main.nf.test' is unchanged
+'modules/nf-core/opt/stat/tests/main.nf.test.snap' is unchanged
+************************************************************

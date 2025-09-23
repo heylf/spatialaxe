@@ -10,8 +10,8 @@ process OPT_STAT {
     path(gene_synonyms)
 
     output:
-    tuple val(meta), path("${meta.id}/collapsed_summary.tsv"), emit: summary
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("${prefix}/collapsed_summary.tsv"), emit: summary
+    path "versions.yml"                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

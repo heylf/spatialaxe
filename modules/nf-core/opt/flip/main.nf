@@ -9,8 +9,8 @@ process OPT_FLIP {
     tuple val(meta2), path(ref_annot_gff), path(ref_annot_fa)
 
     output:
-    tuple val(meta), path("${meta.id}/fwd_oriented.fa"), emit: fwd_oriented_fa
-    path "versions.yml"                                , emit: versions
+    tuple val(meta), path("${prefix}/fwd_oriented.fa"), emit: fwd_oriented_fa
+    path "versions.yml"                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

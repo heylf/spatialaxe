@@ -9,8 +9,8 @@ process RESOLIFT {
 
     output:
     tuple val(meta),
-          path("${meta.id}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
-    path("versions.yml")                                 , emit: versions
+          path("${prefix}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
+    path("versions.yml")                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when

@@ -9,8 +9,8 @@ process BAYSOR_SEGFREE {
     path(config)
 
     output:
-    tuple val(meta), path("ncvs.loom"), emit: ncvs
-    path("versions.yml")              , emit: versions
+    tuple val(meta), path("${prefix}/ncvs.loom"), emit: ncvs
+    path("versions.yml")                        , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,10 +25,12 @@ process BAYSOR_SEGFREE {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    mkdir -p ${prefix}
+
     baysor segfree \\
     ${transcripts} \\
     --config ${config} \\
-    --output=${prefix} \\
+    --output=${prefix}/ncvs.loom \\
     ${args}
 
     cat <<-END_VERSIONS > versions.yml

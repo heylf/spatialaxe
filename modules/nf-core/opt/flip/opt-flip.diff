@@ -1,0 +1,20 @@
+Changes in component 'nf-core/opt/flip'
+Changes in 'opt/flip/main.nf':
+--- modules/nf-core/opt/flip/main.nf
++++ modules/nf-core/opt/flip/main.nf
+@@ -9,8 +9,8 @@
+     tuple val(meta2), path(ref_annot_gff), path(ref_annot_fa)
+ 
+     output:
+-    tuple val(meta), path("${meta.id}/fwd_oriented.fa"), emit: fwd_oriented_fa
+-    path "versions.yml"                                , emit: versions
++    tuple val(meta), path("${prefix}/fwd_oriented.fa"), emit: fwd_oriented_fa
++    path "versions.yml"                               , emit: versions
+ 
+     when:
+     task.ext.when == null || task.ext.when
+
+'modules/nf-core/opt/flip/meta.yml' is unchanged
+'modules/nf-core/opt/flip/tests/main.nf.test' is unchanged
+'modules/nf-core/opt/flip/tests/main.nf.test.snap' is unchanged
+************************************************************
