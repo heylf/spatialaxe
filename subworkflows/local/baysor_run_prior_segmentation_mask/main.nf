@@ -56,10 +56,11 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     // run import-segmentation with baysor outs
     ch_imp_seg_inputs = ch_bundle_path
-                            .combine(BAYSOR_RUN.out.segmentation[1], by:0)
-                            .combine(BAYSOR_RUN.out.segmentation[2], by:0)
+                            .combine(BAYSOR_RUN.out.segmentation, by: 0)
                             .map {
-                                meta, bundle, segmentation_csv, polygons2d -> tuple (
+                                meta, bundle, segmentation_outs ->
+                                def ( _meta, segmentation_csv, polygons2d ) = segmentation_outs
+                                tuple (
                                     meta,                    // meta
                                     bundle,                  // bundle
                                     [],                      // coordinate_transform

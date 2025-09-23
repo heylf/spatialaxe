@@ -29,7 +29,8 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
         ch_imp_seg_inputs = ch_bundle_path
                                 .combine(cells, by:0)
                                 .map {
-                                    meta, bundle, cells_zarr -> tuple (
+                                    meta, bundle, cells_zarr ->
+                                    tuple (
                                         meta,                    // meta
                                         bundle,                  // bundle
                                         [],                      // coordinate_transform
@@ -56,7 +57,8 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
         ch_imp_seg_inputs = ch_bundle_path
                                 .combine(params.qupath_polygons)
                                 .map {
-                                    meta, bundle, polygons_geojson  -> tuple (
+                                    meta, bundle, polygons_geojson  ->
+                                    tuple (
                                         meta,                    // meta
                                         bundle,                  // bundle
                                         [],                      // coordinate_transform
@@ -81,7 +83,8 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
         ch_imp_seg_inputs = ch_bundle_path
                                 .combine(params.qupath_polygons)
                                 .map {
-                                    meta, bundle, polygons_geojson -> tuple (
+                                    meta, bundle, polygons_geojson ->
+                                    tuple (
                                         meta,                    // meta
                                         bundle,                  // bundle
                                         [],                      // coordinate_transform
@@ -113,7 +116,8 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
                                 .combine(params.qupath_polygins)
                                 .combine(params.alignment_csv)
                                 .map {
-                                    meta, bundle, polygons_geojson, alignment_csv -> tuple (
+                                    meta, bundle, polygons_geojson, alignment_csv ->
+                                    tuple (
                                         meta,                    // meta
                                         bundle,                  // bundle
                                         alignment_csv,                      // coordinate_transform

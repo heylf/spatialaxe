@@ -78,9 +78,10 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     if ( params.nucleus_segmentation_only ) {
 
         ch_imp_seg_inputs = ch_bundle_path
-                            .combine(CELLPOSE_NUCLEI.out.cells, by:0)
+                            .combine(CELLPOSE_NUCLEI.out.cells, by: 0)
                             .map {
-                                meta, bundle, nuclei_seg -> tuple (
+                                meta, bundle, nuclei_seg ->
+                                tuple (
                                     meta,                    // meta
                                     bundle,                  // bundle
                                     [],                      // coordinate_transform
