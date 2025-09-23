@@ -259,6 +259,16 @@
                     "type": "boolean",
                     "description": "Whether to use connected components for grouping transcripts without direct nucleus association",
                     "default": false
+                },
+                "buffer_samples": {
+                    "type": "boolean",
+                    "description": "Process only one sample at a time from a multi-sample samplesheet.",
+                    "default": false
+                },
+                "buffer_size": {
+                    "type": "integer",
+                    "description": "Number of sample(s) to process at a time from a multi-sample samplesheet. Works if buffered_samples is true.",
+                    "default": 0
                 }
             }
         },

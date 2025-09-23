@@ -107,10 +107,19 @@ workflow SPATIALXE {
             }
             .set { ch_input }
 
-    } else {
+    } else { // for all other profile runs
 
-        // for all other profile runs
-        ch_input = ch_samplesheet
+        // check if samples are buffered
+        if ( params.buffer_samples ) {
+            ch_input = ch_samplesheet.buffer ( size: params.buffer_size )
+                                    .map
+                                    { buffered_sample ->
+                                        def (meta, bundle, tif) = buffered_sample[0]
+                                        tuple(meta, bundle, tif)
+                                    }
+        } else {
+            ch_input = ch_samplesheet
+        }
     }
 
     // path to bundle input
