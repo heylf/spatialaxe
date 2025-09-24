@@ -18,8 +18,6 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     ch_versions              = Channel.empty()
     ch_imp_seg_inputs        = Channel.empty()
-    ch_cellpose_nuclei_mask  = Channel.empty()
-    ch_cellpose_cells_mask   = Channel.empty()
     ch_coordinate_space      = Channel.value("pixels")
 
     cellpose_model = params.cellpose_model ? (Channel.fromPath(params.cellpose_model, checkIfExists: true)) : []
@@ -39,40 +37,12 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     }
 
     // run cellpose on morphology tiff
-    if ( params.cell_segmentation_only ) {
+    CELLPOSE_CELLS ( ch_image, cellpose_model, 'cells' )
+    ch_versions = ch_versions.mix( CELLPOSE_CELLS.out.versions )
 
-        CELLPOSE_CELLS ( ch_image, cellpose_model, 'cells' )
-        ch_versions = ch_versions.mix( CELLPOSE_CELLS.out.versions )
+    CELLPOSE_NUCLEI ( ch_image, 'nuclei', 'nuclei' )
+    ch_versions = ch_versions.mix( CELLPOSE_NUCLEI.out.versions )
 
-        _ch_cellpose_cells_cells = CELLPOSE_CELLS.out.cells.map {
-            _meta, cells -> return [ cells ]
-        }
-        ch_cellpose_cells_mask = CELLPOSE_CELLS.out.mask.map {
-            _meta, mask -> return [ mask ]
-        }
-        _ch_cellpose_cells_flows = CELLPOSE_CELLS.out.flows.map {
-            _meta, flows -> return [ flows ]
-        }
-
-
-
-    }
-
-    if ( params.nucleus_segmentation_only ) {
-
-        CELLPOSE_NUCLEI ( ch_image, 'nuclei', 'nuclei' )
-        ch_versions = ch_versions.mix( CELLPOSE_NUCLEI.out.versions )
-
-        _ch_cellpose_nuclei_cells = CELLPOSE_NUCLEI.out.cells.map {
-            _meta, cells -> return [ cells ]
-        }
-        ch_cellpose_nuclei_mask = CELLPOSE_NUCLEI.out.mask.map {
-            _meta, mask -> return [ mask ]
-        }
-        _ch_cellpose_nuclei_flows = CELLPOSE_NUCLEI.out.flows.map {
-            _meta, flows -> return [ flows ]
-        }
-    }
 
     // run import-segmentation with cellpose results
     if ( params.nucleus_segmentation_only ) {
@@ -92,7 +62,6 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
                                     ch_coordinate_space.val  // units
                                 )
                             }
-
         XENIUMRANGER_IMPORT_SEGMENTATION (
             ch_imp_seg_inputs
         )
@@ -115,7 +84,7 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
                                     ch_coordinate_space.val  // units
                                 )
                             }
-
+        ch_imp_seg_inputs.view()
         XENIUMRANGER_IMPORT_SEGMENTATION (
             ch_imp_seg_inputs
         )

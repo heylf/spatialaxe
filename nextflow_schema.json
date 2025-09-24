@@ -268,7 +268,7 @@
                 "buffer_size": {
                     "type": "integer",
                     "description": "Number of sample(s) to process at a time from a multi-sample samplesheet. Works if buffered_samples is true.",
-                    "default": 0
+                    "default": 1
                 }
             }
         },

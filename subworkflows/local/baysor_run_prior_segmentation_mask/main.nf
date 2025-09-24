@@ -45,14 +45,24 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
         ch_transcripts = ch_transcripts_parquet
     }
 
-    // run baysor with morphology.tiff
-    BAYSOR_RUN (
-        ch_transcripts,
-        ch_segmentation_mask,
-        ch_config,
-        30
-    )
+
+    // run baysor with prior segmentation mask
+    ch_baysor_input = ch_transcripts
+                            .combine(ch_segmentation_mask)
+                            .combine(ch_config)
+                            .map { meta, transcripts, mask, config ->
+                                tuple (
+                                    meta,           // meta
+                                    transcripts,    // transcripts
+                                    mask,           // prior_segmentation
+                                    config,         // config
+                                    30              // scale
+                                )
+                            }
+
+    BAYSOR_RUN ( ch_baysor_input )
     ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions )
+
 
     // run import-segmentation with baysor outs
     ch_imp_seg_inputs = ch_bundle_path

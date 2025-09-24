@@ -58,6 +58,7 @@ process CELLPOSE {
     """
     mkdir -p ${prefix}
     touch ${prefix}/morphology.ome_${maskname}_masks.tif
+    touch ${prefix}/morphology.ome_${maskname}_seg.npy
     touch ${base}_cp_masks.tif
 
     cat <<-END_VERSIONS > versions.yml

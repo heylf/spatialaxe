@@ -42,21 +42,12 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     }
 
+
     // run cellpose on the morphology (enhanced) tiff
     if ( params.cell_segmentation_only ) {
 
         CELLPOSE_CELLS ( ch_image, cellpose_model, 'cells' )
         ch_versions = ch_versions.mix( CELLPOSE_CELLS.out.versions )
-
-        _ch_cellpose_cells_cells = CELLPOSE_CELLS.out.cells.map {
-            _meta, cells -> return [ cells ]
-        }
-        ch_cellpose_cells_mask = CELLPOSE_CELLS.out.mask.map {
-            _meta, mask -> return [ mask ]
-        }
-        _ch_cellpose_cells_flows = CELLPOSE_CELLS.out.flows.map {
-            _meta, flows -> return [ flows ]
-        }
 
     }
 
@@ -64,16 +55,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
         CELLPOSE_NUCLEI ( ch_image, 'nuclei', 'nuclei' )
         ch_versions = ch_versions.mix( CELLPOSE_NUCLEI.out.versions )
-
-        _ch_cellpose_nuclei_cells = CELLPOSE_NUCLEI.out.cells.map {
-            _meta, cells -> return [ cells ]
-        }
-        ch_cellpose_nuclei_mask = CELLPOSE_NUCLEI.out.mask.map {
-            _meta, mask -> return [ mask ]
-        }
-        _ch_cellpose_nuclei_flows = CELLPOSE_NUCLEI.out.flows.map {
-            _meta, flows -> return [ flows ]
-        }
 
     }
 
@@ -103,19 +84,54 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     if ( params.nucleus_segmentation_only ) {
 
         // run baysor with nuclei mask
-        BAYSOR_RUN ( ch_transcripts, ch_cellpose_nuclei_mask, ch_config, 30 )
+        ch_baysor_input = ch_transcripts
+                            .combine(CELLPOSE_NUCLEI.out.mask, by: 0)
+                            .combine(ch_config)
+                            .map { meta, transcripts, mask, config ->
+                                tuple (
+                                    meta,           // meta
+                                    transcripts,    // transcripts
+                                    mask,           // prior_segmentation
+                                    config,         // config
+                                    30              // scale
+                                )
+                            }
+        BAYSOR_RUN ( ch_baysor_input )
         ch_versions = ch_versions.mix ( BAYSOR_RUN.out.versions )
 
     } else if ( params.cell_segmentation_only ) {
 
         // run baysor with cell mask
-        BAYSOR_RUN ( ch_transcripts, ch_cellpose_cells_mask, ch_config, 30 )
+        ch_baysor_input = ch_transcripts
+                            .combine(CELLPOSE_CELLS.out.mask, by: 0)
+                            .combine(ch_config)
+                            .map { meta, transcripts, mask, config ->
+                                tuple (
+                                    meta,           // meta
+                                    transcripts,    // transcripts
+                                    mask,           // prior_segmentation
+                                    config,         // config
+                                    30              // scale
+                                )
+                            }
+        BAYSOR_RUN ( ch_baysor_input )
         ch_versions = ch_versions.mix ( BAYSOR_RUN.out.versions )
 
     } else {
 
-        // run baysor with cell mask
-        BAYSOR_RUN ( ch_transcripts, [], ch_config, 30 )
+        // run baysor without cell/nuclei mask
+        ch_baysor_input = ch_transcripts
+                            .combine(ch_config)
+                            .map { meta, transcripts, config ->
+                                tuple (
+                                    meta,           // meta
+                                    transcripts,    // transcripts
+                                    [],             // prior_segmentation
+                                    config,         // config
+                                    30              // scale
+                                )
+                            }
+        BAYSOR_RUN ( ch_baysor_input )
         ch_versions = ch_versions.mix ( BAYSOR_RUN.out.versions )
 
     }
@@ -125,8 +141,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     ch_imp_seg_inputs = ch_bundle_path
                             .combine(BAYSOR_RUN.out.segmentation, by: 0)
                             .map {
-                                meta, bundle, segmentation_outs ->
-                                def ( _meta, segmentation_csv, polygons2d ) = segmentation_outs
+                                meta, bundle, segmentation_csv, polygons2d ->
                                 tuple (
                                     meta,                    // meta
                                     bundle,                  // bundle
@@ -139,9 +154,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                                 )
                             }
 
-    XENIUMRANGER_IMPORT_SEGMENTATION (
-        ch_imp_seg_inputs
-    )
+    XENIUMRANGER_IMPORT_SEGMENTATION ( ch_imp_seg_inputs )
     ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
     emit:

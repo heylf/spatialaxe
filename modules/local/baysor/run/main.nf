@@ -5,10 +5,11 @@ process BAYSOR_RUN {
     container "khersameesh24/baysor:0.7.1"
 
     input:
-    tuple val(meta), path(transcripts)
-    path(prior_segmentation)
-    path(config)
-    val(scale)
+    tuple val(meta),
+          path(transcripts),
+          path(prior_segmentation),
+          path(config),
+          val(scale)
 
     output:
     tuple val(meta),
