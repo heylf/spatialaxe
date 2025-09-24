@@ -8,7 +8,7 @@ process SEGGER_CREATE_DATASET {
     tuple val(meta), path(base_dir)
 
     output:
-    tuple val(meta), path("${meta.id}"), emit: datasetdir
+    tuple val(meta), path("${prefix}/"), emit: datasetdir
     path("versions.yml")               , emit: versions
 
     when:
@@ -21,8 +21,8 @@ process SEGGER_CREATE_DATASET {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def script_path = "/workspace/segger_dev/src/segger/cli/create_dataset_fast.py"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     // check for platform values
     if ( !(params.format in ['xenium']) ) {
@@ -51,7 +51,7 @@ process SEGGER_CREATE_DATASET {
         error "SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}/

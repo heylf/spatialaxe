@@ -10,10 +10,10 @@ process CELLPOSE {
     val(maskname)
 
     output:
-    tuple val(meta), path("${meta.id}/*masks.tif"), emit: mask
-    tuple val(meta), path("${meta.id}/*flows.tif"), emit: flows, optional: true
-    tuple val(meta), path("${meta.id}/*seg.npy")  , emit: cells, optional: true
-    path "versions.yml"                           , emit: versions
+    tuple val(meta), path("${prefix}/*masks.tif"), emit: mask
+    tuple val(meta), path("${prefix}/*flows.tif"), emit: flows, optional: true
+    tuple val(meta), path("${prefix}/*seg.npy")  , emit: cells, optional: true
+    path "versions.yml"                          , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,8 +24,8 @@ process CELLPOSE {
         error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def model_command = model ? "--pretrained_model $model" : ""
+    prefix = task.ext.prefix ?: "${meta.id}"
     """
     export OMP_NUM_THREADS=${task.cpus}
     export MKL_NUM_THREADS=${task.cpus}
@@ -51,9 +51,9 @@ process CELLPOSE {
         error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
     }
     
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def name = image.name
     def base = name.lastIndexOf('.') != -1 ? name[0..name.lastIndexOf('.') - 1] : name
+    prefix = task.ext.prefix ?: "${meta.id}"
     
     """
     mkdir -p ${prefix}

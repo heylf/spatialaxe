@@ -9,8 +9,8 @@ process OPT_FLIP {
     tuple val(meta2), path(ref_annot_gff), path(ref_annot_fa)
 
     output:
-    tuple val(meta), path("${meta.id}/fwd_oriented.fa"), emit: fwd_oriented_fa
-    path "versions.yml"                                , emit: versions
+    tuple val(meta), path("${prefix}/fwd_oriented.fa"), emit: fwd_oriented_fa
+    path "versions.yml"                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,8 +20,9 @@ process OPT_FLIP {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "OPT_FLIP module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
+
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
     
     """
     opt \\
@@ -40,8 +41,12 @@ process OPT_FLIP {
     """
 
     stub:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "OPT_FLIP module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
+    prefix = task.ext.prefix ?: "${meta.id}"
     
     """
     mkdir -p ${prefix}

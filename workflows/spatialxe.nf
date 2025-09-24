@@ -316,13 +316,6 @@ workflow SPATIALXE {
                     ch_segmentation_mask,
                     ch_config
                 )
-            } else {
-                BAYSOR_RUN_PRIOR_SEGMENTATION_MASK (
-                    ch_bundle_path,
-                    ch_transcripts_parquet,
-                    [],
-                    ch_config
-                )
             }
             ch_redefined_bundle = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.redefined_bundle
             ch_coordinate_space = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.coordinate_space

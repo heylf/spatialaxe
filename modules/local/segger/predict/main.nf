@@ -9,11 +9,10 @@ process SEGGER_PREDICT {
     path(models_dir)
     path(transcripts)
 
-
     output:
-    tuple val(meta), path("${meta.id}/benchmarks_dir")                             , emit: benchmarks
-    tuple val(meta), path("${meta.id}/benchmarks_dir/*/segger_transcripts.parquet"), emit: transcripts
-    path("versions.yml")                                                           , emit: versions
+    tuple val(meta), path("${prefix}/benchmarks_dir")                             , emit: benchmarks
+    tuple val(meta), path("${prefix}/benchmarks_dir/*/segger_transcripts.parquet"), emit: transcripts
+    path("versions.yml")                                                          , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -25,8 +24,8 @@ process SEGGER_PREDICT {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def script_path = "/workspace/segger_dev/src/segger/cli/predict_fast.py"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     python3 ${script_path} \\
@@ -52,7 +51,7 @@ process SEGGER_PREDICT {
         error "SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p "${prefix}/benchmarks_dir"

@@ -9,8 +9,8 @@ process RESOLIFT {
 
     output:
     tuple val(meta),
-          path("${meta.id}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
-    path("versions.yml")                                 , emit: versions
+          path("${prefix}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
+    path("versions.yml")                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,7 +22,7 @@ process RESOLIFT {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
@@ -43,7 +43,7 @@ process RESOLIFT {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "RESOLIFT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

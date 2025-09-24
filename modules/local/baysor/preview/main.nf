@@ -9,8 +9,8 @@ process BAYSOR_PREVIEW {
     path(config)
 
     output:
-    tuple val(meta), path("${meta.id}/preview.html"), emit: preview_html
-    path("versions.yml")                            , emit: versions
+    tuple val(meta), path("${prefix}/preview.html"), emit: preview_html
+    path("versions.yml")                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,7 +22,7 @@ process BAYSOR_PREVIEW {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
@@ -46,7 +46,7 @@ process BAYSOR_PREVIEW {
         error "BAYSOR_PREVIEW module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

@@ -8,8 +8,8 @@ process PROSEG2BAYSOR {
     tuple val(meta), path(cell_polygons), path(transcript_metadata)
 
     output:
-    tuple val(meta), path("${meta.id}/cell-polygons.geojson")  , emit: xr_polygons
-    tuple val(meta), path("${meta.id}/transcript-metadata.csv"), emit: xr_metadata
+    tuple val(meta), path("${prefix}/cell-polygons.geojson")  , emit: xr_polygons
+    tuple val(meta), path("${prefix}/transcript-metadata.csv"), emit: xr_metadata
     path("versions.yml")                                      , emit: versions
 
     script:
@@ -19,7 +19,7 @@ process PROSEG2BAYSOR {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
@@ -44,7 +44,7 @@ process PROSEG2BAYSOR {
         error "PROSEG2BAYSOR module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

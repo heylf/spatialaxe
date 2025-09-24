@@ -8,8 +8,8 @@ process SEGGER_TRAIN {
     tuple val(meta), path(dataset_dir)
 
     output:
-    tuple val(meta), path("${meta.id}/trained_models"), emit: trained_models
-    path("versions.yml")                              , emit: versions
+    tuple val(meta), path("${prefix}/trained_models"), emit: trained_models
+    path("versions.yml")                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,8 +21,8 @@ process SEGGER_TRAIN {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def script_path = "/workspace/segger_dev/src/segger/cli/train_model.py"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     python3 ${script_path} \\
@@ -48,7 +48,7 @@ process SEGGER_TRAIN {
         error "SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}/trained_models/

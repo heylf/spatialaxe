@@ -9,8 +9,8 @@ process PROSEG {
 
     output:
     tuple val(meta),
-          path("${meta.id}/cell-polygons.geojson.gz"),
-          path("${meta.id}/transcript-metadata.csv.gz"), emit: seg_outs
+          path("${prefix}/cell-polygons.geojson.gz"),
+          path("${prefix}/transcript-metadata.csv.gz"), emit: seg_outs
     path("versions.yml")                              , emit: versions
 
     when:
@@ -23,7 +23,7 @@ process PROSEG {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     // check for platform values
     if ( !(params.format in ['xenium', 'cosmx', 'merscope']) ) {
@@ -59,7 +59,7 @@ process PROSEG {
         error "PROSEG module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}/

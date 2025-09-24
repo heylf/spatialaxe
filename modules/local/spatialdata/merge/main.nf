@@ -8,8 +8,8 @@ process SPATIALDATA_MERGE {
     tuple val(meta), path(raw_bundle, stageAs: "*"), path(redefined_bundle, stageAs: "*")
 
     output:
-    tuple val(meta), path("${meta.id}/spatialdata_merged"), emit: merged_bundle
-    path("versions.yml")                                  , emit: versions
+    tuple val(meta), path("${prefix}/spatialdata_merged"), emit: merged_bundle
+    path("versions.yml")                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,7 +21,7 @@ process SPATIALDATA_MERGE {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     template 'merge.py'
 
@@ -31,7 +31,7 @@ process SPATIALDATA_MERGE {
         exit 1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p "${prefix}/spatialdata_merged/"

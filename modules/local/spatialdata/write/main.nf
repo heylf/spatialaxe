@@ -11,8 +11,8 @@ process SPATIALDATA_WRITE {
     val(coordinate_space)
 
     output:
-    tuple val(meta), path("${meta.id}/${outputfolder}"), emit: spatialdata
-    path("versions.yml")                               , emit: versions
+    tuple val(meta), path("${prefix}/${outputfolder}"), emit: spatialdata
+    path("versions.yml")                              , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +23,7 @@ process SPATIALDATA_WRITE {
         exit 1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     template 'write.py'
 
@@ -33,8 +33,8 @@ process SPATIALDATA_WRITE {
         exit 1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def outdir = "${outputfolder}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p "${prefix}/${outdir}"

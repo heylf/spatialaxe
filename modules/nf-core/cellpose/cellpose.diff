@@ -21,7 +21,7 @@ Changes in 'cellpose/main.nf':
  
      when:
      task.ext.when == null || task.ext.when
-@@ -19,7 +21,7 @@
+@@ -19,37 +21,47 @@
      script:
      // Exit if running this module with -profile conda / -profile mamba
      if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
@@ -29,8 +29,9 @@ Changes in 'cellpose/main.nf':
 +        error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
      }
      def args = task.ext.args ?: ''
-     def prefix = task.ext.prefix ?: "${meta.id}"
-@@ -27,29 +29,38 @@
+-    def prefix = task.ext.prefix ?: "${meta.id}"
+     def model_command = model ? "--pretrained_model $model" : ""
++    prefix = task.ext.prefix ?: "${meta.id}"
      """
      export OMP_NUM_THREADS=${task.cpus}
      export MKL_NUM_THREADS=${task.cpus}
@@ -56,14 +57,16 @@ Changes in 'cellpose/main.nf':
 -        error "I did not manage to create a cellpose module in Conda that works in all OSes. Please use Docker / Singularity / Podman instead."
 +        error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
      }
+-    def prefix = task.ext.prefix ?: "${meta.id}"
 +    
-     def prefix = task.ext.prefix ?: "${meta.id}"
      def name = image.name
      def base = name.lastIndexOf('.') != -1 ? name[0..name.lastIndexOf('.') - 1] : name
++    prefix = task.ext.prefix ?: "${meta.id}"
 +    
      """
 +    mkdir -p ${prefix}
 +    touch ${prefix}/morphology.ome_${maskname}_masks.tif
++    touch ${prefix}/morphology.ome_${maskname}_seg.npy
      touch ${base}_cp_masks.tif
  
 -        cat <<-END_VERSIONS > versions.yml

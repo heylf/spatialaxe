@@ -23,7 +23,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     ch_transcripts          = Channel.empty()
 
     ch_redefined_bundle     = Channel.empty()
-    ch_coordinate_space     = Channel.value("microns")
+    ch_coordinate_space     = Channel.value("pixels")
 
     // filter transcripts.parquet based on thresholds
     if ( params.filter_transcripts ) {
@@ -59,7 +59,6 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
                                     30              // scale
                                 )
                             }
-
     BAYSOR_RUN ( ch_baysor_input )
     ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions )
 
@@ -68,20 +67,18 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     ch_imp_seg_inputs = ch_bundle_path
                             .combine(BAYSOR_RUN.out.segmentation, by: 0)
                             .map {
-                                meta, bundle, segmentation_outs ->
-                                def ( _meta, segmentation_csv, polygons2d ) = segmentation_outs
+                                meta, bundle, _segmentation_csv, polygons2d ->
                                 tuple (
                                     meta,                    // meta
                                     bundle,                  // bundle
                                     [],                      // coordinate_transform
-                                    [],                      // nuclei
-                                    [],                      // cells
-                                    segmentation_csv,        // transcript_assignment
-                                    polygons2d,              // viz_polygons
+                                    polygons2d,              // nuclei
+                                    polygons2d,              // cells
+                                    [],                      // transcript_assignment
+                                    [],                      // viz_polygons
                                     ch_coordinate_space.val  // units
                                 )
                             }
-
     XENIUMRANGER_IMPORT_SEGMENTATION (
         ch_imp_seg_inputs
     )

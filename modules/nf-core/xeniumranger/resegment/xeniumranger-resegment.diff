@@ -19,18 +19,21 @@ Changes in 'xeniumranger/resegment/main.nf':
      output:
 -    tuple val(meta), path("**/outs/**"), emit: outs
 -    path "versions.yml", emit: versions
-+    tuple val(meta), path("${meta.id}/outs"), emit: bundle
-+    path("versions.yml")                    , emit: versions
++    tuple val(meta), path("${prefix}/outs"), emit: bundle
++    path("versions.yml")                   , emit: versions
  
      when:
      task.ext.when == null || task.ext.when
-@@ -26,20 +22,17 @@
+@@ -24,22 +20,19 @@
+         error "XENIUMRANGER_RESEGMENT module does not support Conda. Please use Docker / Singularity / Podman instead."
+     }
      def args = task.ext.args ?: ""
-     def prefix = task.ext.prefix ?: "${meta.id}"
- 
+-    def prefix = task.ext.prefix ?: "${meta.id}"
+-
 -    def expansion_distance = expansion_distance ? "--expansion-distance=\"${expansion_distance}\"": ""
 -    def dapi_filter = dapi_filter ? "--dapi-filter=\"${dapi_filter}\"": ""
--
++    prefix = task.ext.prefix ?: "${meta.id}"
+ 
      // Do not use boundary stain in analysis, but keep default interior stain and DAPI
 -    def boundary_stain = boundary_stain ? "--boundary-stain=disable": ""
 +    def boundary_stain = "${params.boundary_stain}" ? "": "--boundary-stain=disable"
@@ -49,9 +52,13 @@ Changes in 'xeniumranger/resegment/main.nf':
          ${boundary_stain} \\
          ${interior_stain} \\
          --localcores=${task.cpus} \\
-@@ -59,7 +52,7 @@
+@@ -57,9 +50,10 @@
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+         error "XENIUMRANGER_RESEGMENT module does not support Conda. Please use Docker / Singularity / Podman instead."
      }
-     def prefix = task.ext.prefix ?: "${meta.id}"
+-    def prefix = task.ext.prefix ?: "${meta.id}"
++    prefix = task.ext.prefix ?: "${meta.id}"
++
      """
 -    mkdir -p "${prefix}/outs/"
 +    mkdir -p "${prefix}/outs"

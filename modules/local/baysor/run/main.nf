@@ -13,9 +13,9 @@ process BAYSOR_RUN {
 
     output:
     tuple val(meta),
-          path("${meta.id}/segmentation.csv"),
-          path("${meta.id}/segmentation_polygons_2d.json"), emit: segmentation
-    path("versions.yml")                                  , emit: versions
+          path("${prefix}/segmentation.csv"),
+          path("${prefix}/segmentation_polygons_2d.json"), emit: segmentation
+    path("versions.yml")                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,9 +27,9 @@ process BAYSOR_RUN {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def prior_seg = "${prior_segmentation}" ? "${prior_segmentation}" : ""
     def scaling_factor = scale ? "--scale=${scale}": ""
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
@@ -56,7 +56,7 @@ process BAYSOR_RUN {
         error "BAYSOR_RUN module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

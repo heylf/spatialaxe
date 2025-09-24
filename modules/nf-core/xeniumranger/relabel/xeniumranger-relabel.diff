@@ -17,13 +17,26 @@ Changes in 'xeniumranger/relabel/main.nf':
 -    tuple val(meta), path("**/outs/**"), emit: outs
 -    path "versions.yml", emit: versions
 +    tuple val(meta), path("${prefix}/outs"), emit: bundle
-+    path("versions.yml")                    , emit: versions
++    path("versions.yml")                   , emit: versions
  
      when:
      task.ext.when == null || task.ext.when
-@@ -45,7 +45,7 @@
+@@ -21,7 +21,7 @@
+         error "XENIUMRANGER_RELABEL module does not support Conda. Please use Docker / Singularity / Podman instead."
      }
-     def prefix = task.ext.prefix ?: "${meta.id}"
+     def args = task.ext.args ?: ''
+-    def prefix = task.ext.prefix ?: "${meta.id}"
++    prefix = task.ext.prefix ?: "${meta.id}"
+ 
+     """
+     xeniumranger relabel \\
+@@ -43,9 +43,10 @@
+     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+         error "XENIUMRANGER_RELABEL module does not support Conda. Please use Docker / Singularity / Podman instead."
+     }
+-    def prefix = task.ext.prefix ?: "${meta.id}"
++    prefix = task.ext.prefix ?: "${meta.id}"
++
      """
 -    mkdir -p "${prefix}/outs/"
 +    mkdir -p "${prefix}/outs"

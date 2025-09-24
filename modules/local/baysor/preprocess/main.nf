@@ -14,8 +14,8 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
 
     output:
     tuple val(meta),
-          path("${meta.id}/filtered_transcripts.parquet"), emit: transcripts_parquet
-    path("versions.yml")                                 , emit: versions
+          path("${prefix}/filtered_transcripts.parquet"), emit: transcripts_parquet
+    path("versions.yml")                                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -26,7 +26,7 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
         error "BAYSOR_PREPROCESS_TRANSCRIPTS module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     template 'preprocess_transcripts.py'
 
@@ -36,7 +36,7 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
         error "BAYSOR_PREPROCESS_TRANSCRIPTS module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

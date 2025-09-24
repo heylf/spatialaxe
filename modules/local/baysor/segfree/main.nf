@@ -9,7 +9,7 @@ process BAYSOR_SEGFREE {
     path(config)
 
     output:
-    tuple val(meta), path("${meta.id}/ncvs.loom"), emit: ncvs
+    tuple val(meta), path("${prefix}/ncvs.loom"), emit: ncvs
     path("versions.yml")                         , emit: versions
 
     when:
@@ -22,7 +22,7 @@ process BAYSOR_SEGFREE {
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
@@ -45,7 +45,7 @@ process BAYSOR_SEGFREE {
         error "BAYSOR_SEGFREE module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
