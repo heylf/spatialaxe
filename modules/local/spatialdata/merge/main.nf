@@ -5,12 +5,11 @@ process SPATIALDATA_MERGE {
     container "heylf/spatialdata:0.2.6"
 
     input:
-    tuple val(meta), path(ref_bundle, stageAs: "*")
-    path(add_bundle, stageAs: "*")
+    tuple val(meta), path(raw_bundle, stageAs: "*"), path(redefined_bundle, stageAs: "*")
 
     output:
-    tuple val(meta), path("spatialdata_merged"), emit: merged_bundle
-    path("versions.yml")                         , emit: versions
+    tuple val(meta), path("${prefix}/spatialdata_merged"), emit: merged_bundle
+    path("versions.yml")                                 , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,13 +21,21 @@ process SPATIALDATA_MERGE {
     }
 
     def args = task.ext.args ?: ''
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     template 'merge.py'
 
     stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        exit 1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    mkdir -p "spatialdata_merged/"
-    touch spatialdata_merged/fake_file.txt
+    mkdir -p "${prefix}/spatialdata_merged/"
+    touch "${prefix}/spatialdata_merged/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -14,7 +14,8 @@ class BaysorPreview():
             transcripts: Path,
             sampled_transcripts: Path,
             sample_fraction: float = 0.3,
-            random_state: int = 42
+            random_state: int = 42,
+            prefix: str = ""
         ) -> None:
         """
         Reads a csv file & randomly samples a fraction of rows,
@@ -28,8 +29,8 @@ class BaysorPreview():
         """
 
         random.seed(random_state)
-
-        with open(transcripts, mode='rt', newline='') as infile, \
+        output_path = f"{prefix}/{transcripts}"
+        with open(output_path, mode='rt', newline='') as infile, \
             open(sampled_transcripts, mode='wt', newline='') as outfile:
 
             reader = csv.reader(infile)
@@ -61,13 +62,15 @@ def main() -> None:
     """
     transcripts: str = "${transcripts}"
     sample_fraction: float = "${sample_fraction}"
+    prefix: str = "${meta.id}"
     sampled_transcripts: str = "sampled_transcripts.csv"
 
     # generate dataset
     BaysorPreview.generate_dataset (
         transcripts=transcripts,
         sampled_transcripts=sampled_transcripts,
-        sample_fraction=sample_fraction
+        sample_fraction=sample_fraction,
+        prefix=prefix
     )
 
     # generate versions.yml

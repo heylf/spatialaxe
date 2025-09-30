@@ -63,41 +63,41 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
 
 
     // run xeniumranger import-segmentation
-    cells = ch_updated_bundle.map { _meta, bundle ->
-        return [ bundle + "/cells.zarr.zip" ]
-    }
+    // cells = ch_updated_bundle.map { _meta, bundle ->
+    //     return [ bundle + "/cells.zarr.zip" ]
+    // }
 
-    if ( params.nucleus_segmentation_only ) {
+    // if ( params.nucleus_segmentation_only ) {
 
-        XENIUMRANGER_IMPORT_SEGMENTATION (
-            ch_updated_bundle,
-            [],
-            cells,
-            cells,
-            [],
-            [],
-            ch_coordinate_space
-        )
-        ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
+    //     XENIUMRANGER_IMPORT_SEGMENTATION (
+    //         ch_updated_bundle,
+    //         [],
+    //         cells,
+    //         cells,
+    //         [],
+    //         [],
+    //         ch_coordinate_space
+    //     )
+    //     ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
 
-        ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
+    //     ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
-    } else {
+    // } else {
 
-        XENIUMRANGER_IMPORT_SEGMENTATION (
-            ch_updated_bundle,
-            [],
-            [],
-            cells,
-            [],
-            [],
-            ch_coordinate_space
-        )
-        ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
+    //     XENIUMRANGER_IMPORT_SEGMENTATION (
+    //         ch_updated_bundle,
+    //         [],
+    //         [],
+    //         cells,
+    //         [],
+    //         [],
+    //         ch_coordinate_space
+    //     )
+    //     ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
 
-        ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
+    //     ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
-    }
+    // }
 
     emit:
 

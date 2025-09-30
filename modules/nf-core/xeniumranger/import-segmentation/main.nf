@@ -5,17 +5,18 @@ process XENIUMRANGER_IMPORT_SEGMENTATION {
     container "nf-core/xeniumranger:3.1.1"
 
     input:
-    tuple val(meta), path(xenium_bundle)
-    path(coordinate_transform)
-    path(nuclei)
-    path(cells)
-    path(transcript_assignment)
-    path(viz_polygons)
-    val(units)
+    tuple val(meta),
+          path(xenium_bundle),
+          path(coordinate_transform),
+          path(nuclei),
+          path(cells),
+          path(transcript_assignment),
+          path(viz_polygons),
+          val(units)
 
     output:
-    tuple val(meta), path("${meta.id}/outs"), emit: bundle
-    path("versions.yml")                    , emit: versions
+    tuple val(meta), path("${prefix}/outs"), emit: bundle
+    path("versions.yml")                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -26,7 +27,7 @@ process XENIUMRANGER_IMPORT_SEGMENTATION {
         error "XENIUMRANGER_IMPORT-SEGMENTATION module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     // image based segmentation options
     def coord_transform = coordinate_transform ? "--coordinate-transform=\"${coordinate_transform}\"": ""
@@ -69,9 +70,11 @@ process XENIUMRANGER_IMPORT_SEGMENTATION {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "XENIUMRANGER_IMPORT-SEGMENTATION module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    prefix = task.ext.prefix ?: "${meta.id}"
+    
     """
-    mkdir -p "${prefix}/outs/"
+    mkdir -p "${prefix}/outs"
     touch "${prefix}/outs/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml

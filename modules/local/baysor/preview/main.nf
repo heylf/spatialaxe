@@ -9,9 +9,8 @@ process BAYSOR_PREVIEW {
     path(config)
 
     output:
-    tuple val(meta), path("preview.html"), emit: preview_html
-    path("preview_preview_log.log")      , emit: preview_log
-    path("versions.yml")                 , emit: versions
+    tuple val(meta), path("${prefix}/preview.html"), emit: preview_html
+    path("versions.yml")                           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -21,13 +20,19 @@ process BAYSOR_PREVIEW {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "BAYSOR_PREVIEW module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
+
     def args = task.ext.args ?: ''
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    mkdir -p ${prefix}
+
     baysor preview \\
     ${transcripts} \\
     --config ${config} \\
     ${args}
+
+    mv preview.html ${prefix}/preview.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -41,9 +46,11 @@ process BAYSOR_PREVIEW {
         error "BAYSOR_PREVIEW module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    touch preview.html
-    touch preview_preview_log.log
+    mkdir -p ${prefix}
+    touch "${prefix}/preview.html"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

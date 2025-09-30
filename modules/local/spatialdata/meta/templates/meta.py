@@ -11,6 +11,7 @@ def main():
 
     spatialdata_bundle = "${spatialdata_bundle}"
     xenium_bundle = "${xenium_bundle}"
+    output_path = "${meta.id}"
     metadata = "${meta}"
     output = "spatialdata_meta"
 
@@ -44,7 +45,7 @@ def main():
         metadata_gene_panel = json.load(f)
         sdata['raw_table'].uns['gene_panel'] = json.dumps(metadata_gene_panel)
 
-    sdata.write(f"./{output}", overwrite=True, consolidate_metadata=True, format=None)
+    sdata.write(f"{output_path}/{output}", overwrite=True, consolidate_metadata=True, format=None)
 
     #Output version information
     with open("versions.yml", "w") as f:

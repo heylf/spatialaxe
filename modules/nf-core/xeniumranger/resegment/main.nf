@@ -8,8 +8,8 @@ process XENIUMRANGER_RESEGMENT {
     tuple val(meta), path(xenium_bundle)
 
     output:
-    tuple val(meta), path("${meta.id}/outs"), emit: bundle
-    path("versions.yml")                    , emit: versions
+    tuple val(meta), path("${prefix}/outs"), emit: bundle
+    path("versions.yml")                   , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,7 +20,7 @@ process XENIUMRANGER_RESEGMENT {
         error "XENIUMRANGER_RESEGMENT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ""
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     // Do not use boundary stain in analysis, but keep default interior stain and DAPI
     def boundary_stain = "${params.boundary_stain}" ? "": "--boundary-stain=disable"
@@ -50,9 +50,10 @@ process XENIUMRANGER_RESEGMENT {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "XENIUMRANGER_RESEGMENT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    mkdir -p "${prefix}/outs/"
+    mkdir -p "${prefix}/outs"
     touch "${prefix}/outs/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml

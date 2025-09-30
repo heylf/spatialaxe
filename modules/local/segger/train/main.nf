@@ -8,25 +8,26 @@ process SEGGER_TRAIN {
     tuple val(meta), path(dataset_dir)
 
     output:
-    tuple val(meta), path("${meta.id}_trained_models"), emit: trained_models
-    path("versions.yml")                              , emit: versions
+    tuple val(meta), path("${prefix}/trained_models"), emit: trained_models
+    path("versions.yml")                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
+    // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def script_path = "/workspace/segger_dev/src/segger/cli/train_model.py"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     python3 ${script_path} \\
         --dataset_dir ${dataset_dir} \\
-        --models_dir ${prefix}_trained_models \\
+        --models_dir ${prefix}/trained_models \\
         --sample_tag ${prefix} \\
         --batch_size ${params.batch_size_train} \\
         --max_epochs ${params.max_epochs} \\
@@ -42,10 +43,16 @@ process SEGGER_TRAIN {
     """
 
     stub:
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
+    prefix = task.ext.prefix ?: "${meta.id}"
+
     """
-    mkdir -p ${prefix}_trained_models/
-    touch ${prefix}_trained_models/fakefile.txt
+    mkdir -p ${prefix}/trained_models/
+    touch ${prefix}/trained_models/fakefile.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

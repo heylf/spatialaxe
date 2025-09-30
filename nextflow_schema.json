@@ -46,7 +46,8 @@
                 },
                 "qupath_polygons": {
                     "type": "string",
-                    "description": "Polygon segmentation results in GeoJSON format from QuPath."
+                    "description": "Path to qupath segmentation file in GeoJSON format.",
+                    "format": "file-path"
                 },
                 "alignment_csv": {
                     "type": "string",
@@ -61,6 +62,21 @@
                 "segmentation_mask": {
                     "type": "string",
                     "description": "Prior segmentation mask from other segmentation methods.",
+                    "format": "file-path"
+                },
+                "probes_fasta": {
+                    "type": "string",
+                    "description": "Fasta file for the probe sequences used in the xenium experiment.",
+                    "format": "file-path"
+                },
+                "reference_annotations": {
+                    "type": "string",
+                    "description": "Path to the directory containing genomic features (.gff) and fasta (.fa) files used as reference annotations.",
+                    "format": "file-path"
+                },
+                "gene_synonyms": {
+                    "type": "string",
+                    "description": "Gene synonyms that may have been counted as off-targets but simply differ in name.",
                     "format": "file-path"
                 },
                 "email": {
@@ -242,6 +258,21 @@
                 "cc_analysis": {
                     "type": "boolean",
                     "description": "Whether to use connected components for grouping transcripts without direct nucleus association",
+                    "default": false
+                },
+                "buffer_samples": {
+                    "type": "boolean",
+                    "description": "Process only one sample at a time from a multi-sample samplesheet.",
+                    "default": false
+                },
+                "buffer_size": {
+                    "type": "integer",
+                    "description": "Number of sample(s) to process at a time from a multi-sample samplesheet. Works if buffered_samples is true.",
+                    "default": 1
+                },
+                "restrict_concurrency": {
+                    "type": "boolean",
+                    "description": "Restrict parallelizing a process. Eg. restrict running cellpose cell and nuclei segmentation together if the resources are limited.",
                     "default": false
                 }
             }

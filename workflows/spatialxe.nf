@@ -40,7 +40,7 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE } from '../subworkflo
 include { SPATIALDATA_WRITE_META_MERGE } from '../subworkflows/local/spatialdata_write_meta_merge/main'
 
 // TODO qc layer subworkflows
-
+include { OPT_FLIP_TRACK_STAT } from '../subworkflows/local/opt_flip_track_stat/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -61,21 +61,24 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    ch_versions            = Channel.empty()
+    ch_versions              = Channel.empty()
 
-    ch_input               = Channel.empty()
-    ch_bundle              = Channel.empty()
-    ch_config              = Channel.empty()
-    ch_features            = Channel.empty()
-    ch_raw_bundle          = Channel.empty()
-    ch_gene_panel          = Channel.empty()
-    ch_bundle_path         = Channel.empty()
-    ch_multiqc_files       = Channel.empty()
-    ch_morphology_image    = Channel.empty()
-    ch_redefined_bundle    = Channel.empty()
-    ch_coordinate_space    = Channel.empty()
-    ch_transcripts_parquet = Channel.empty()
-
+    ch_input                 = Channel.empty()
+    ch_bundle                = Channel.empty()
+    ch_config                = Channel.empty()
+    ch_features              = Channel.empty()
+    ch_raw_bundle            = Channel.empty()
+    ch_gene_panel            = Channel.empty()
+    ch_bundle_path           = Channel.empty()
+    ch_qupath_polygons       = Channel.empty()
+    ch_gene_synonyms         = Channel.empty()
+    ch_multiqc_files         = Channel.empty()
+    ch_morphology_image      = Channel.empty()
+    ch_redefined_bundle      = Channel.empty()
+    ch_coordinate_space      = Channel.empty()
+    ch_panel_probes_fasta    = Channel.empty()
+    ch_transcripts_parquet   = Channel.empty()
+    ch_reference_annotations = Channel.empty()
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -104,10 +107,19 @@ workflow SPATIALXE {
             }
             .set { ch_input }
 
-    } else {
+    } else { // for all other profile runs
 
-        // for all other profile runs
-        ch_input = ch_samplesheet
+        // check if samples are buffered
+        if ( params.buffer_samples ) {
+            ch_input = ch_samplesheet.buffer ( size: params.buffer_size )
+                                    .map
+                                    { buffered_sample ->
+                                        def (meta, bundle, tif) = buffered_sample[0]
+                                        tuple(meta, bundle, tif)
+                                    }
+        } else {
+            ch_input = ch_samplesheet
+        }
     }
 
     // path to bundle input
@@ -137,13 +149,13 @@ workflow SPATIALXE {
     ch_config = Channel.fromPath (
         "${projectDir}/assets/config/xenium.toml",
         checkIfExists: true
-    )
+    ).flatten()
 
     // get segmentation mask if provided with --segmentation_mask for the baysor method
     if ( params.segmentation_mask ) {
         ch_segmentation_mask = Channel.fromPath (
             params.segmentation_mask, checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get a list of features if provided with the --features for the ficture method
@@ -151,7 +163,7 @@ workflow SPATIALXE {
         ch_features = Channel.fromPath (
             params.features,
             checkIfExists: true
-        )
+        ).flatten()
     }
 
     // get custom cellpose model if provided with the --cellpose_model for the cellpose method
@@ -159,7 +171,39 @@ workflow SPATIALXE {
         ch_features = Channel.fromPath (
             params.cellpose_model,
             checkIfExists: true
-        )
+        ).flatten()
+    }
+
+    // get panel probes fasta for off-target-probe tracking
+    if ( params.probes_fasta ) {
+        ch_panel_probes_fasta = Channel.fromPath (
+            params.probes_fasta,
+            checkIfExists: true
+        ).flatten()
+    }
+
+    // get reference annotation files (gff,fa) for off-target-probe tracking
+    if ( params.reference_annotations ) {
+        ch_reference_annotations = Channel.fromPath (
+            "${params.reference_annotations}/*.{fa,gff}".toString(),
+            checkIfExists: true
+        ).flatten()
+    }
+
+    // get gene synonyms for off-target-probe tracking
+    if ( params.gene_synonyms ) {
+        ch_gene_synonyms = Channel.fromPath (
+            params.gene_synonyms,
+            checkIfExists: true
+        ).flatten()
+    }
+
+    // get qupath ploygons
+    if ( params.qupath_polygons ) {
+        ch_qupath_polygons = Channel.fromPath (
+            "${params.qupath_polygons}/*.geojson",
+            checkIfExists: true
+        ).flatten()
     }
 
     // get gene_panel.json if provided with --gene_panel, sets relabel_genes to true
@@ -169,7 +213,7 @@ workflow SPATIALXE {
         ch_gene_panel = Channel.fromPath (
             params.gene_panel,
             checkIfExists: true
-        )
+        ).flatten()
 
     } else {
 
@@ -216,7 +260,6 @@ workflow SPATIALXE {
         )
     }
 
-
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         SPATIALXE - XENIUMRANGER LAYER
@@ -253,52 +296,40 @@ workflow SPATIALXE {
             ch_coordinate_space = CELLPOSE_BAYSOR_IMPORT_SEGMENTATION.out.coordinate_space
         }
 
-        // check it the provided method is part of the methods list
-        if ( params.method in params.image_seg_methods ) {
+        // run xeniumranger resegment with morphology_ome.tif
+        if ( params.method == 'xeniumranger' ) {
 
-            // run xeniumranger resegment with morphology_ome.tif
-            if ( params.method == 'xeniumranger' ) {
+            XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF (
+                ch_bundle_path
+            )
+            ch_redefined_bundle = XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF.out.redefined_bundle
+            ch_coordinate_space = XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF.out.coordinate_space
+        }
 
-                XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF (
-                    ch_bundle_path
+        // run baysor run with morphology_ome.tif
+        if ( params.method == 'baysor' ) {
+
+            if ( params.segmentation_mask ) {
+                BAYSOR_RUN_PRIOR_SEGMENTATION_MASK (
+                    ch_bundle_path,
+                    ch_transcripts_parquet,
+                    ch_segmentation_mask,
+                    ch_config
                 )
-                ch_redefined_bundle = XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF.out.redefined_bundle
-                ch_coordinate_space = XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF.out.coordinate_space
             }
+            ch_redefined_bundle = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.redefined_bundle
+            ch_coordinate_space = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.coordinate_space
+        }
 
-            // run baysor run with morphology_ome.tif
-            if ( params.method == 'baysor' ) {
+        // run cellpose on the morphology_ome.tif
+        if ( params.method == 'cellpose' ) {
 
-                if ( params.segmentation_mask ) {
-                    BAYSOR_RUN_PRIOR_SEGMENTATION_MASK (
-                        ch_bundle_path,
-                        ch_transcripts_parquet,
-                        ch_segmentation_mask,
-                        ch_config
-                    )
-                } else {
-                    BAYSOR_RUN_PRIOR_SEGMENTATION_MASK (
-                        ch_bundle_path,
-                        ch_transcripts_parquet,
-                        [],
-                        ch_config
-                    )
-                }
-                ch_redefined_bundle = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.redefined_bundle
-                ch_coordinate_space = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.coordinate_space
-            }
-
-            // run cellpose on the morphology_ome.tif
-            if ( params.method == 'cellpose' ) {
-
-                CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF (
-                    ch_morphology_image,
-                    ch_bundle_path
-                )
-                ch_redefined_bundle = CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF.out.redefined_bundle
-                ch_coordinate_space = CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF.out.coordinate_space
-            }
-
+            CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF (
+                ch_morphology_image,
+                ch_bundle_path
+            )
+            ch_redefined_bundle = CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF.out.redefined_bundle
+            ch_coordinate_space = CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF.out.coordinate_space
         }
     }
 
@@ -309,8 +340,8 @@ workflow SPATIALXE {
     */
     if ( params.mode == 'coordinate' ) {
 
-        // trigger the default transcripts-based workflow if no method is specified
-        if ( !params.method ) {
+        // run proseg with transcripts.parquet if method = proseg or is not provided (default workflow)
+        if ( !params.method || params.method == 'proseg') {
 
             PROSEG_PRESET_PROSEG2BAYSOR (
                 ch_bundle_path,
@@ -321,47 +352,32 @@ workflow SPATIALXE {
 
         }
 
-        // check it the provided method is part of the methods list
-        if ( params.method in params.transcript_seg_methods ) {
+        // run segger with transcripts.parquet
+        if ( params.method == 'segger' ) {
 
-            // run proseg with transcripts.parquet
-            if ( params.method == 'proseg') {
-
-                PROSEG_PRESET_PROSEG2BAYSOR (
-                    ch_bundle_path,
-                    ch_transcripts_parquet
-                )
-                ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR.out.redefined_bundle
-                ch_coordinate_space = PROSEG_PRESET_PROSEG2BAYSOR.out.coordinate_space
-
-            }
-
-            // run segger with transcripts.parquet
-            if ( params.method == 'segger' ) {
-
-                SEGGER_CREATE_TRAIN_PREDICT (
-                    ch_bundle_path,
-                    ch_transcripts_parquet
-                )
-                ch_redefined_bundle = SEGGER_CREATE_TRAIN_PREDICT.out.redefined_bundle
-                ch_coordinate_space = SEGGER_CREATE_TRAIN_PREDICT.out.coordinate_space
-
-            }
-
-            // run baysor with transcripts.parquet
-            if ( params.method == 'baysor' ) {
-
-                BAYSOR_RUN_TRANSCRIPTS_PARQUET (
-                    ch_bundle_path,
-                    ch_transcripts_parquet,
-                    ch_config
-                )
-                ch_redefined_bundle = BAYSOR_RUN_TRANSCRIPTS_PARQUET.out.redefined_bundle
-                ch_coordinate_space = BAYSOR_RUN_TRANSCRIPTS_PARQUET.out.coordinate_space
-            }
+            SEGGER_CREATE_TRAIN_PREDICT (
+                ch_bundle_path,
+                ch_transcripts_parquet
+            )
+            ch_redefined_bundle = SEGGER_CREATE_TRAIN_PREDICT.out.redefined_bundle
+            ch_coordinate_space = SEGGER_CREATE_TRAIN_PREDICT.out.coordinate_space
 
         }
+
+        // run baysor with transcripts.parquet
+        if ( params.method == 'baysor' ) {
+
+            BAYSOR_RUN_TRANSCRIPTS_PARQUET (
+                ch_bundle_path,
+                ch_transcripts_parquet,
+                ch_config
+            )
+            ch_redefined_bundle = BAYSOR_RUN_TRANSCRIPTS_PARQUET.out.redefined_bundle
+            ch_coordinate_space = BAYSOR_RUN_TRANSCRIPTS_PARQUET.out.coordinate_space
+        }
+
     }
+
 
 
     /*
@@ -395,8 +411,8 @@ workflow SPATIALXE {
     */
     if ( params.mode == 'segfree' ) {
 
-        // trigger the default segfree workflow if no method is specified
-        if ( !params.method ) {
+        // trigger the default segfree workflow if no method or if the method is baysor
+        if ( !params.method || params.method == 'baysor' ) {
 
             BAYSOR_GENERATE_SEGFREE (
                 ch_transcripts_parquet,
@@ -404,26 +420,13 @@ workflow SPATIALXE {
             )
         }
 
-        // check it the provided method is part of the methods list
-        if ( params.method in params.segfree_methods ) {
+        // run ficture with transcripts.parquet
+        if ( params.method == 'ficture' ) {
 
-            // run baysor with transcripts.parquet
-            if ( params.method == 'baysor' ) {
-
-                BAYSOR_GENERATE_SEGFREE (
-                    ch_transcripts_parquet,
-                    ch_config
-                )
-            }
-
-            // run ficture with transcripts.parquet
-            if ( params.method == 'ficture' ) {
-
-                FICTURE_PREPROCESS_MODEL (
-                    ch_transcripts_parquet,
-                    ch_features
-                )
-            }
+            FICTURE_PREPROCESS_MODEL (
+                ch_transcripts_parquet,
+                ch_features
+            )
         }
     }
 
@@ -448,7 +451,7 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     ch_multiqc_config        = Channel.fromPath (
-        "$projectDir/assets/multiqc_config.yml",
+        "${projectDir}/assets/multiqc_config.yml",
         checkIfExists: true
     )
 
@@ -472,7 +475,7 @@ workflow SPATIALXE {
 
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
         file( params.multiqc_methods_description, checkIfExists: true ) :
-        file( "$projectDir/assets/methods_description_template.yml", checkIfExists: true )
+        file( "${projectDir}/assets/methods_description_template.yml", checkIfExists: true )
 
     ch_methods_description                = Channel.value (
         methodsDescriptionText ( ch_multiqc_custom_methods_description )
@@ -492,7 +495,7 @@ workflow SPATIALXE {
         file("${path}/*")
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix ( ch_redefined_bundle_files.collect() )
+    ch_multiqc_files = ch_multiqc_files.mix ( ch_redefined_bundle_files.flatten() )
 
     MULTIQC (
         ch_multiqc_files.collect(),

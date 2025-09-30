@@ -22,12 +22,8 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     ch_transcripts          = Channel.empty()
 
-    ch_segmentation         = Channel.empty()
-    ch_polygons2d           = Channel.empty()
-    ch_htmls                = Channel.empty()
-
     ch_redefined_bundle     = Channel.empty()
-    ch_coordinate_space     = Channel.value("microns")
+    ch_coordinate_space     = Channel.value("pixels")
 
     // filter transcripts.parquet based on thresholds
     if ( params.filter_transcripts ) {
@@ -49,41 +45,48 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
         ch_transcripts = ch_transcripts_parquet
     }
 
-    // run baysor with morphology.tiff
-    BAYSOR_RUN (
-        ch_transcripts,
-        ch_segmentation_mask,
-        ch_config,
-        30
-    )
+
+    // run baysor with prior segmentation mask
+    ch_baysor_input = ch_transcripts
+                            .combine(ch_segmentation_mask)
+                            .combine(ch_config)
+                            .map { meta, transcripts, mask, config ->
+                                tuple (
+                                    meta,           // meta
+                                    transcripts,    // transcripts
+                                    mask,           // prior_segmentation
+                                    config,         // config
+                                    30              // scale
+                                )
+                            }
+    BAYSOR_RUN ( ch_baysor_input )
     ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions )
 
-    ch_segmentation = BAYSOR_RUN.out.segmentation
-    ch_just_segmentation = ch_segmentation.map {
-        _meta, segmentation -> return [ segmentation ]
-    }
-    ch_polygons2d = BAYSOR_RUN.out.polygons2d
-    ch_htmls      = BAYSOR_RUN.out.htmls
 
-    // run xeniumranger import-segmentation
+    // run import-segmentation with baysor outs
+    ch_imp_seg_inputs = ch_bundle_path
+                            .combine(BAYSOR_RUN.out.segmentation, by: 0)
+                            .map {
+                                meta, bundle, _segmentation_csv, polygons2d ->
+                                tuple (
+                                    meta,                    // meta
+                                    bundle,                  // bundle
+                                    [],                      // coordinate_transform
+                                    polygons2d,              // nuclei
+                                    polygons2d,              // cells
+                                    [],                      // transcript_assignment
+                                    [],                      // viz_polygons
+                                    ch_coordinate_space.val  // units
+                                )
+                            }
     XENIUMRANGER_IMPORT_SEGMENTATION (
-        ch_bundle_path,
-        [],
-        [],
-        [],
-        ch_just_segmentation,
-        ch_polygons2d,
-        ch_coordinate_space
+        ch_imp_seg_inputs
     )
-    ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
+    ch_versions = ch_versions.mix ( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 
     ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle
 
     emit:
-
-    segmentation     = ch_segmentation        // channel: [ val(meta), ["segmentation.csv"] ]
-    polygons2d       = ch_polygons2d          // channel: [ ["segmentation_polygons_2d.json"] ]
-    htmls            = ch_htmls               // channel: [ ["*.html"] ]
 
     coordinate_space = ch_coordinate_space    // channel: [ "microns" ]
 

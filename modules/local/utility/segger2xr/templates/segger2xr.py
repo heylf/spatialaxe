@@ -44,16 +44,17 @@ def refine_transcripts(parquet_path: str) -> pd.DataFrame:
     return df
 
 
-def main(input_file: str) -> None:
+def main(input_file: str, prefix: str) -> None:
     transcripts = refine_transcripts(input_file)
-    transcripts.to_parquet("transcripts.parquet", engine="pyarrow")
+    transcripts.to_parquet(f"{prefix}/transcripts.parquet", engine="pyarrow")
 
 
 if __name__ == "__main__":
 
-    transcripts = "${transcripts}"
+    transcripts: str = "${transcripts}"
+    prefix: str = "${meta.id}"
 
-    main(input_file=transcripts)
+    main(input_file=transcripts, prefix=prefix)
 
     #Output versions.yml
     with open("versions.yml", "w") as f:

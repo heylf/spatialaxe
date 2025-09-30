@@ -10,7 +10,7 @@ def main():
     print("[START]")
 
     input_path = "${bundle}"
-    output_path = "."
+    output_path = "${meta.id}"
     outputfolder = "${outputfolder}"
     segmented_object = "${segmented_object}"
     coordinate_space = "${coordinate_space}"

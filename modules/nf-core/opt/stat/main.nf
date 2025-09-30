@@ -10,8 +10,8 @@ process OPT_STAT {
     path(gene_synonyms)
 
     output:
-    tuple val(meta), path("${meta.id}/collapsed_summary.tsv"), emit: summary
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("${prefix}/collapsed_summary.tsv"), emit: summary
+    path "versions.yml"                                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,8 +22,8 @@ process OPT_STAT {
         error "OPT_STAT module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def synonyms = gene_synonyms ? "-s ${gene_synonyms}": ""
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     opt \\
@@ -41,8 +41,12 @@ process OPT_STAT {
     """
 
     stub:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "OPT_STAT module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

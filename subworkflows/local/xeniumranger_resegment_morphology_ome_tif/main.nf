@@ -30,14 +30,24 @@ workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
     // adjust the nuclear expansion distance without altering nuclei detection
     if ( params.nucleus_segmentation_only ) {
 
+        ch_imp_seg_inputs = ch_bundle_path
+                                .combine(XENIUMRANGER_RESEGMENT.out.bundle, by:0)
+                                .combine(cells)
+                                .map {
+                                    meta, bundle, cells_zarr -> tuple (
+                                        meta,                    // meta
+                                        bundle,                  // bundle
+                                        [],                      // coordinate_transform
+                                        cells_zarr,              // nuclei
+                                        [],                      // cells
+                                        [],                      // transcript_assignment
+                                        [],                      // viz_polygons
+                                        ch_coordinate_space.val  // units
+                                    )
+                                }
+
         XENIUMRANGER_IMPORT_SEGMENTATION (
-            XENIUMRANGER_RESEGMENT.out.bundle,
-            [],
-            cells,
-            [],
-            [],
-            [],
-            ch_coordinate_space
+            ch_imp_seg_inputs
         )
         ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions )
 

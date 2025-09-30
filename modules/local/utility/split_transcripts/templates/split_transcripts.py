@@ -49,7 +49,8 @@ def generate_version_yml() -> None:
 def main(
     transcripts: str,
     x_bins: int = 10,
-    y_bins: int = 10
+    y_bins: int = 10,
+    prefix: str = ""
 ) -> None:
     """
     Generate splits
@@ -61,7 +62,7 @@ def main(
     tiles_df = make_tiles(df, x_bins, y_bins)
 
     # save parquet file
-    tiles_df.to_csv("splits.csv", index=False)
+    tiles_df.to_csv(f"{prefix}/splits.csv", index=False)
 
     # generate version yml
     generate_version_yml()
@@ -74,5 +75,6 @@ if __name__ == "__main__":
     transcripts: str = "${transcripts}"
     x_bins: int = "${x_bins}"
     y_bins: int = "${y_bins}"
+    prefix: str = "${prefix}"
 
     main(transcripts=transcripts, x_bins=x_bins, y_bins=y_bins)
