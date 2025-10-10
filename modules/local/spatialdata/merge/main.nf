@@ -1,15 +1,15 @@
 process SPATIALDATA_MERGE {
-    tag "$meta.id"
-    label 'process_low'
+    tag "${meta.id}"
+    label 'process_high_memory'
 
-    container "heylf/spatialdata:0.2.6"
+    container "khersameesh24/spatialdata:0.2.6"
 
     input:
     tuple val(meta), path(raw_bundle, stageAs: "*"), path(redefined_bundle, stageAs: "*")
 
     output:
     tuple val(meta), path("${prefix}/spatialdata_merged"), emit: merged_bundle
-    path("versions.yml")                                 , emit: versions
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -17,18 +17,18 @@ process SPATIALDATA_MERGE {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead."
+        exit(1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template 'merge.py'
+    template('merge.py')
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit 1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead."
+        exit(1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"
@@ -42,5 +42,4 @@ process SPATIALDATA_MERGE {
         spatialdata: \$(echo \$( python -c "import spatialdata; print(spatialdata.__version__)" 2>&1) )
     END_VERSIONS
     """
-
 }

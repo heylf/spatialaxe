@@ -1,21 +1,15 @@
 process BAYSOR_RUN {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     container "khersameesh24/baysor:0.7.1"
 
     input:
-    tuple val(meta),
-          path(transcripts),
-          path(prior_segmentation),
-          path(config),
-          val(scale)
+    tuple val(meta), path(transcripts), path(prior_segmentation), path(config), val(scale)
 
     output:
-    tuple val(meta),
-          path("${prefix}/segmentation.csv"),
-          path("${prefix}/segmentation_polygons_2d.json"), emit: segmentation
-    path("versions.yml")                                 , emit: versions
+    tuple val(meta), path("${prefix}/segmentation.csv"), path("${prefix}/segmentation_polygons_2d.json"), emit: segmentation
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,12 +17,12 @@ process BAYSOR_RUN {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "BAYSOR_RUN module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("BAYSOR_RUN module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
     def prior_seg = "${prior_segmentation}" ? "${prior_segmentation}" : ""
-    def scaling_factor = scale ? "--scale=${scale}": ""
+    def scaling_factor = scale ? "--scale=${scale}" : ""
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
@@ -53,7 +47,7 @@ process BAYSOR_RUN {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "BAYSOR_RUN module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("BAYSOR_RUN module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"

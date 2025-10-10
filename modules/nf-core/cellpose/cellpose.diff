@@ -1,14 +1,23 @@
 Changes in component 'nf-core/cellpose'
+'modules/nf-core/cellpose/meta.yml' is unchanged
 Changes in 'cellpose/main.nf':
 --- modules/nf-core/cellpose/main.nf
 +++ modules/nf-core/cellpose/main.nf
-@@ -6,12 +6,14 @@
+@@ -1,17 +1,20 @@
+ process CELLPOSE {
+-    tag "$meta.id"
+-    label 'process_medium'
++    tag "${meta.id}"
++    label 'process_high'
++    maxForks params.restrict_concurrency ? 1 : 0
+ 
+     container "docker.io/biocontainers/cellpose:3.1.0_cv1"
  
      input:
      tuple val(meta), path(image)
 -    path(model)
-+    val(model)
-+    val(maskname)
++    val model
++    val maskname
  
      output:
 -    tuple val(meta), path("*masks.tif") ,   emit: mask
@@ -16,53 +25,57 @@ Changes in 'cellpose/main.nf':
 -    path "versions.yml"                 ,   emit: versions
 +    tuple val(meta), path("${prefix}/*masks.tif"), emit: mask
 +    tuple val(meta), path("${prefix}/*flows.tif"), emit: flows, optional: true
-+    tuple val(meta), path("${prefix}/*seg.npy")  , emit: cells, optional: true
-+    path "versions.yml"                          , emit: versions
++    tuple val(meta), path("${prefix}/*seg.npy"), emit: cells, optional: true
++    path "versions.yml", emit: versions
  
      when:
      task.ext.when == null || task.ext.when
-@@ -19,37 +21,47 @@
+@@ -19,40 +22,49 @@
      script:
      // Exit if running this module with -profile conda / -profile mamba
      if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
 -        error "I did not manage to create a cellpose module in Conda that works in all OSes. Please use Docker / Singularity / Podman instead."
-+        error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
++        error("CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead.")
      }
      def args = task.ext.args ?: ''
 -    def prefix = task.ext.prefix ?: "${meta.id}"
-     def model_command = model ? "--pretrained_model $model" : ""
+-    def model_command = model ? "--pretrained_model $model" : ""
++    def model_command = model ? "--pretrained_model ${model}" : ""
 +    prefix = task.ext.prefix ?: "${meta.id}"
      """
      export OMP_NUM_THREADS=${task.cpus}
      export MKL_NUM_THREADS=${task.cpus}
 +    export NPY_PROMOTION_STATE=legacy
      cellpose \\
-         --image_path $image \\
+-        --image_path $image \\
++        --image_path ${image} \\
          --save_tif \\
-         $model_command \\
-         $args
- 
+-        $model_command \\
+-        $args
++        ${model_command} \\
++        ${args}
++
 +    mkdir -p ${prefix}
 +    mv *masks.tif ${prefix}/morphology.ome_${maskname}_masks.tif
-+
+ 
      cat <<-END_VERSIONS > versions.yml
      "${task.process}":
          cellpose: \$(cellpose --version | awk 'NR==2 {print \$3}')
      END_VERSIONS
      """
-+    
++
      stub:
      // Exit if running this module with -profile conda / -profile mamba
      if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
 -        error "I did not manage to create a cellpose module in Conda that works in all OSes. Please use Docker / Singularity / Podman instead."
-+        error "CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead."
++        error("CELLPOSE module does not support conda. Please use Docker / Singularity / Podman instead.")
      }
 -    def prefix = task.ext.prefix ?: "${meta.id}"
-+    
++
      def name = image.name
      def base = name.lastIndexOf('.') != -1 ? name[0..name.lastIndexOf('.') - 1] : name
 +    prefix = task.ext.prefix ?: "${meta.id}"
-+    
++
      """
 +    mkdir -p ${prefix}
 +    touch ${prefix}/morphology.ome_${maskname}_masks.tif
@@ -74,9 +87,11 @@ Changes in 'cellpose/main.nf':
      "${task.process}":
          cellpose: \$(cellpose --version | awk 'NR==2 {print \$3}')
      END_VERSIONS
+     """
+-
+ }
 
-'modules/nf-core/cellpose/meta.yml' is unchanged
-'modules/nf-core/cellpose/tests/main.nf.test' is unchanged
 'modules/nf-core/cellpose/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/cellpose/tests/main.nf.test' is unchanged
 'modules/nf-core/cellpose/tests/nextflow_wflows.config' is unchanged
 ************************************************************

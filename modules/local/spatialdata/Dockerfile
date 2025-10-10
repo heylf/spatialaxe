@@ -7,7 +7,9 @@ LABEL authors="Florian Heyl" \
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 # Set the environment variable NUMBA_CACHE_DIR
-ENV NUMBA_CACHE_DIR '/tmp'
+ENV NUMBA_CACHE_DIR='tmp'
+ENV MPLCONFIGDIR='tmp/matplotlib'
+ENV XDG_CACHE_HOME='tmp'
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
