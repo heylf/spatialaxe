@@ -35,14 +35,14 @@ process PROSEG {
         --${params.format} \\
         ${transcripts} \\
         --nthreads ${task.cpus} \\
-        --output-expected-counts "${prefix}/expected-counts.csv.gz" \\
-        --output-cell-metadata "${prefix}/cell-metadata.csv.gz" \\
-        --output-transcript-metadata "${prefix}/transcript-metadata.csv.gz" \\
-        --output-gene-metadata "${prefix}/gene-metadata.csv.gz" \\
-        --output-rates "${prefix}/rates.csv.gz" \\
-        --output-cell-polygons "${prefix}/cell-polygons.geojson.gz" \\
-        --output-cell-polygon-layers "${prefix}/cell-polygons-layers.geojson.gz" \\
-        --output-cell-hulls "${prefix}/cell-hulls.geojson.gz" \\
+        --output-expected-counts ${prefix}/expected-counts.csv.gz \\
+        --output-cell-metadata ${prefix}/cell-metadata.csv.gz \\
+        --output-transcript-metadata ${prefix}/transcript-metadata.csv.gz \\
+        --output-gene-metadata ${prefix}/gene-metadata.csv.gz \\
+        --output-rates ${prefix}/rates.csv.gz \\
+        --output-cell-polygons ${prefix}/cell-polygons.geojson.gz \\
+        --output-cell-polygon-layers ${prefix}/cell-polygons-layers.geojson.gz \\
+        --output-cell-hulls ${prefix}/cell-hulls.geojson.gz \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml

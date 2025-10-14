@@ -7,6 +7,7 @@ include { BAYSOR_RUN                       } from '../../../modules/local/baysor
 include { CELLPOSE as CELLPOSE_CELLS       } from '../../../modules/nf-core/cellpose/main'
 include { CELLPOSE as CELLPOSE_NUCLEI      } from '../../../modules/nf-core/cellpose/main'
 include { BAYSOR_PREPROCESS_TRANSCRIPTS    } from '../../../modules/local/baysor/preprocess/main'
+include { RESIZE_TIF                       } from '../../../modules/local/utility/resize_tif/main'
 include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeniumranger/import-segmentation/main'
 
 workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
