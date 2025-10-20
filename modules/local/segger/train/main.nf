@@ -1,5 +1,5 @@
 process SEGGER_TRAIN {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     container "khersameesh24/segger:0.1.0"
@@ -9,7 +9,7 @@ process SEGGER_TRAIN {
 
     output:
     tuple val(meta), path("${prefix}/trained_models"), emit: trained_models
-    path("versions.yml")                             , emit: versions
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -17,7 +17,7 @@ process SEGGER_TRAIN {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
@@ -45,7 +45,7 @@ process SEGGER_TRAIN {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("SEGGER_TRAIN module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"

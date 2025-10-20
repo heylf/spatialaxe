@@ -1,5 +1,5 @@
 process SEGGER_CREATE_DATASET {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     container "khersameesh24/segger:0.1.0"
@@ -9,7 +9,7 @@ process SEGGER_CREATE_DATASET {
 
     output:
     tuple val(meta), path("${prefix}/"), emit: datasetdir
-    path("versions.yml")               , emit: versions
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -17,7 +17,7 @@ process SEGGER_CREATE_DATASET {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
@@ -25,8 +25,8 @@ process SEGGER_CREATE_DATASET {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     // check for platform values
-    if ( !(params.format in ['xenium']) ) {
-        error "${params.format} is an invalid platform type."
+    if (!(params.format in ['xenium'])) {
+        error("${params.format} is an invalid platform type.")
     }
 
     """
@@ -48,7 +48,7 @@ process SEGGER_CREATE_DATASET {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("SEGGER_CREATE_DATASET module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"

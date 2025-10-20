@@ -1,18 +1,18 @@
 process SEGGER_PREDICT {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_gpu'
 
     container "khersameesh24/segger:0.1.0"
 
     input:
     tuple val(meta), path(segger_dataset)
-    path(models_dir)
-    path(transcripts)
+    path models_dir
+    path transcripts
 
     output:
-    tuple val(meta), path("${prefix}/benchmarks_dir")                             , emit: benchmarks
+    tuple val(meta), path("${prefix}/benchmarks_dir"), emit: benchmarks
     tuple val(meta), path("${prefix}/benchmarks_dir/*/segger_transcripts.parquet"), emit: transcripts
-    path("versions.yml")                                                          , emit: versions
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,7 +20,7 @@ process SEGGER_PREDICT {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
@@ -48,7 +48,7 @@ process SEGGER_PREDICT {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("SEGGER_PREDICT module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"

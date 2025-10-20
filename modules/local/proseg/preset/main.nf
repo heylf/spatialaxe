@@ -1,5 +1,5 @@
 process PROSEG {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     container "khersameesh24/proseg:2.0.0"
@@ -8,10 +8,8 @@ process PROSEG {
     tuple val(meta), path(transcripts)
 
     output:
-    tuple val(meta),
-          path("${prefix}/cell-polygons.geojson.gz"),
-          path("${prefix}/transcript-metadata.csv.gz"), emit: seg_outs
-    path("versions.yml")                              , emit: versions
+    tuple val(meta), path("${prefix}/cell-polygons.geojson.gz"), path("${prefix}/transcript-metadata.csv.gz"), emit: seg_outs
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -19,15 +17,15 @@ process PROSEG {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "PROSEG module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("PROSEG module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
 
     // check for platform values
-    if ( !(params.format in ['xenium', 'cosmx', 'merscope']) ) {
-        error "${params.format} is an invalid platform type. Please specify xenium, cosmx, or merscope"
+    if (!(params.format in ['xenium', 'cosmx', 'merscope'])) {
+        error("${params.format} is an invalid platform type. Please specify xenium, cosmx, or merscope")
     }
 
     """
@@ -37,14 +35,14 @@ process PROSEG {
         --${params.format} \\
         ${transcripts} \\
         --nthreads ${task.cpus} \\
-        --output-expected-counts "${prefix}/expected-counts.csv.gz" \\
-        --output-cell-metadata "${prefix}/cell-metadata.csv.gz" \\
-        --output-transcript-metadata "${prefix}/transcript-metadata.csv.gz" \\
-        --output-gene-metadata "${prefix}/gene-metadata.csv.gz" \\
-        --output-rates "${prefix}/rates.csv.gz" \\
-        --output-cell-polygons "${prefix}/cell-polygons.geojson.gz" \\
-        --output-cell-polygon-layers "${prefix}/cell-polygons-layers.geojson.gz" \\
-        --output-cell-hulls "${prefix}/cell-hulls.geojson.gz" \\
+        --output-expected-counts ${prefix}/expected-counts.csv.gz \\
+        --output-cell-metadata ${prefix}/cell-metadata.csv.gz \\
+        --output-transcript-metadata ${prefix}/transcript-metadata.csv.gz \\
+        --output-gene-metadata ${prefix}/gene-metadata.csv.gz \\
+        --output-rates ${prefix}/rates.csv.gz \\
+        --output-cell-polygons ${prefix}/cell-polygons.geojson.gz \\
+        --output-cell-polygon-layers ${prefix}/cell-polygons-layers.geojson.gz \\
+        --output-cell-hulls ${prefix}/cell-hulls.geojson.gz \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
@@ -56,7 +54,7 @@ process PROSEG {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "PROSEG module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("PROSEG module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"

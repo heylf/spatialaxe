@@ -1,16 +1,15 @@
 process RESOLIFT {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_medium'
 
-    container "quay.io/khersameesh24/resolift:1.0.0"
+    container "khersameesh24/resolift:1.0.0"
 
     input:
     tuple val(meta), path(morphology_tiff)
 
     output:
-    tuple val(meta),
-          path("${prefix}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
-    path("versions.yml")                                , emit: versions
+    tuple val(meta), path("${prefix}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -18,7 +17,7 @@ process RESOLIFT {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "RESOLIFT module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("RESOLIFT module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     def args = task.ext.args ?: ''
@@ -41,7 +40,7 @@ process RESOLIFT {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "RESOLIFT module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("RESOLIFT module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     prefix = task.ext.prefix ?: "${meta.id}"
 

@@ -1,16 +1,16 @@
 process XENIUMRANGER_RELABEL {
-    tag "$meta.id"
+    tag "${meta.id}"
     label 'process_high'
 
     container "nf-core/xeniumranger:3.1.1"
 
     input:
-    tuple val(meta), path(xenium_bundle)
-    path(gene_panel)
+    tuple val(meta), path(xenium_bundle, stageAs: "bundle/")
+    path gene_panel
 
     output:
     tuple val(meta), path("${prefix}/outs"), emit: bundle
-    path("versions.yml")                   , emit: versions
+    path ("versions.yml"), emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -18,7 +18,7 @@ process XENIUMRANGER_RELABEL {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "XENIUMRANGER_RELABEL module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("XENIUMRANGER_RELABEL module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
@@ -41,7 +41,7 @@ process XENIUMRANGER_RELABEL {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error "XENIUMRANGER_RELABEL module does not support Conda. Please use Docker / Singularity / Podman instead."
+        error("XENIUMRANGER_RELABEL module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     prefix = task.ext.prefix ?: "${meta.id}"
 
