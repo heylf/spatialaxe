@@ -17,6 +17,7 @@ components:
   - cellpose
   - resolift
   - resize/tif
+  - get/transcripts/coordinates
   - baysor/preprocess/transcripts
   - baysor/run
   - xeniumranger/import/segmentation
