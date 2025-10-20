@@ -16,6 +16,7 @@ keywords:
 components:
   - cellpose
   - resolift
+  - resize/tif
   - baysor/preprocess/transcripts
   - baysor/run
   - xeniumranger/import/segmentation
