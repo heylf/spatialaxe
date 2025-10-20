@@ -16,7 +16,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     ch_morphology_image // channel: [ val(meta), ["path-to-morphology.ome.tif"] ]
     ch_bundle_path // channel: [ val(meta), ["path-to-xenium-bundle"] ]
     ch_transcripts_parquet // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
-    ch_experiment_metadata // channel: [ ["path-to-experiment.xenium"] ] 
+    ch_experiment_metadata // channel: [ ["path-to-experiment.xenium"] ]
     ch_config // channel: ["path-to-xenium.toml"]
 
     main:
