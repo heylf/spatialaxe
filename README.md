@@ -21,48 +21,73 @@
 
 ## Introduction
 
-**nf-core/spatialxe** is a bioinformatics pipeline that ...
+**nf-core/spatialxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium data. **The pipeline is currently under developement and not completed yet!**. The current plan for the pipeline implementation is shown in the metromap below. Please note that the pipeline steps and methods might change as we move forward in the development cycle.
 
-<!-- TODO nf-core:
-   Complete this sentence with a 2-3 sentence summary of what types of data the pipeline ingests, a brief overview of the
-   major pipeline sections and the types of output it produces. You're giving an overview to someone new
-   to nf-core here, in 15-20 seconds. For an example, see https://github.com/nf-core/rnaseq/blob/master/README.md#introduction
--->
-
-<!-- TODO nf-core: Include a figure that guides the user through the major workflow steps. Many nf-core
-     workflows use the "tube map" design for that. See https://nf-co.re/docs/guidelines/graphic_design/workflow_diagrams#examples for examples.   -->
-<!-- TODO nf-core: Fill in short bullet-pointed list of the default steps in the pipeline -->1. Read QC ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))2. Present QC for raw reads ([`MultiQC`](http://multiqc.info/))
+![nf-core/spatialxe-metromap](docs/images/spatialxe-metromap.png)
 
 ## Usage
 
-> [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/spatialxe/results).
 
-<!-- TODO nf-core: Describe the minimum required steps to execute the pipeline, e.g. how to prepare samplesheets.
-     Explain what rows and columns represent. For instance (please edit as appropriate):
+## Pipeline summary
 
-First, prepare a samplesheet with your input data that looks as follows:
+## Quick Start
 
 `samplesheet.csv`:
 
 ```csv
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
+sample,bundle,image
+test_sample,/path/to/xenium-bundle,/path/to/morphology.ome.tif
 ```
-
-Each row represents a fastq file (single-end) or a pair of fastq files (paired end).
-
--->
 
 Now, you can run the pipeline using:
 
-<!-- TODO nf-core: update the following command to include all required parameters for a minimal example -->
+## Run image-based segmentation mode <br>
+
+`CELLPOSE -> BAYSOR -> XR-IMPORT_SEGMENTATION -> SPATIALDATA -> QC`
 
 ```bash
 nextflow run nf-core/spatialxe \
    -profile <docker/singularity/.../institute> \
    --input samplesheet.csv \
-   --outdir <OUTDIR>
+   --outdir <OUTDIR> \
+   --mode <MODE>
+```
+
+## Run coordinate-based segmentation mode <br>
+
+`PROSEG -> PROSEG2BAYSOR -> XR-IMPORT_SEGMENTATION -> SPATIALDATA -> QC`
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode coordinate
+```
+
+## Run segfree mode <br>
+
+`BAYSOR_SEGFREE`
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode segfree
+```
+
+## Run preview mode <br>
+
+`BAYSOR_PREVIEW`
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode preview
 ```
 
 > [!WARNING]
@@ -78,11 +103,13 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/spatialxe was originally written by Sameesh Kher, Florian Heyl.
+nf-core/spatialxe was originally written by [Sameesh Kher](https://github.com/khersameesh24) and [Florian Heyl](https://github.com/heylf).
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
-<!-- TODO nf-core: If applicable, make list of people who have also contributed -->
+- Tobias Krause
+- Krešimir Beštak (kbestak)
+- Matthias Hörtenhuber (mashehu)
 
 ## Contributions and Support
 

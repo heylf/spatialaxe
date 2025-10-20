@@ -1,0 +1,60 @@
+process BAYSOR_PREVIEW {
+    tag "${meta.id}"
+    label 'process_high'
+
+    container "khersameesh24/baysor:0.7.1"
+
+    input:
+    tuple val(meta), path(transcripts)
+    path config
+
+    output:
+    tuple val(meta), path("${prefix}/preview.html"), emit: preview_html
+    path ("versions.yml"), emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error("BAYSOR_PREVIEW module does not support Conda. Please use Docker / Singularity / Podman instead.")
+    }
+
+    def args = task.ext.args ?: ''
+    prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    mkdir -p ${prefix}
+
+    baysor preview \\
+    ${transcripts} \\
+    --config ${config} \\
+    ${args}
+
+    mv preview.html ${prefix}/preview.html
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        baysor: 0.7.1
+    END_VERSIONS
+    """
+
+    stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error("BAYSOR_PREVIEW module does not support Conda. Please use Docker / Singularity / Podman instead.")
+    }
+
+    prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    mkdir -p ${prefix}
+    touch "${prefix}/preview.html"
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        baysor: 0.7.1
+    END_VERSIONS
+    """
+}
