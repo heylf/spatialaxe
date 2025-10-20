@@ -2,20 +2,22 @@
 // Run the cellpose, baysor and import-segmentation flow
 //
 
-include { RESOLIFT                         } from '../../../modules/local/resolift/main'
-include { BAYSOR_RUN                       } from '../../../modules/local/baysor/run/main'
-include { CELLPOSE as CELLPOSE_CELLS       } from '../../../modules/nf-core/cellpose/main'
-include { CELLPOSE as CELLPOSE_NUCLEI      } from '../../../modules/nf-core/cellpose/main'
-include { BAYSOR_PREPROCESS_TRANSCRIPTS    } from '../../../modules/local/baysor/preprocess/main'
-include { RESIZE_TIF                       } from '../../../modules/local/utility/resize_tif/main'
+include { RESOLIFT } from '../../../modules/local/resolift/main'
+include { BAYSOR_RUN } from '../../../modules/local/baysor/run/main'
+include { CELLPOSE as CELLPOSE_CELLS } from '../../../modules/nf-core/cellpose/main'
+include { CELLPOSE as CELLPOSE_NUCLEI } from '../../../modules/nf-core/cellpose/main'
+include { BAYSOR_PREPROCESS_TRANSCRIPTS } from '../../../modules/local/baysor/preprocess/main'
+include { RESIZE_TIF } from '../../../modules/local/utility/resize_tif/main'
+include { GET_TRANSCRIPTS_COORDINATES } from '../../../modules/local/utility/get_coordinates/main'
 include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeniumranger/import-segmentation/main'
 
 workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     take:
-    ch_morphology_image    // channel: [ val(meta), ["path-to-morphology.ome.tif"] ]
-    ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    ch_morphology_image // channel: [ val(meta), ["path-to-morphology.ome.tif"] ]
+    ch_bundle_path // channel: [ val(meta), ["path-to-xenium-bundle"] ]
     ch_transcripts_parquet // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
-    ch_config              // channel: ["path-to-xenium.toml"]
+    ch_experiment_metadata // channel: [ ["path-to-experiment.xenium"] ] 
+    ch_config // channel: ["path-to-xenium.toml"]
 
     main:
 
@@ -24,6 +26,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     ch_imp_seg_inputs = Channel.empty()
     ch_filtered_transcripts = Channel.empty()
     ch_coordinate_space = Channel.value("microns")
+
 
     cellpose_model = params.cellpose_model ? (Channel.fromPath(params.cellpose_model, checkIfExists: true)) : []
 
@@ -76,12 +79,28 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
         ch_transcripts = ch_transcripts_parquet
     }
 
+
     // run baysor with cellpose results
     if (params.nucleus_segmentation_only) {
 
+        // check if the size of the segmentation mask matches the max transcripts coordinate range
+        ch_resizetif_input = ch_transcripts
+            .combine(CELLPOSE_NUCLEI.out.mask, by: 0)
+            .combine(ch_experiment_metadata)
+            .map { meta, transcripts, mask, exp_meta ->
+                tuple(
+                    meta,
+                    transcripts,
+                    mask,
+                    exp_meta,
+                )
+            }
+        RESIZE_TIF(ch_resizetif_input)
+        ch_versions = ch_versions.mix(RESIZE_TIF.out.versions)
+
         // run baysor with nuclei mask
         ch_baysor_input = ch_transcripts
-            .combine(CELLPOSE_NUCLEI.out.mask, by: 0)
+            .combine(RESIZE_TIF.out.resized_mask, by: 0)
             .combine(ch_config)
             .map { meta, transcripts, mask, config ->
                 tuple(
@@ -97,9 +116,24 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     }
     else if (params.cell_segmentation_only) {
 
+        // check if the size of the segmentation mask matches the max transcripts coordinate range
+        ch_resizetif_input = ch_transcripts
+            .combine(CELLPOSE_CELLS.out.mask, by: 0)
+            .combine(ch_experiment_metadata)
+            .map { meta, transcripts, mask, exp_meta ->
+                tuple(
+                    meta,
+                    transcripts,
+                    mask,
+                    exp_meta,
+                )
+            }
+        RESIZE_TIF(ch_resizetif_input)
+        ch_versions = ch_versions.mix(RESIZE_TIF.out.versions)
+
         // run baysor with cell mask
         ch_baysor_input = ch_transcripts
-            .combine(CELLPOSE_CELLS.out.mask, by: 0)
+            .combine(RESIZE_TIF.out.resized_mask, by: 0)
             .combine(ch_config)
             .map { meta, transcripts, mask, config ->
                 tuple(
@@ -154,5 +188,5 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     emit:
     coordinate_space = ch_coordinate_space // channel: [ val("microns") ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
+    versions = ch_versions // channel: [ versions.yml ]
 }
