@@ -1,37 +1,14 @@
 {
-    "proseg - transcripts.csv": {
+    "versions": {
         "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test_run_proseg"
-                        },
-                        "cell-polygons.geojson.gz:md5,0a0720618807276a85df5db3b97b0126",
-                        "transcript-metadata.csv.gz:md5,b86b2693abd18359b9fc778219ef95e5"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
-                ],
-                "seg_outs": [
-                    [
-                        {
-                            "id": "test_run_proseg"
-                        },
-                        "cell-polygons.geojson.gz:md5,0a0720618807276a85df5db3b97b0126",
-                        "transcript-metadata.csv.gz:md5,b86b2693abd18359b9fc778219ef95e5"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
-                ]
-            }
+            [
+                "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
+            ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-21T01:01:08.449451798"
+        "timestamp": "2025-10-21T11:40:01.014191593"
     }
 }
