@@ -1,0 +1,83 @@
+{
+    "proseg - transcripts.csv": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "seg_outs": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-20T23:24:12.471950862"
+    },
+    "proseg stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "seg_outs": [
+                    
+                ],
+                "versions": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-20T23:24:24.563938979"
+    },
+    "proseg - transcripts.parquet": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_run_proseg"
+                        },
+                        "cell-polygons.geojson.gz:md5,08176ff87a14af7a005ea3042dd507bd",
+                        "transcript-metadata.csv.gz:md5,54a4c6cbc4e5a3af0329ea4878590175"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
+                ],
+                "seg_outs": [
+                    [
+                        {
+                            "id": "test_run_proseg"
+                        },
+                        "cell-polygons.geojson.gz:md5,08176ff87a14af7a005ea3042dd507bd",
+                        "transcript-metadata.csv.gz:md5,54a4c6cbc4e5a3af0329ea4878590175"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-20T23:48:59.153582813"
+    }
+}
