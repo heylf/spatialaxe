@@ -1,6 +1,6 @@
 process RESOLIFT {
     tag "${meta.id}"
-    label 'process_medium'
+    label 'process_low'
 
     container "khersameesh24/resolift:1.0.0"
 

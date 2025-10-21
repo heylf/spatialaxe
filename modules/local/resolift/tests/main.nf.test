@@ -12,25 +12,15 @@ nextflow_process {
     tag "unzip"
     config "./nextflow.config"
 
-    setup {
-
-            run("UNZIP") {
-                script "modules/nf-core/unzip/main.nf"
-                process {
-                    """
-                    input[0] = [[id: "test_run"], file('https://raw.githubusercontent.com/nf-core/test-datasets/spatialxe/Xenium_Prime_Mouse_Ileum_tiny_outs.zip', checkIfExists: true)]
-                    """
-                }
-            }
-    }
-
     test("resolift main") {
 
         when {
             process {
                 """
-                input[0] = Channel.of(
-                            [id: "test_run"]).combine(UNZIP.out.unzipped_archive.map { it[1] } + "/morphology_focus/morphology_focus_0000.ome.tif")
+                input[0] = [
+                    [ id:'test_run' ],
+                    file(params.modules_testdata_base_path + 'imaging/segmentation/nuclear_image.tif', checkIfExists: true),
+                ]
                 """
             }
         }
@@ -51,8 +41,10 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of(
-                            [id: "test_run"]).combine(UNZIP.out.unzipped_archive.map { it[1] } + "/morphology_focus/morphology_focus_0000.ome.tif")
+                input[0] = [
+                    [ id:'test_run' ],
+                    file(params.modules_testdata_base_path + 'imaging/segmentation/nuclear_image.tif', checkIfExists: true),
+                ]
                 """
             }
         }

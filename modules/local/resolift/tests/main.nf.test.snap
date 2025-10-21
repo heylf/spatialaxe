@@ -7,30 +7,30 @@
                         {
                             "id": "test_run"
                         },
-                        "test_run.tiff:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "morphology.ome.enhanced.tiff:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,e2a649848a8b90aecf354b1478c05450"
+                    "versions.yml:md5,e1555a510762d87bf0e7b61a25b3158a"
                 ],
-                "output": [
+                "enhanced_tiff": [
                     [
                         {
                             "id": "test_run"
                         },
-                        "test_run.tiff:md5,d41d8cd98f00b204e9800998ecf8427e"
+                        "morphology.ome.enhanced.tiff:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,e2a649848a8b90aecf354b1478c05450"
+                    "versions.yml:md5,e1555a510762d87bf0e7b61a25b3158a"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-03-25T15:17:43.654819314"
+        "timestamp": "2025-10-21T00:18:34.494214588"
     },
     "resolift main": {
         "content": [
@@ -40,29 +40,29 @@
                         {
                             "id": "test_run"
                         },
-                        "test_run.tiff:md5,45735fdfe69f69e6fb9556c317c17a7c"
+                        "morphology.ome.enhanced.tiff:md5,a9feec67b317d8e5c5c93bc45d5a8763"
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,e2a649848a8b90aecf354b1478c05450"
+                    "versions.yml:md5,e1555a510762d87bf0e7b61a25b3158a"
                 ],
-                "output": [
+                "enhanced_tiff": [
                     [
                         {
                             "id": "test_run"
                         },
-                        "test_run.tiff:md5,45735fdfe69f69e6fb9556c317c17a7c"
+                        "morphology.ome.enhanced.tiff:md5,a9feec67b317d8e5c5c93bc45d5a8763"
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,e2a649848a8b90aecf354b1478c05450"
+                    "versions.yml:md5,e1555a510762d87bf0e7b61a25b3158a"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "24.10.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-03-25T15:30:32.695757643"
+        "timestamp": "2025-10-21T00:18:27.340632206"
     }
 }
