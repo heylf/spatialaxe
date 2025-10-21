@@ -1,6 +1,6 @@
 process PROSEG {
     tag "${meta.id}"
-    label 'process_low'
+    label 'process_high'
 
     container "khersameesh24/proseg:2.0.0"
 

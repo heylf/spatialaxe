@@ -32,6 +32,39 @@
         },
         "timestamp": "2025-10-21T00:18:34.494214588"
     },
+    "resolift tif": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test_run"
+                        },
+                        "morphology.ome.enhanced.tiff:md5,a9feec67b317d8e5c5c93bc45d5a8763"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,e1555a510762d87bf0e7b61a25b3158a"
+                ],
+                "enhanced_tiff": [
+                    [
+                        {
+                            "id": "test_run"
+                        },
+                        "morphology.ome.enhanced.tiff:md5,a9feec67b317d8e5c5c93bc45d5a8763"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,e1555a510762d87bf0e7b61a25b3158a"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-21T15:00:40.809200602"
+    },
     "resolift main": {
         "content": [
             {

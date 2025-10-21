@@ -1,12 +1,11 @@
 process BAYSOR_PREVIEW {
     tag "${meta.id}"
-    label 'process_high'
+    label 'process_low'
 
     container "khersameesh24/baysor:0.7.1"
 
     input:
-    tuple val(meta), path(transcripts)
-    path config
+    tuple val(meta), path(transcripts), path(config)
 
     output:
     tuple val(meta), path("${prefix}/preview.html"), emit: preview_html
