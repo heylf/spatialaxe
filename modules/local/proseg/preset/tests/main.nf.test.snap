@@ -3,16 +3,28 @@
         "content": [
             {
                 "0": [
-                    
+                    [
+                        {
+                            "id": "test_run_proseg"
+                        },
+                        "cell-polygons.geojson.gz:md5,1ea2523bdc71760e5c8c3e3b45aa1bfd",
+                        "transcript-metadata.csv.gz:md5,eaf60cb1348d181001d4c82dfc6e78bb"
+                    ]
                 ],
                 "1": [
-                    
+                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
                 ],
                 "seg_outs": [
-                    
+                    [
+                        {
+                            "id": "test_run_proseg"
+                        },
+                        "cell-polygons.geojson.gz:md5,1ea2523bdc71760e5c8c3e3b45aa1bfd",
+                        "transcript-metadata.csv.gz:md5,eaf60cb1348d181001d4c82dfc6e78bb"
+                    ]
                 ],
                 "versions": [
-                    
+                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
                 ]
             }
         ],
@@ -20,7 +32,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-20T23:24:12.471950862"
+        "timestamp": "2025-10-21T00:39:25.11492323"
     },
     "proseg stub": {
         "content": [
