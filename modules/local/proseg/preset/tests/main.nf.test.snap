@@ -7,8 +7,8 @@
                         {
                             "id": "test_run_proseg"
                         },
-                        "cell-polygons.geojson.gz:md5,1ea2523bdc71760e5c8c3e3b45aa1bfd",
-                        "transcript-metadata.csv.gz:md5,eaf60cb1348d181001d4c82dfc6e78bb"
+                        "cell-polygons.geojson.gz:md5,0a0720618807276a85df5db3b97b0126",
+                        "transcript-metadata.csv.gz:md5,b86b2693abd18359b9fc778219ef95e5"
                     ]
                 ],
                 "1": [
@@ -19,8 +19,8 @@
                         {
                             "id": "test_run_proseg"
                         },
-                        "cell-polygons.geojson.gz:md5,1ea2523bdc71760e5c8c3e3b45aa1bfd",
-                        "transcript-metadata.csv.gz:md5,eaf60cb1348d181001d4c82dfc6e78bb"
+                        "cell-polygons.geojson.gz:md5,0a0720618807276a85df5db3b97b0126",
+                        "transcript-metadata.csv.gz:md5,b86b2693abd18359b9fc778219ef95e5"
                     ]
                 ],
                 "versions": [
@@ -32,64 +32,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-21T00:39:25.11492323"
-    },
-    "proseg stub": {
-        "content": [
-            {
-                "0": [
-                    
-                ],
-                "1": [
-                    
-                ],
-                "seg_outs": [
-                    
-                ],
-                "versions": [
-                    
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
-        },
-        "timestamp": "2025-10-20T23:24:24.563938979"
-    },
-    "proseg - transcripts.parquet": {
-        "content": [
-            {
-                "0": [
-                    [
-                        {
-                            "id": "test_run_proseg"
-                        },
-                        "cell-polygons.geojson.gz:md5,08176ff87a14af7a005ea3042dd507bd",
-                        "transcript-metadata.csv.gz:md5,54a4c6cbc4e5a3af0329ea4878590175"
-                    ]
-                ],
-                "1": [
-                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
-                ],
-                "seg_outs": [
-                    [
-                        {
-                            "id": "test_run_proseg"
-                        },
-                        "cell-polygons.geojson.gz:md5,08176ff87a14af7a005ea3042dd507bd",
-                        "transcript-metadata.csv.gz:md5,54a4c6cbc4e5a3af0329ea4878590175"
-                    ]
-                ],
-                "versions": [
-                    "versions.yml:md5,0984aeb6871c3863a77973545cc39fc2"
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
-        },
-        "timestamp": "2025-10-20T23:48:59.153582813"
+        "timestamp": "2025-10-21T01:01:08.449451798"
     }
 }
