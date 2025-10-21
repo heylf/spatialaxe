@@ -1,6 +1,6 @@
 process BAYSOR_PREVIEW {
     tag "${meta.id}"
-    label 'process_low'
+    label 'process_medium'
 
     container "khersameesh24/baysor:0.7.1"
 
