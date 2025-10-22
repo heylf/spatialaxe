@@ -228,6 +228,14 @@ def validateInputParameters() {
             log.warn("⚠️  Missing segmentation mask with `--segmentation_mask` when pipeline is run in ${params.mode} and with the ${params.method}. Running in coordinate mode.")
         }
     }
+
+    // check if required arguments are provided for off-target probe tracking
+    if (params.offtarget_probe_tracking) {
+        if(!params.probes_fasta || !params.reference_annotations || !params.gene_synonyms) {
+            log.error("❌ Error: Missing required param(s) for off-target-proebe detection.")
+            exit(1)
+        }
+    }
 }
 
 //
