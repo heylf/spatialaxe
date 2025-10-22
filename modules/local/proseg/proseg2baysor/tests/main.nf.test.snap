@@ -1,0 +1,60 @@
+{
+    "proseg2baysor - cell_polygons, transcript_metadata": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "versions": [
+                    
+                ],
+                "xr_metadata": [
+                    
+                ],
+                "xr_polygons": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-20T23:57:41.672841472"
+    },
+    "proseg2baysor stub": {
+        "content": [
+            {
+                "0": [
+                    
+                ],
+                "1": [
+                    
+                ],
+                "2": [
+                    
+                ],
+                "versions": [
+                    
+                ],
+                "xr_metadata": [
+                    
+                ],
+                "xr_polygons": [
+                    
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-20T23:57:48.940574255"
+    }
+}

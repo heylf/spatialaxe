@@ -1,0 +1,14 @@
+{
+    "versions": {
+        "content": [
+            [
+                "versions.yml:md5,0087a258a0d219ae51424cf117967391"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-21T20:10:24.383172648"
+    }
+}

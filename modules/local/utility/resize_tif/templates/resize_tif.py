@@ -120,4 +120,4 @@ if __name__ == "__main__":
     #Output versions.yml
     with open("versions.yml", "w") as f:
         f.write('"${task.process}":\\n')
-        f.write('resize_tif: "1.0.0"\\n')
+        f.write('RESIZE_TIF: "1.0.0"\\n')

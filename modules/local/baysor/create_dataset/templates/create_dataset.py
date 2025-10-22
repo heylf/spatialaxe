@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import csv
 import random
 from pathlib import Path
@@ -29,9 +30,10 @@ class BaysorPreview():
         """
 
         random.seed(random_state)
-        output_path = f"{prefix}/{transcripts}"
-        with open(output_path, mode='rt', newline='') as infile, \
-            open(sampled_transcripts, mode='wt', newline='') as outfile:
+        output_path = f"{prefix}/{sampled_transcripts}"
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(transcripts, mode='rt', newline='') as infile, \
+            open(output_path, mode='wt', newline='') as outfile:
 
             reader = csv.reader(infile)
             writer = csv.writer(outfile)
@@ -62,14 +64,14 @@ def main() -> None:
     """
     transcripts: str = "${transcripts}"
     sample_fraction: float = "${sample_fraction}"
-    prefix: str = "${meta.id}"
+    prefix: str = "${prefix}"
     sampled_transcripts: str = "sampled_transcripts.csv"
 
     # generate dataset
     BaysorPreview.generate_dataset (
         transcripts=transcripts,
         sampled_transcripts=sampled_transcripts,
-        sample_fraction=sample_fraction,
+        sample_fraction=float(sample_fraction),
         prefix=prefix
     )
 

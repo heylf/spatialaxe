@@ -31,6 +31,9 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args // array: List of positional nextflow CLI args
     outdir            // string: The output directory where the results will be saved
     input             // string: Path to input samplesheet
+    help              // boolean: Display help message and exit
+    help_full         // boolean: Show the full help message
+    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
@@ -49,10 +52,35 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    before_text = """
+-\033[2m----------------------------------------------------\033[0m-
+                                        \033[0;32m,--.\033[0;30m/\033[0;32m,-.\033[0m
+\033[0;34m        ___     __   __   __   ___     \033[0;32m/,-._.--~\'\033[0m
+\033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
+\033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
+                                        \033[0;32m`._,._,\'\033[0m
+\033[0;35m  nf-core/spatialxe ${workflow.manifest.version}\033[0m
+-\033[2m----------------------------------------------------\033[0m-
+"""
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+* The nf-core framework
+    https://doi.org/10.1038/s41587-020-0439-x
+
+* Software dependencies
+    https://github.com/nf-core/spatialxe/blob/master/CITATIONS.md
+"""
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --mode <MODE> --outdir <OUTDIR>"
+
     UTILS_NFSCHEMA_PLUGIN(
         workflow,
         validate_params,
         null,
+        help,
+        help_full,
+        show_hidden,
+        before_text,
+        after_text,
+        command,
     )
 
     //
@@ -200,6 +228,14 @@ def validateInputParameters() {
             log.warn("⚠️  Missing segmentation mask with `--segmentation_mask` when pipeline is run in ${params.mode} and with the ${params.method}. Running in coordinate mode.")
         }
     }
+
+    // check if required arguments are provided for off-target probe tracking
+    if (params.offtarget_probe_tracking) {
+        if(!params.probes_fasta || !params.reference_annotations || !params.gene_synonyms) {
+            log.error("❌ Error: Missing required param(s) for off-target-proebe detection.")
+            exit(1)
+        }
+    }
 }
 
 //
@@ -266,7 +302,9 @@ def validateXeniumBundle(ch_samplesheet) {
             }
         }
     }
-    log.info("INFO Xenium bundle validated        ✅ \n")
+    else {
+        log.info("INFO Xenium bundle validated        ✅ \n")
+    }
 }
 
 //

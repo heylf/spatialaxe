@@ -15,9 +15,17 @@ workflow BAYSOR_GENERATE_SEGFREE {
     ch_versions = Channel.empty()
 
     // run baysor segfree
+    ch_baysor_segfree_input = ch_transcripts_parquet
+                                .combine(ch_config)
+                                .map { meta, transcripts, config ->
+                                    tuple(
+                                        meta,
+                                        transcripts,
+                                        config
+                                    )
+                                }
     BAYSOR_SEGFREE(
-        ch_transcripts_parquet,
-        ch_config,
+        ch_baysor_segfree_input
     )
     ch_versions = ch_versions.mix(BAYSOR_SEGFREE.out.versions)
 

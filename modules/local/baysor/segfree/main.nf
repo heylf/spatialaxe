@@ -5,8 +5,7 @@ process BAYSOR_SEGFREE {
     container "khersameesh24/baysor:0.7.1"
 
     input:
-    tuple val(meta), path(transcripts)
-    path config
+    tuple val(meta), path(transcripts), path(config)
 
     output:
     tuple val(meta), path("${prefix}/ncvs.loom"), emit: ncvs
