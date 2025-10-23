@@ -26,7 +26,8 @@ workflow BAYSOR_GENERATE_PREVIEW {
     ch_versions = ch_versions.mix(BAYSOR_CREATE_DATASET.out.versions)
 
     // run baysor preview if param - generate_preview is true
-    ch_baysor_preview_input = ch_transcripts_parquet
+    ch_sampled_transcripts = BAYSOR_CREATE_DATASET.out.sampled_transcripts
+    ch_baysor_preview_input = ch_sampled_transcripts
                                 .combine(ch_config)
                                 .map { meta, transcripts, config ->
                                     tuple(

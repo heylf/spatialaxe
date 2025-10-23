@@ -2,22 +2,22 @@
 // Run the cellpose, baysor and import-segmentation flow
 //
 
-include { RESOLIFT } from '../../../modules/local/resolift/main'
-include { BAYSOR_RUN } from '../../../modules/local/baysor/run/main'
-include { CELLPOSE as CELLPOSE_CELLS } from '../../../modules/nf-core/cellpose/main'
-include { CELLPOSE as CELLPOSE_NUCLEI } from '../../../modules/nf-core/cellpose/main'
-include { BAYSOR_PREPROCESS_TRANSCRIPTS } from '../../../modules/local/baysor/preprocess/main'
-include { RESIZE_TIF } from '../../../modules/local/utility/resize_tif/main'
-include { GET_TRANSCRIPTS_COORDINATES } from '../../../modules/local/utility/get_coordinates/main'
+include { RESOLIFT                         } from '../../../modules/local/resolift/main'
+include { BAYSOR_RUN                       } from '../../../modules/local/baysor/run/main'
+include { CELLPOSE as CELLPOSE_CELLS       } from '../../../modules/nf-core/cellpose/main'
+include { CELLPOSE as CELLPOSE_NUCLEI      } from '../../../modules/nf-core/cellpose/main'
+include { BAYSOR_PREPROCESS_TRANSCRIPTS    } from '../../../modules/local/baysor/preprocess/main'
+include { RESIZE_TIF                       } from '../../../modules/local/utility/resize_tif/main'
+include { GET_TRANSCRIPTS_COORDINATES      } from '../../../modules/local/utility/get_coordinates/main'
 include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeniumranger/import-segmentation/main'
 
 workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     take:
-    ch_morphology_image // channel: [ val(meta), ["path-to-morphology.ome.tif"] ]
-    ch_bundle_path // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
-    ch_experiment_metadata // channel: [ ["path-to-experiment.xenium"] ]
-    ch_config // channel: ["path-to-xenium.toml"]
+    ch_morphology_image          // channel: [ val(meta), ["path-to-morphology.ome.tif"] ]
+    ch_bundle_path               // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    ch_transcripts_parquet       // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
+    ch_experiment_metadata       // channel: [ ["path-to-experiment.xenium"] ]
+    ch_config                    // channel: ["path-to-xenium.toml"]
 
     main:
 
@@ -186,7 +186,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     ch_versions = ch_versions.mix(XENIUMRANGER_IMPORT_SEGMENTATION.out.versions)
 
     emit:
-    coordinate_space = ch_coordinate_space // channel: [ val("microns") ]
+    coordinate_space = ch_coordinate_space                         // channel: [ val("microns") ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions = ch_versions // channel: [ versions.yml ]
+    versions = ch_versions                                         // channel: [ versions.yml ]
 }
