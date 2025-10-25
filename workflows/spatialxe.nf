@@ -71,6 +71,7 @@ workflow SPATIALXE {
     ch_raw_bundle = Channel.empty()
     ch_gene_panel = Channel.empty()
     ch_bundle_path = Channel.empty()
+    ch_preview_html = Channel.empty()
     ch_exp_metadata = Channel.empty()
     ch_gene_synonyms = Channel.empty()
     ch_multiqc_files = Channel.empty()
@@ -293,6 +294,7 @@ workflow SPATIALXE {
             ch_transcripts_parquet,
             ch_config,
         )
+        ch_preview_html = BAYSOR_GENERATE_PREVIEW.out.preview_html
     }
 
     /*
@@ -539,12 +541,11 @@ workflow SPATIALXE {
 
     if (params.mode == 'image' || params.mode == 'coordinate') {
 
-        // get all files from the raw bundle
-        ch_raw_bundle_files = ch_bundle.flatMap { _meta, path ->
-            file("${path}/*")
+        // get path to the raw bundle
+        ch_just_bundle_path = ch_bundle_path.map {
+            _meta, bundle_path -> return [bundle_path] 
         }
-
-        ch_multiqc_files = ch_multiqc_files.mix(ch_raw_bundle_files.flatten())
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
 
         MULTIQC_PRE_XR_RUN (
             ch_multiqc_files.collect(),
@@ -556,12 +557,12 @@ workflow SPATIALXE {
         )
         ch_multiqc_pre_xr_report = MULTIQC_PRE_XR_RUN.out.report.toList()
 
-        // get all files from the redefined bundle
-        ch_redefined_bundle_files = ch_redefined_bundle.flatMap { _meta, path ->
-            file("${path}/*")
+        // get path to the redefined bundle
+        ch_just_redefined_bundle_path = ch_redefined_bundle.map {
+            _meta, bundle_path -> return [bundle_path]
         }
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_redefined_bundle_files.flatten())
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_redefined_bundle_path.flatten())
 
         MULTIQC_POST_XR_RUN (
             ch_multiqc_files.collect(),
@@ -575,11 +576,17 @@ workflow SPATIALXE {
 
     } else {
 
-        ch_raw_bundle_path = ch_input.map { _meta, path, _image ->
-            return [path]
+        // get path to the raw bundle
+        ch_just_bundle_path = ch_bundle_path.map {
+            _meta, bundle_path -> return [bundle_path] 
         }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
 
-        ch_multiqc_files = ch_multiqc_files.mix(ch_raw_bundle_path.flatten())
+        // get the preview html file if preview mode is run
+        ch_just_preview_html = ch_preview_html.map { _meta, preview_html ->
+            return [preview_html]
+        }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_preview_html.flatten())
 
         MULTIQC (
             ch_multiqc_files.collect(),
