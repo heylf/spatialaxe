@@ -6,6 +6,8 @@
 
 // multiqc
 include { MULTIQC                                          } from '../modules/nf-core/multiqc/main'
+include { MULTIQC as MULTIQC_PRE_XR_RUN                    } from '../modules/nf-core/multiqc/main'
+include { MULTIQC as MULTIQC_POST_XR_RUN                   } from '../modules/nf-core/multiqc/main'
 include { paramsSummaryMultiqc                             } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 
 // nf-core functionality
@@ -69,9 +71,11 @@ workflow SPATIALXE {
     ch_raw_bundle = Channel.empty()
     ch_gene_panel = Channel.empty()
     ch_bundle_path = Channel.empty()
+    ch_preview_html = Channel.empty()
     ch_exp_metadata = Channel.empty()
     ch_gene_synonyms = Channel.empty()
     ch_multiqc_files = Channel.empty()
+    ch_multiqc_report = Channel.empty()
     ch_qupath_polygons = Channel.empty()
     ch_morphology_image = Channel.empty()
     ch_redefined_bundle = Channel.empty()
@@ -79,6 +83,8 @@ workflow SPATIALXE {
     ch_panel_probes_fasta = Channel.empty()
     ch_transcripts_parquet = Channel.empty()
     ch_reference_annotations = Channel.empty()
+    ch_multiqc_pre_xr_report = Channel.empty()
+    ch_multiqc_post_xr_report = Channel.empty()
 
 
     /*
@@ -127,6 +133,12 @@ workflow SPATIALXE {
 
     // path to bundle input
     ch_bundle_path = ch_input.map { meta, bundle, _image ->
+
+        def bundle_path = file(bundle)
+        if( !bundle_path.exists() ) {
+            log.error("❌ Check if the path to the xenium bundle exists.")
+            exit(1)
+        }
         return [meta, bundle]
     }
 
@@ -282,6 +294,7 @@ workflow SPATIALXE {
             ch_transcripts_parquet,
             ch_config,
         )
+        ch_preview_html = BAYSOR_GENERATE_PREVIEW.out.preview_html
     }
 
     /*
@@ -438,8 +451,6 @@ workflow SPATIALXE {
     }
 
 
-
-
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         SPATIALXE - SEGMENTATION-FREE LAYER
@@ -528,23 +539,70 @@ workflow SPATIALXE {
         )
     )
 
-    // get all files from the redefined bundle
-    ch_redefined_bundle_files = ch_redefined_bundle.flatMap { _meta, path ->
-        file("${path}/*")
+    if (params.mode == 'image' || params.mode == 'coordinate') {
+
+        // get path to the raw bundle
+        ch_just_bundle_path = ch_bundle_path.map {
+            _meta, bundle_path -> return [bundle_path] 
+        }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
+
+        MULTIQC_PRE_XR_RUN (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList(),
+            [],
+            [],
+        )
+        ch_multiqc_pre_xr_report = MULTIQC_PRE_XR_RUN.out.report.toList()
+
+        // get path to the redefined bundle
+        ch_just_redefined_bundle_path = ch_redefined_bundle.map {
+            _meta, bundle_path -> return [bundle_path]
+        }
+
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_redefined_bundle_path.flatten())
+
+        MULTIQC_POST_XR_RUN (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList(),
+            [],
+            [],
+        )
+        ch_multiqc_post_xr_report = MULTIQC_POST_XR_RUN.out.report.toList()
+
+    } else {
+
+        // get path to the raw bundle
+        ch_just_bundle_path = ch_bundle_path.map {
+            _meta, bundle_path -> return [bundle_path] 
+        }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
+
+        // get the preview html file if preview mode is run
+        ch_just_preview_html = ch_preview_html.map { _meta, preview_html ->
+            return [preview_html]
+        }
+        ch_multiqc_files = ch_multiqc_files.mix(ch_just_preview_html.flatten())
+
+        MULTIQC (
+            ch_multiqc_files.collect(),
+            ch_multiqc_config.toList(),
+            ch_multiqc_custom_config.toList(),
+            ch_multiqc_logo.toList(),
+            [],
+            [],
+        )
+        ch_multiqc_report = MULTIQC.out.report.toList()
+
     }
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_redefined_bundle_files.flatten())
-
-    MULTIQC(
-        ch_multiqc_files.collect(),
-        ch_multiqc_config.toList(),
-        ch_multiqc_custom_config.toList(),
-        ch_multiqc_logo.toList(),
-        [],
-        [],
-    )
-
     emit:
-    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
-    versions       = ch_versions // channel: [ path(versions.yml) ]
+    multiqc_pre_xr_report  = ch_multiqc_pre_xr_report  // channel: /path/to/multiqc_report.html
+    multiqc_post_xr_report = ch_multiqc_post_xr_report // channel: /path/to/multiqc_report.html
+    multiqc_report         = ch_multiqc_report         // channel: /path/to/multiqc_report.html
+    versions               = ch_versions               // channel: [ path(versions.yml) ]
 }

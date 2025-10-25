@@ -62,30 +62,30 @@
                 {
                     "directory": false,
                     "file": true,
-                    "freeSpace": 6039023616,
-                    "canonicalPath": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run/cell-polygons.geojson.gz",
-                    "usableSpace": 4304269312,
+                    "freeSpace": 6039748608,
+                    "canonicalPath": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run/cell-polygons.geojson.gz",
+                    "usableSpace": 4304994304,
                     "hidden": false,
                     "totalSpace": 33636024320,
-                    "path": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run/cell-polygons.geojson.gz",
+                    "path": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run/cell-polygons.geojson.gz",
                     "name": "cell-polygons.geojson.gz",
                     "absolute": true,
-                    "absolutePath": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run/cell-polygons.geojson.gz",
-                    "parent": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run"
+                    "absolutePath": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run/cell-polygons.geojson.gz",
+                    "parent": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run"
                 },
                 {
                     "directory": false,
                     "file": true,
-                    "freeSpace": 6039023616,
-                    "canonicalPath": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run/transcript-metadata.csv.gz",
-                    "usableSpace": 4304269312,
+                    "freeSpace": 6039748608,
+                    "canonicalPath": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run/transcript-metadata.csv.gz",
+                    "usableSpace": 4304994304,
                     "hidden": false,
                     "totalSpace": 33636024320,
-                    "path": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run/transcript-metadata.csv.gz",
+                    "path": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run/transcript-metadata.csv.gz",
                     "name": "transcript-metadata.csv.gz",
                     "absolute": true,
-                    "absolutePath": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run/transcript-metadata.csv.gz",
-                    "parent": "/workspaces/spatialxe/.nf-test/tests/114eea5799d89b6db58311660eae3dd6/output/proseg/preset/test_run"
+                    "absolutePath": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run/transcript-metadata.csv.gz",
+                    "parent": "/workspaces/spatialxe/.nf-test/tests/488e86689a494e1614a97a76fbae8637/output/proseg/preset/test_run"
                 },
                 "versions.yml:md5,ac3abfa01bfd5b6102495845cdc1b768",
                 "cell-polygons.geojson:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -110,6 +110,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-23T09:21:17.04547356"
+        "timestamp": "2025-10-23T09:20:49.255521686"
     }
 }

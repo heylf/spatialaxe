@@ -1,0 +1,59 @@
+{
+    "-profile test": {
+        "content": [
+            {
+                "UNTAR": {
+                    "untar": 1.34
+                },
+                "Workflow": {
+                    "nf-core/spatialxe": "v1.0dev"
+                }
+            },
+            [
+                "baysor",
+                "baysor/create_dataset",
+                "baysor/create_dataset/test_run",
+                "baysor/create_dataset/test_run/sampled_transcripts.csv",
+                "baysor/create_dataset/versions.yml",
+                "baysor/preview",
+                "baysor/preview/test_run",
+                "baysor/preview/test_run/preview.html",
+                "baysor/preview/versions.yml",
+                "multiqc",
+                "multiqc/multiqc_data",
+                "multiqc/multiqc_plots",
+                "multiqc/multiqc_report.html",
+                "pipeline_info",
+                "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml",
+                "spatialconverter",
+                "spatialconverter/parquet_to_csv",
+                "spatialconverter/parquet_to_csv/test_run",
+                "spatialconverter/parquet_to_csv/test_run/transcripts.parquet.csv",
+                "spatialconverter/parquet_to_csv/versions.yml",
+                "untar",
+                "untar/test_run",
+                "untar/test_run/experiment.xenium",
+                "untar/test_run/gene_panel.json",
+                "untar/test_run/morphology.ome.tif",
+                "untar/test_run/transcripts.parquet"
+            ],
+            [
+                "sampled_transcripts.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,ba06b22355a650c8b7118fcbc171162b",
+                "preview.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,dc0516ae9a452f7949e0e2e65b0201b0",
+                "transcripts.parquet.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,b7a26f2cff61d87a77f2db813dbc851a",
+                "experiment.xenium:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "gene_panel.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "morphology.ome.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-23T09:23:50.987857992"
+    }
+}
