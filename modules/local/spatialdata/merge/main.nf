@@ -6,9 +6,10 @@ process SPATIALDATA_MERGE {
 
     input:
     tuple val(meta), path(raw_bundle, stageAs: "*"), path(redefined_bundle, stageAs: "*")
+    val(outputfolder)
 
     output:
-    tuple val(meta), path("${prefix}/spatialdata_merged"), emit: merged_bundle
+    tuple val(meta), path("spatialdata/${prefix}/${outputfolder}"), emit: merged_bundle
     path ("versions.yml"), emit: versions
 
     when:
@@ -20,7 +21,6 @@ process SPATIALDATA_MERGE {
         exit(1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
-    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
 
     template('merge.py')
@@ -34,8 +34,8 @@ process SPATIALDATA_MERGE {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    mkdir -p "${prefix}/spatialdata_merged/"
-    touch "${prefix}/spatialdata_merged/fake_file.txt"
+    mkdir -p "spatialdata/${prefix}/${outputfolder}/"
+    touch "spatialdata/${prefix}/${outputfolder}/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -32,7 +32,7 @@
                 "mode": {
                     "type": "string",
                     "description": "Mode in which the pipeline is to be run. Either image-based segmentation, coordinate-based segmentation, segmentation-free analysis or data preview.",
-                    "enum": ["image", "coordinate", "segfree", "preview"]
+                    "enum": ["image", "coordinate", "segfree", "preview", "qc"]
                 },
                 "method": {
                     "type": "string",

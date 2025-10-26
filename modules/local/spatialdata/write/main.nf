@@ -6,13 +6,13 @@ process SPATIALDATA_WRITE {
 
     input:
     tuple val(meta), path(bundle, stageAs: "*")
-    val outputfolder
-    val segmented_object
-    val coordinate_space
+    val(outputfolder)
+    val(segmented_object)
+    val(coordinate_space)
 
     output:
-    tuple val(meta), path("${prefix}/${outputfolder}"), emit: spatialdata
-    path ("versions.yml"), emit: versions
+    tuple val(meta), path("spatialdata/${prefix}/${outputfolder}"), emit: spatialdata
+    path ("versions.yml")                                         , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,12 +33,11 @@ process SPATIALDATA_WRITE {
         exit(1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
-    def outdir = "${outputfolder}"
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    mkdir -p "${prefix}/${outdir}"
-    touch "${prefix}/${outdir}/fake_file.txt"
+    mkdir -p "spatialdata/${prefix}/${outputfolder}"
+    touch "spatialdata/${prefix}/${outputfolder}/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

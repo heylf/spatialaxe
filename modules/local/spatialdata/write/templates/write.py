@@ -10,8 +10,8 @@ def main():
     print("[START]")
 
     input_path = "${bundle}"
-    output_path = "${meta.id}"
-    outputfolder = "${outputfolder}"
+    prefix = "${prefix}"
+    output_folder = "${outputfolder}"
     segmented_object = "${segmented_object}"
     coordinate_space = "${coordinate_space}"
 
@@ -62,7 +62,7 @@ def main():
             n_jobs="${task.cpus}",
         )
         print(sd_xenium_obj)
-        sd_xenium_obj.write(f"{output_path}/{outputfolder}")
+        sd_xenium_obj.write(f"spatialdata/{prefix}/{output_folder}")
     else:
         sys.exit("[ERROR] Format not found")
 

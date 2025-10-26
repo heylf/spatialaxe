@@ -43,7 +43,7 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     // write spatialdata object from the raw xenium bundle
     SPATIALDATA_WRITE_RAW_BUNDLE(
         ch_bundle_path,
-        'spatialdata_raw',
+        'raw_bundle',
         ch_segmented_object,
         ch_coordinate_space,
     )
@@ -53,7 +53,7 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     // write spatialdata object after running IMP_SEG
     SPATIALDATA_WRITE_REDEFINED_BUNDLE(
         ch_redefined_bundle,
-        'spatialdata_redefined',
+        'redefined_bundle',
         ch_segmented_object,
         ch_coordinate_space,
     )
@@ -62,14 +62,16 @@ workflow SPATIALDATA_WRITE_META_MERGE {
 
     // merge raw & redefined spatialdata objects
     SPATIALDATA_MERGE_RAW_REDEFINED(
-        SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata.combine(ch_redefined_bundle, by: 0)
+        SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata.combine(ch_redefined_bundle, by: 0),
+        'merged_bundle'
     )
     ch_versions = ch_versions.mix(SPATIALDATA_MERGE_RAW_REDEFINED.out.versions)
 
 
     // write metadata with spatialdata object
     SPATIALDATA_META(
-        SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle.combine(ch_bundle_path, by: 0)
+        SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle.combine(ch_bundle_path, by: 0),
+        'metadata'
     )
     ch_versions = ch_versions.mix(SPATIALDATA_META.out.versions)
 

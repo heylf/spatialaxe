@@ -6,9 +6,10 @@ process SPATIALDATA_META {
 
     input:
     tuple val(meta), path(spatialdata_bundle, stageAs: "*"), path(xenium_bundle, stageAs: "*")
+    val(outputfolder)
 
     output:
-    tuple val(meta), path("${prefix}/spatialdata_meta"), emit: metadata
+    tuple val(meta), path("spatialdata/${prefix}/${outputfolder}"), emit: metadata
     path ("versions.yml"), emit: versions
 
     when:
@@ -33,8 +34,8 @@ process SPATIALDATA_META {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    mkdir -p "${prefix}/spatialdata_meta/"
-    touch "${prefix}/spatialdata_meta/fake_file.txt"
+    mkdir -p "spatialdata/${prefix}/${outputfolder}/"
+    touch "spatialdata/${prefix}/${outputfolder}/fake_file.txt"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

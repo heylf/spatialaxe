@@ -185,6 +185,12 @@ workflow PIPELINE_COMPLETION {
 //
 def validateInputParameters() {
 
+    // check if conda profile is provided
+    if (workflow.profile.contains('conda')) {
+        log.error("❌ Error: `nf-core/spatialxe` does not support running the pipeline with profile: conda ")
+        exit(1)
+    }
+
     // check if the samplesheet provided with the test config is assets/samplesheet.csv
     if (workflow.profile.contains('test') && !"${params.input}".endsWith("assets/samplesheet.csv")) {
         log.error("❌ Error: Use the samplesheet at: ${projectDir}/assets/samplesheet.csv with `--input` when running the pipeline in test profile.")
