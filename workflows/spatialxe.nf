@@ -543,7 +543,7 @@ workflow SPATIALXE {
 
         // get path to the raw bundle
         ch_just_bundle_path = ch_bundle_path.map {
-            _meta, bundle_path -> return [bundle_path] 
+            _meta, bundle_path -> return [bundle_path]
         }
         ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
 
@@ -578,7 +578,7 @@ workflow SPATIALXE {
 
         // get path to the raw bundle
         ch_just_bundle_path = ch_bundle_path.map {
-            _meta, bundle_path -> return [bundle_path] 
+            _meta, bundle_path -> return [bundle_path]
         }
         ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
 

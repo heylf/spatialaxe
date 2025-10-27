@@ -48,7 +48,7 @@ if __name__ == '__main__':
         preview_html,
         output_html
     )
-    
+
     #Output versions.yml
     with open("versions.yml", "w") as f:
         f.write('"${task.process}":\\n')

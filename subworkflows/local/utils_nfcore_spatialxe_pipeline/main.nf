@@ -326,7 +326,7 @@ def validateXeniumBundle(ch_samplesheet) {
                 exit(1)
             }
 
-            
+
         }
     }
     else {
