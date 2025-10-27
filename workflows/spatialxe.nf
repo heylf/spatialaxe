@@ -70,6 +70,7 @@ workflow SPATIALXE {
     ch_features = Channel.empty()
     ch_raw_bundle = Channel.empty()
     ch_gene_panel = Channel.empty()
+    ch_qc_reports = Channel.empty()
     ch_bundle_path = Channel.empty()
     ch_preview_html = Channel.empty()
     ch_exp_metadata = Channel.empty()
@@ -438,10 +439,11 @@ workflow SPATIALXE {
     */
 
     // check to run the qc layer
-    if (params.run_qc) {
+    if (params.mode == 'qc' || params.run_qc) {
 
         if (params.offtarget_probe_tracking) {
 
+            // run off-target probe tracking
             OPT_FLIP_TRACK_STAT(
                 ch_panel_probes_fasta,
                 ch_reference_annotations,
@@ -582,11 +584,29 @@ workflow SPATIALXE {
         }
         ch_multiqc_files = ch_multiqc_files.mix(ch_just_bundle_path.flatten())
 
-        // get the preview html file if preview mode is run
-        ch_just_preview_html = ch_preview_html.map { _meta, preview_html ->
-            return [preview_html]
+
+        // get the qc htmls if qc mode is run
+        if (params.mode == 'qc' || params.run_qc) {
+
+            // TODO collect all qc outs in a channel to be passed to multiqc
+            ch_just_qc_htmls = ch_qc_reports.map { _meta, qc_reports ->
+                return [qc_reports]
+            }
+            ch_multiqc_files = ch_multiqc_files.mix(ch_just_qc_htmls.flatten())
+
         }
-        ch_multiqc_files = ch_multiqc_files.mix(ch_just_preview_html.flatten())
+
+
+        // get the preview html if preview mode is run
+        if (params.mode == 'preview') {
+
+            ch_just_preview_html = ch_preview_html.map { _meta, preview_html ->
+                return [preview_html]
+            }
+            ch_multiqc_files = ch_multiqc_files.mix(ch_just_preview_html.flatten())
+
+        }
+
 
         MULTIQC (
             ch_multiqc_files.collect(),

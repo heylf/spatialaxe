@@ -236,11 +236,13 @@ def validateInputParameters() {
     }
 
     // check if required arguments are provided for off-target probe tracking
-    if (params.offtarget_probe_tracking) {
+    if (!params.mode && params.offtarget_probe_tracking) {
         if(!params.probes_fasta || !params.reference_annotations || !params.gene_synonyms) {
             log.error("❌ Error: Missing required param(s) for off-target-proebe detection.")
             exit(1)
         }
+        log.error("❌ Error: Use --mode qc and --offtraget_probe_tracking to run off-target probe tracking.")
+        exit(1)
     }
 }
 
