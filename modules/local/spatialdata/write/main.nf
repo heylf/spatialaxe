@@ -1,6 +1,6 @@
 process SPATIALDATA_WRITE {
     tag "${meta.id}"
-    label 'process_high_memory'
+    label 'process_high'
 
     container "khersameesh24/spatialdata:0.2.6"
 

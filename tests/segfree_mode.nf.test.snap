@@ -10,17 +10,18 @@
                 }
             },
             [
-                "baysor",
-                "baysor/segfree",
-                "baysor/segfree/test_run",
-                "baysor/segfree/test_run/ncvs.loom",
-                "baysor/segfree/versions.yml",
-                "multiqc",
-                "multiqc/multiqc_data",
-                "multiqc/multiqc_plots",
-                "multiqc/multiqc_report.html",
                 "pipeline_info",
                 "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml",
+                "segfree",
+                "segfree/baysor",
+                "segfree/baysor/segfree",
+                "segfree/baysor/segfree/test_run",
+                "segfree/baysor/segfree/test_run/ncvs.loom",
+                "segfree/baysor/segfree/versions.yml",
+                "segfree/multiqc",
+                "segfree/multiqc/multiqc_data",
+                "segfree/multiqc/multiqc_plots",
+                "segfree/multiqc/multiqc_report.html",
                 "untar",
                 "untar/test_run",
                 "untar/test_run/experiment.xenium",
@@ -31,6 +32,7 @@
             [
                 "ncvs.loom:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "versions.yml:md5,63bed288b51a17ff6d425b7920ae7f13",
+                "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "experiment.xenium:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gene_panel.json:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "morphology.ome.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -39,8 +41,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-23T09:24:05.726126177"
+        "timestamp": "2025-10-27T14:27:48.721989"
     }
 }
