@@ -3,14 +3,13 @@ nextflow_process {
     name "Test Process RESOLIFT"
     script "../main.nf"
     process "RESOLIFT"
+    config "./nextflow.config"
 
     tag "modules"
     tag "modules_local"
     tag "resolift"
     tag "segmentation"
     tag "cell_segmentation"
-    tag "unzip"
-    config "./nextflow.config"
 
     test("resolift tif") {
 

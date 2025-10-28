@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+
+import os
 import pandas as pd
 
 
@@ -48,11 +50,8 @@ def filter_transcripts (
     filtered_df.loc[neg_cell_row,"cell_id"] = 0
 
     # Output filtered transcripts to parquet
-    os.makedirs(os.path.dirname(prefix), exist_ok=True)
-    filtered_df.to_parquet(
-        '_'.join(["X"+str(min_x)+"-"+str(max_x), "Y"+str(min_y)+"-"+str(max_y), f"{prefix}/filtered_transcripts.parquet"]),
-        index=False
-    )
+    os.makedirs(prefix, exist_ok=True)
+    filtered_df.to_parquet(f"{prefix}/filtered_transcripts.parquet", index=False)
 
     return None
 
@@ -68,7 +67,7 @@ def generate_version_yml() -> None:
 if __name__ == "__main__":
 
     transcripts: str = "${transcripts}"
-    prefix: str = "${meta.id}"
+    prefix: str = "${prefix}"
 
     filter_transcripts (
         transcripts=transcripts,

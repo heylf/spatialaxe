@@ -3,6 +3,7 @@ nextflow_process {
     name "Test Process BAYSOR CREATE_DATASET"
     script "../main.nf"
     process "BAYSOR_CREATE_DATASET"
+    config "./nextflow.config"
 
     tag "modules"
     tag "modules_local"
