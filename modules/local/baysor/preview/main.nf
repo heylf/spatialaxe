@@ -29,9 +29,8 @@ process BAYSOR_PREVIEW {
     baysor preview \\
     ${transcripts} \\
     --config ${config} \\
+    --output ${prefix}/preview.html
     ${args}
-
-    mv preview.html ${prefix}/preview.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -49,7 +48,7 @@ process BAYSOR_PREVIEW {
 
     """
     mkdir -p ${prefix}
-    touch "${prefix}/preview.html"
+    touch ${prefix}/preview.html
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

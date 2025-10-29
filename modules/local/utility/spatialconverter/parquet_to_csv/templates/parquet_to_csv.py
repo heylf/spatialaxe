@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 
+
 import pandas as pd
 from pathlib import Path
 
 
-def convert_parquet (
-        transcripts: Path,
-        extension: str = '.csv',
-        prefix: str = ""
+def convert_parquet(
+    transcripts: Path,
+    extension: str = '.csv',
+    prefix: str = ""
     ) -> None:
 
-    df = pd.read_parquet(transcripts, engine = 'pyarrow')
+    df = pd.read_parquet(transcripts, engine='pyarrow')
 
-    prefix.mkdir(parents=True, exist_ok=True)
+    Path(prefix).mkdir(parents=True, exist_ok=True)
 
     if extension == ".gz":
         output = transcripts.replace(".parquet", ".csv.gz")
@@ -31,13 +32,13 @@ if __name__ == '__main__':
     prefix: str = "${meta.id}"
 
     # generate transcripts.csv(.gz)
-    convert_parquet (
+    convert_parquet(
         transcripts=transcripts,
         extension=extension,
         prefix=prefix
     )
 
-    #Output versions.yml
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write('spatialconverter: "v0.0.1"\\n')
+    # Output versions.yml
+    with open("versions.yml", "w", encoding='utf-8') as fobj:
+        fobj.write('"${task.process}":\\n')
+        fobj.write('spatialconverter: "v0.0.1"\\n')

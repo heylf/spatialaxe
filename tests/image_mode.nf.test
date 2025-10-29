@@ -1,9 +1,9 @@
 nextflow_pipeline {
 
-    name "Test pipeline - runs the default pipeline tests (coordinate mode)"
+    name "Test pipeline for the `image` mode, test run the cellpose->baysor subworkflow"
     script "../main.nf"
     tag "pipeline"
-    config "../conf/test.config"
+    config "../conf/test_image_mode.config"
 
     test("-profile test") {
 

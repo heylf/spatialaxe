@@ -94,7 +94,7 @@ workflow PIPELINE_INITIALISATION {
     // Custom validation for pipeline parameters
     //
     validateInputParameters()
-    log.info("INFO Pipeline parameters validated  ✅ ")
+    log.info("✅ Pipeline parameters validated.")
 
     //
     // Create channel from input file provided through params.input
@@ -107,7 +107,7 @@ workflow PIPELINE_INITIALISATION {
             }
             .set { ch_samplesheet }
 
-        log.info("INFO Samplesheet fields validated   ✅ ")
+        log.info("✅ Samplesheet validated.")
     }
     catch (Exception e) {
 
@@ -185,6 +185,12 @@ workflow PIPELINE_COMPLETION {
 //
 def validateInputParameters() {
 
+    // check if conda profile is provided
+    if (workflow.profile.contains('conda')) {
+        log.error("❌ Error: `nf-core/spatialxe` does not support running the pipeline with profile: conda ")
+        exit(1)
+    }
+
     // check if the samplesheet provided with the test config is assets/samplesheet.csv
     if (workflow.profile.contains('test') && !"${params.input}".endsWith("assets/samplesheet.csv")) {
         log.error("❌ Error: Use the samplesheet at: ${projectDir}/assets/samplesheet.csv with `--input` when running the pipeline in test profile.")
@@ -230,11 +236,13 @@ def validateInputParameters() {
     }
 
     // check if required arguments are provided for off-target probe tracking
-    if (params.offtarget_probe_tracking) {
+    if (!params.mode && params.offtarget_probe_tracking) {
         if(!params.probes_fasta || !params.reference_annotations || !params.gene_synonyms) {
             log.error("❌ Error: Missing required param(s) for off-target-proebe detection.")
             exit(1)
         }
+        log.error("❌ Error: Use --mode qc and --offtraget_probe_tracking to run off-target probe tracking.")
+        exit(1)
     }
 }
 
@@ -243,11 +251,8 @@ def validateInputParameters() {
 //
 def validateXeniumBundle(ch_samplesheet) {
 
-    // define xenium bundle directory structure
-    def xenium_bundle = [
-        "analysis.tar.gz",
-        "analysis.zarr.zip",
-        "analysis_summary.html",
+    // define xenium bundle directory structure - required files
+    def bundle_required_files = [
         "cell_boundaries.csv.gz",
         "cell_boundaries.parquet",
         "cell_feature_matrix.h5",
@@ -265,6 +270,13 @@ def validateXeniumBundle(ch_samplesheet) {
         "nucleus_boundaries.parquet",
         "transcripts.parquet",
         "transcripts.zarr.zip",
+    ]
+
+    // bundle optional files
+    def bundle_optional_files = [
+        "analysis.tar.gz",
+        "analysis.zarr.zip",
+        "analysis_summary.html"
     ]
 
     // get bundle path
@@ -285,25 +297,42 @@ def validateXeniumBundle(ch_samplesheet) {
     if (ch_bundle_path.map { it.exists() }) {
 
         ch_bundle_path.map { path ->
-            def missing_files = []
+            def missing_required_files = []
+            def missing_optional_files = []
 
-            def allExist = xenium_bundle.every { filename ->
+            def requiredExist = bundle_required_files.every { filename ->
                 def fullPath = file("${path}/${filename}")
                 if (!fullPath.exists()) {
-                    missing_files.add(filename)
+                    missing_required_files.add(filename)
                     return false
                 }
                 return true
             }
-
-            if (!allExist) {
-                log.error("❌ Missing file(s) at bundle path provided in the samplesheet: ${missing_files}")
+            // raise error if required files are missing
+            if (!requiredExist) {
+                log.error("❌ Missing file(s) at bundle path provided in the samplesheet: ${missing_required_files}")
                 exit(1)
             }
+
+            def optionalExist = bundle_optional_files.every { filename ->
+                def fullPath = file("${path}/${filename}")
+                if (!fullPath.exists()) {
+                    missing_optional_files.add(filename)
+                    return false
+                }
+                return true
+            }
+            // log message if optional files are missing
+            if (!optionalExist) {
+                log.warn("⚠️ Missing optional file(s) at bundle path provided in the samplesheet: ${missing_optional_files}")
+                exit(1)
+            }
+
+
         }
     }
     else {
-        log.info("INFO Xenium bundle validated        ✅ \n")
+        log.info("✅ Xenium bundle validated.\n")
     }
 }
 

@@ -1,9 +1,9 @@
 nextflow_pipeline {
 
-    name "Test pipeline - runs the default pipeline tests (coordinate mode)"
+    name "Test pipeline for the `coordinate` mode, test run the proseg subworkflow"
     script "../main.nf"
     tag "pipeline"
-    config "../conf/test.config"
+    config "../conf/test_coordinate_mode.config"
 
     test("-profile test") {
 

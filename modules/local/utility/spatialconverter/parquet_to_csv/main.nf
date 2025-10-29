@@ -2,15 +2,15 @@ process PARQUET_TO_CSV {
     tag "$meta.id"
     label 'process_low'
 
-    container "community.wave.seqera.io/library/pip_pandas:5c59aaec7d5d4750"
+    container "community.wave.seqera.io/library/pandas_procs_pyarrow_pip_pruned:a01d9a7721ecb2b7"
 
     input:
     tuple val(meta), path(transcripts)
     val(extension)
 
     output:
-    tuple val(meta), path("${meta.id}/*.csv*"), emit: transcripts_csv
-    path("versions.yml")                      , emit: versions
+    tuple val(meta), path("${prefix}/*.csv*"), emit: transcripts_csv
+    path("versions.yml")                     , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -20,9 +20,9 @@ process PARQUET_TO_CSV {
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
         error "PARQUET_TO_CSV module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
-    template 'parquet_to_csv.py'
+    template('parquet_to_csv.py')
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
@@ -30,7 +30,7 @@ process PARQUET_TO_CSV {
         error "PARQUET_TO_CSV module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}

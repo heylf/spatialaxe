@@ -1,8 +1,8 @@
 process BAYSOR_PREPROCESS_TRANSCRIPTS {
     tag "${meta.id}"
-    label 'process_low'
+    label 'process_medium'
 
-    container "ghcr.io/scverse/spatialdata:spatialdata0.3.0_spatialdata-io0.1.7_spatialdata-plot0.2.9"
+    container "community.wave.seqera.io/library/pandas_procs_pyarrow_pip_pruned:a01d9a7721ecb2b7"
 
     input:
     tuple val(meta), path(transcripts)

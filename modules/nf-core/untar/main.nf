@@ -56,6 +56,7 @@ process UNTAR {
     touch ${prefix}/morphology.ome.tif
     touch ${prefix}/transcripts.parquet
     touch ${prefix}/gene_panel.json
+    touch ${prefix}/experiment.xenium
     
     ## Dry-run untaring the archive to get the files and place all in prefix
     if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
