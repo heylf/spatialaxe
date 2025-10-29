@@ -59,17 +59,20 @@
                 "image/spatialdata/write/spatialdata/test_run/redefined_bundle",
                 "image/spatialdata/write/spatialdata/test_run/redefined_bundle/fake_file.txt",
                 "image/spatialdata/write/versions.yml",
+                "image/untar",
+                "image/untar/test_run",
+                "image/untar/test_run/experiment.xenium",
+                "image/untar/test_run/gene_panel.json",
+                "image/untar/test_run/morphology.ome.tif",
+                "image/untar/test_run/transcripts.parquet",
+                "image/untar/versions.yml",
+                "image/utility",
+                "image/utility/resize_tif",
+                "image/utility/resize_tif/test_run",
+                "image/utility/resize_tif/test_run/resized_morphology.ome_cells_masks.tif.tif",
+                "image/utility/resize_tif/versions.yml",
                 "pipeline_info",
-                "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml",
-                "resize",
-                "resize/test_run",
-                "resize/test_run/resized_morphology.ome_cells_masks.tif.tif",
-                "untar",
-                "untar/test_run",
-                "untar/test_run/experiment.xenium",
-                "untar/test_run/gene_panel.json",
-                "untar/test_run/morphology.ome.tif",
-                "untar/test_run/transcripts.parquet"
+                "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml"
             ],
             [
                 "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -89,17 +92,19 @@
                 "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "versions.yml:md5,5ffb7137a403934431ca87be7ad84968",
-                "resized_morphology.ome_cells_masks.tif.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "experiment.xenium:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gene_panel.json:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "morphology.ome.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,4054f048e726d8faf84c982f8180a9e0",
+                "resized_morphology.ome_cells_masks.tif.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,686bf4196185d2e13ae2e12221233b7e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.0"
         },
-        "timestamp": "2025-10-27T14:25:49.454381"
+        "timestamp": "2025-10-29T13:22:11.312536"
     }
 }

@@ -41,11 +41,6 @@
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/untar/untar.diff"
                     },
-                    "unzip": {
-                        "branch": "master",
-                        "git_sha": "41dfa3f7c0ffabb96a6a813fe321c6d1cc5b6e46",
-                        "installed_by": ["modules"]
-                    },
                     "xeniumranger/import-segmentation": {
                         "branch": "master",
                         "git_sha": "b5e1891a88491d8731b5e68e22bd907726caec4a",
