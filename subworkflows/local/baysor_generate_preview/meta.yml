@@ -13,7 +13,7 @@ components:
   - baysor/preview
   - baysor/create/dataset
   - parquet/to/csv
-  - clean/preview/html
+  - extract/preview/data
 input:
   - ch_transcripts_parquet:
       description: |
