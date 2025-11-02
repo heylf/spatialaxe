@@ -1,14 +1,15 @@
-process CLEAN_PREVIEW_HTML {
+process EXTRACT_PREVIEW_DATA {
     tag "${meta.id}"
     label 'process_low'
 
-    container "community.wave.seqera.io/library/beautifulsoup4_procs:3f09125465990b35"
+    container "community.wave.seqera.io/library/beautifulsoup4_pandas:d3b8b3eb86514c3c"
 
     input:
     tuple val(meta), path(preview_html)
 
     output:
-    tuple val(meta), path("${prefix}/preview_mqc.html"), emit: mqc_html
+    tuple val(meta), path("${prefix}/*_mqc.tsv"), emit: mqc_data
+    tuple val(meta), path("${prefix}/*_mqc.png"), emit: mqc_img
     path ("versions.yml"), emit: versions
 
     when:
@@ -17,27 +18,31 @@ process CLEAN_PREVIEW_HTML {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error("CLEAN_HTML module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        error("EXTRACT_PREVIEW_DATA module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('clean_html.py')
+    template('extract_data.py')
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        error("CLEAN_HTML module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        error("EXTRACT_PREVIEW_DATA module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
     mkdir -p ${prefix}
-    touch ${prefix}/preview_mqc.html
+    touch ${prefix}/noise_distribution_mqc.tsv
+    touch ${prefix}/gene_structure_mqc.tsv
+    touch ${prefix}/umap_mqc.tsv
+    touch ${prefix}/transcript_plots_mqc.png
+    touch ${prefix}/noise_level_mqc.png
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        CLEAN_HTML: "1.0.0"
+        EXTRACT_PREVIEW_DATA: "1.0.0"
     END_VERSIONS
     """
 }
