@@ -1,0 +1,99 @@
+{
+    "-profile test": {
+        "content": [
+            {
+                "UNTAR": {
+                    "untar": 1.34
+                },
+                "Workflow": {
+                    "nf-core/spatialxe": "v1.0dev"
+                }
+            },
+            [
+                "coordinate",
+                "coordinate/multiqc",
+                "coordinate/multiqc/raw_bundle",
+                "coordinate/multiqc/raw_bundle/multiqc_data",
+                "coordinate/multiqc/raw_bundle/multiqc_plots",
+                "coordinate/multiqc/raw_bundle/multiqc_report.html",
+                "coordinate/multiqc/redefined_bundle",
+                "coordinate/multiqc/redefined_bundle/multiqc_data",
+                "coordinate/multiqc/redefined_bundle/multiqc_plots",
+                "coordinate/multiqc/redefined_bundle/multiqc_report.html",
+                "coordinate/proseg",
+                "coordinate/proseg/preset",
+                "coordinate/proseg/preset/test_run",
+                "coordinate/proseg/preset/test_run/cell-polygons.geojson.gz",
+                "coordinate/proseg/preset/test_run/transcript-metadata.csv.gz",
+                "coordinate/proseg/preset/versions.yml",
+                "coordinate/proseg/proseg2baysor",
+                "coordinate/proseg/proseg2baysor/test_run",
+                "coordinate/proseg/proseg2baysor/test_run/cell-polygons.geojson",
+                "coordinate/proseg/proseg2baysor/test_run/transcript-metadata.csv",
+                "coordinate/proseg/proseg2baysor/versions.yml",
+                "coordinate/spatialdata",
+                "coordinate/spatialdata/merge",
+                "coordinate/spatialdata/merge/spatialdata",
+                "coordinate/spatialdata/merge/spatialdata/test_run",
+                "coordinate/spatialdata/merge/spatialdata/test_run/merged_bundle",
+                "coordinate/spatialdata/merge/spatialdata/test_run/merged_bundle/fake_file.txt",
+                "coordinate/spatialdata/merge/versions.yml",
+                "coordinate/spatialdata/meta",
+                "coordinate/spatialdata/meta/spatialdata",
+                "coordinate/spatialdata/meta/spatialdata/test_run",
+                "coordinate/spatialdata/meta/spatialdata/test_run/metadata",
+                "coordinate/spatialdata/meta/spatialdata/test_run/metadata/fake_file.txt",
+                "coordinate/spatialdata/meta/versions.yml",
+                "coordinate/spatialdata/write",
+                "coordinate/spatialdata/write/spatialdata",
+                "coordinate/spatialdata/write/spatialdata/test_run",
+                "coordinate/spatialdata/write/spatialdata/test_run/raw_bundle",
+                "coordinate/spatialdata/write/spatialdata/test_run/raw_bundle/fake_file.txt",
+                "coordinate/spatialdata/write/spatialdata/test_run/redefined_bundle",
+                "coordinate/spatialdata/write/spatialdata/test_run/redefined_bundle/fake_file.txt",
+                "coordinate/spatialdata/write/versions.yml",
+                "coordinate/untar",
+                "coordinate/untar/test_run",
+                "coordinate/untar/test_run/experiment.xenium",
+                "coordinate/untar/test_run/gene_panel.json",
+                "coordinate/untar/test_run/morphology.ome.tif",
+                "coordinate/untar/test_run/transcripts.parquet",
+                "coordinate/untar/versions.yml",
+                "coordinate/xeniumranger",
+                "coordinate/xeniumranger/import_segementation",
+                "coordinate/xeniumranger/import_segementation/test_run",
+                "coordinate/xeniumranger/import_segementation/test_run/outs",
+                "coordinate/xeniumranger/import_segementation/test_run/outs/fake_file.txt",
+                "coordinate/xeniumranger/import_segementation/versions.yml",
+                "pipeline_info",
+                "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml"
+            ],
+            [
+                "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "cell-polygons.geojson:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "transcript-metadata.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,66d4df69da12a0f8425f221f94afe76b",
+                "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,9010b5ed380b88a5b20ca6dae73345cb",
+                "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,1dfc19eaa8a0746f17aad700d797e323",
+                "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,5ffb7137a403934431ca87be7ad84968",
+                "experiment.xenium:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "gene_panel.json:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "morphology.ome.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,4054f048e726d8faf84c982f8180a9e0",
+                "fake_file.txt:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "versions.yml:md5,7e76e3dce07f8df00a8628e74c2e6157"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-29T13:54:47.676492"
+    }
+}
