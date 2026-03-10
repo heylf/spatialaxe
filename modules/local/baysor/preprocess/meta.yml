@@ -48,16 +48,16 @@ input:
         if no limit is specified, the default minimum value will be 0.0
 
 output:
-  - - transcripts_parquet:
+  - - transcripts_csv:
         - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test' ]
-        - "*.parquet":
+        - "*.csv":
           type: file
-          description: filtered transcripts.parquet
-          pattern: "filtered_transcripts.parquet"
+          description: filtered transcripts CSV (for Baysor 0.7.1 Parquet.jl compatibility)
+          pattern: "filtered_transcripts.csv"
 
   - - versions:
       type: file

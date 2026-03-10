@@ -36,7 +36,7 @@
                 },
                 "method": {
                     "type": "string",
-                    "enum": ["cellpose", "xeniumranger", "baysor", "proseg", "segger", "ficture"],
+                    "enum": ["cellpose", "xeniumranger", "baysor", "proseg", "segger", "ficture", "stardist"],
                     "description": "Segmentation method to run."
                 },
                 "gene_panel": {
@@ -58,6 +58,29 @@
                     "type": "string",
                     "description": "Model to use for running or starting training.",
                     "format": "file-path"
+                },
+                "stardist_model": {
+                    "type": "string",
+                    "default": "2D_versatile_fluo",
+                    "description": "StarDist pretrained model for cell segmentation (e.g., '2D_versatile_fluo', '2D_versatile_he')."
+                },
+                "stardist_nuclei_model": {
+                    "type": "string",
+                    "default": "2D_versatile_fluo",
+                    "description": "StarDist pretrained model for nuclei segmentation."
+                },
+                "stardist_prob_thresh": {
+                    "type": "number",
+                    "description": "StarDist object probability threshold. Lower values detect more objects."
+                },
+                "stardist_nms_thresh": {
+                    "type": "number",
+                    "description": "StarDist non-maximum suppression threshold. Lower values reduce overlapping detections."
+                },
+                "stardist_n_tiles": {
+                    "type": "string",
+                    "default": "8 8",
+                    "description": "StarDist tiling for large images (e.g., '4 4'). Reduces memory usage."
                 },
                 "segmentation_mask": {
                     "type": "string",
@@ -149,6 +172,24 @@
                     "default": true,
                     "description": "Specify the name of the boundary stain to use or disable. Supported for cell segmentation staining workflow output bundles. Possible options are: \\\"ATP1A1/CD45/E-Cadherin\\\" (default) or \\\"disable\\\""
                 },
+                "use_gpu": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Enable GPU acceleration (set automatically by the gpu profile)."
+                },
+                "gpu_queue": {
+                    "type": "string",
+                    "description": "AWS Batch queue for GPU tasks (e.g., Segger, ProSeg)."
+                },
+                "cellpose_queue": {
+                    "type": "string",
+                    "description": "AWS Batch queue for Cellpose (single large GPU)."
+                },
+                "cellpose_downscale": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Pre-downscale morphology image to avoid Cellpose OOM on large images."
+                },
                 "sharpen_tiff": {
                     "type": "boolean",
                     "description": "Whether to enhance the morphology.ome.tif file."
@@ -165,6 +206,16 @@
                     "enum": ["kd_tree", "cuda"],
                     "description": "Method for KNN computation. (e.g., cuda for GPU-based computation)"
                 },
+                "segger_num_workers": {
+                    "type": "integer",
+                    "default": 4,
+                    "description": "Number of data-loader workers for Segger."
+                },
+                "segger_model": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to a pre-trained Segger model checkpoint."
+                },
                 "format": {
                     "type": "string",
                     "default": "xenium",
@@ -174,7 +225,7 @@
                     "type": "array",
                     "items": {
                         "type": "string",
-                        "enum": ["cellpose", "xeniumranger", "baysor"]
+                        "enum": ["cellpose", "xeniumranger", "baysor", "stardist"]
                     },
                     "description": "List of image-based segmentation methods."
                 },
@@ -207,9 +258,65 @@
                     "description": "Whether to filter the transcripts.parquet file before running Baysor segmentation.",
                     "default": false
                 },
+                "baysor_scale": {
+                    "type": "integer",
+                    "default": 30,
+                    "description": "Baysor --scale parameter for non-tiled runs."
+                },
+                "baysor_config": {
+                    "type": "string",
+                    "format": "file-path",
+                    "description": "Path to Baysor config TOML file (optional)."
+                },
+                "baysor_tiling": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable tiled Baysor segmentation (divide transcripts into patches, run Baysor per patch, stitch results)."
+                },
+                "baysor_tiling_micron": {
+                    "type": "integer",
+                    "default": 1200,
+                    "description": "Tile width in microns for Baysor tiling."
+                },
+                "baysor_tiling_overlap": {
+                    "type": "integer",
+                    "default": 200,
+                    "description": "Overlap between Baysor patches in microns."
+                },
+                "baysor_tiling_balanced": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Balance transcripts across tiles by merging sparse tiles."
+                },
+                "baysor_tiling_scale": {
+                    "type": "integer",
+                    "default": 39,
+                    "description": "Baysor --scale for tiled runs (larger to compensate for EM on smaller tiles)."
+                },
+                "baysor_tiling_min_mols_per_cell": {
+                    "type": "integer",
+                    "default": 120,
+                    "description": "Minimum molecules per cell (--min-molecules-per-cell) for tiled Baysor."
+                },
+                "baysor_tiling_min_transcripts_per_cell": {
+                    "type": "integer",
+                    "default": 50,
+                    "description": "Post-stitch cell filtering threshold: minimum transcripts per cell."
+                },
+                "baysor_prior": {
+                    "type": "string",
+                    "enum": ["cells", "cellpose"],
+                    "description": "Prior segmentation type for Baysor. 'cells' uses Xenium bundle cell_id column; 'cellpose' uses Cellpose mask as image prior."
+                },
+                "baysor_prior_confidence": {
+                    "type": "number",
+                    "default": 0.2,
+                    "description": "Baysor prior-segmentation-confidence (0-1)."
+                },
                 "min_qv": {
                     "type": "number",
-                    "description": "minimum Q-Score to pass filtering (default: 20.0)"
+                    "default": 20,
+                    "description": "Minimum Q-Score to pass filtering."
                 },
                 "min_x": {
                     "type": "number",
@@ -227,13 +334,45 @@
                     "type": "number",
                     "description": "only keep transcripts whose y-coordinate is less than specified limit, if no limit is specified, the default value will retain all transcripts since Xenium slide is <24000 microns in x and y (default: 24000.0)"
                 },
+                "tiling": {
+                    "type": "boolean",
+                    "description": "Enable tiled segmentation for large datasets. Divides transcripts into overlapping patches, runs segmentation in parallel per patch, then stitches results.",
+                    "default": false
+                },
+                "patch_grid": {
+                    "type": "string",
+                    "description": "Grid layout for tiling (rows x cols), e.g. '3x3', '4x4'.",
+                    "default": "3x3"
+                },
+                "patch_overlap": {
+                    "type": "integer",
+                    "description": "Overlap between adjacent patches in microns.",
+                    "default": 50
+                },
+                "patch_filter_method": {
+                    "type": "string",
+                    "description": "Post-stitch cell size filtering method. Options: 'empirical' (IQR-based), 'distribution' (z-score), 'both', or null to disable.",
+                    "enum": ["empirical", "distribution", "both"]
+                },
+                "patch_filter_iqr_multiplier": {
+                    "type": "number",
+                    "description": "IQR multiplier for empirical cell size filtering during stitching.",
+                    "default": 3.0
+                },
+                "patch_filter_z_threshold": {
+                    "type": "number",
+                    "description": "Z-score threshold for distribution-based cell size filtering during stitching.",
+                    "default": 4.0
+                },
                 "csplit_x_bins": {
                     "type": "integer",
-                    "description": "number of slices along the x axis (default - 10)"
+                    "default": 2,
+                    "description": "Number of tiles along the x axis for cell-type separability."
                 },
                 "csplit_y_bins": {
                     "type": "integer",
-                    "description": "number of slices along the y axis (default - 10)"
+                    "default": 2,
+                    "description": "Number of tiles along the y axis for cell-type separability."
                 },
                 "tile_width": {
                     "type": "integer",
