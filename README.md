@@ -103,7 +103,7 @@ For more details about the output files and reports, please refer to the
 
 ## Credits
 
-nf-core/spatialxe was originally written by [Sameesh Kher](https://github.com/khersameesh24) and [Florian Heyl](https://github.com/heylf).
+nf-core/spatialxe is mainly developed by [Sameesh Kher](https://github.com/khersameesh24), [Dongze He](https://github.com/an-altosian), and [Florian Heyl](https://github.com/heylf).
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 
