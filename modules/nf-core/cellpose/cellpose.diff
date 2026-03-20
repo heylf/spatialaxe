@@ -1,5 +1,7 @@
---- a/modules/nf-core/cellpose/main.nf
-+++ b/modules/nf-core/cellpose/main.nf
+Changes in component 'nf-core/cellpose'
+Changes in 'cellpose/main.nf':
+--- modules/nf-core/cellpose/main.nf
++++ modules/nf-core/cellpose/main.nf
 @@ -1,6 +1,6 @@
  process CELLPOSE {
      tag "${meta.id}"
@@ -36,8 +38,9 @@
      """
 
      stub:
---- a/modules/nf-core/cellpose/meta.yml
-+++ b/modules/nf-core/cellpose/meta.yml
+Changes in 'cellpose/meta.yml':
+--- modules/nf-core/cellpose/meta.yml
++++ modules/nf-core/cellpose/meta.yml
 @@ -42,32 +42,10 @@
            description: |
              Groovy Map containing sample information
