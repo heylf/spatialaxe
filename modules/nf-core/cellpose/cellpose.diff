@@ -1,16 +1,16 @@
---- a/modules/nf-core/cellpose/main.nf	2026-03-09 23:13:42.359216339 +0000
-+++ b/modules/nf-core/cellpose/main.nf	2026-03-09 23:14:14.408548975 +0000
+--- a/modules/nf-core/cellpose/main.nf
++++ b/modules/nf-core/cellpose/main.nf
 @@ -1,6 +1,6 @@
  process CELLPOSE {
      tag "${meta.id}"
 -    label 'process_medium'
 +    label 'process_high'
      label 'process_gpu'
- 
+
      conda "${moduleDir}/environment.yml"
 @@ -13,9 +13,7 @@
      path(model)
- 
+
      output:
 -    tuple val(meta), path("${prefix}/*masks.tif"), emit: mask
 -    tuple val(meta), path("${prefix}/*flows.tif"), emit: flows, optional: true
@@ -22,7 +22,7 @@
 @@ -45,10 +43,13 @@
          ${model_command} \\
          ${args}
- 
+
 +    # Fail fast if cellpose detected zero cells
 +    if grep -q "No cell pixels found" .cellpose/run.log 2>/dev/null; then
 +        echo "ERROR: cellpose detected 0 cells" >&2; exit 1
@@ -34,5 +34,42 @@
 -    mv *seg.npy ${prefix}/ 2>/dev/null || true
 +    mv *_cp_masks.tif ${prefix}/
      """
- 
+
      stub:
+--- a/modules/nf-core/cellpose/meta.yml
++++ b/modules/nf-core/cellpose/meta.yml
+@@ -42,32 +42,10 @@
+           description: |
+             Groovy Map containing sample information
+             [sample id]
+-      - "${prefix}/*masks.tif":
++      - "${prefix}/*_cp_masks.tif":
+           type: file
+           description: labelled mask output from cellpose in tif format
+-          pattern: "${prefix}/*masks.tif"
+-          ontologies: []
+-  flows:
+-    - - meta:
+-          type: map
+-          description: |
+-            Groovy Map containing sample information
+-            [sample id]
+-      - "${prefix}/*flows.tif":
+-          type: file
+-          description: cell flow output from cellpose
+-          pattern: "${prefix}/*flows.tif"
+-          ontologies: []
+-  cells:
+-    - - meta:
+-          type: map
+-          description: |
+-            Groovy Map containing sample information
+-            [sample id]
+-      - "${prefix}/*seg.npy":
+-          type: file
+-          description: numpy array with cell segmentation data
+-          pattern: "${prefix}/*seg.npy"
++          pattern: "${prefix}/*_cp_masks.tif"
+           ontologies: []
+   versions_cellpose:
+     - - ${task.process}:

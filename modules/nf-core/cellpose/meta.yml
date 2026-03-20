@@ -42,32 +42,10 @@ output:
           description: |
             Groovy Map containing sample information
             [sample id]
-      - "${prefix}/*masks.tif":
+      - "${prefix}/*_cp_masks.tif":
           type: file
           description: labelled mask output from cellpose in tif format
-          pattern: "${prefix}/*masks.tif"
-          ontologies: []
-  flows:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            [sample id]
-      - "${prefix}/*flows.tif":
-          type: file
-          description: cell flow output from cellpose
-          pattern: "${prefix}/*flows.tif"
-          ontologies: []
-  cells:
-    - - meta:
-          type: map
-          description: |
-            Groovy Map containing sample information
-            [sample id]
-      - "${prefix}/*seg.npy":
-          type: file
-          description: numpy array with cell segmentation data
-          pattern: "${prefix}/*seg.npy"
+          pattern: "${prefix}/*_cp_masks.tif"
           ontologies: []
   versions_cellpose:
     - - ${task.process}:

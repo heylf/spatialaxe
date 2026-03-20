@@ -1,0 +1,11 @@
+Changes in module 'nf-core/stardist'
+--- modules/nf-core/stardist/main.nf
++++ modules/nf-core/stardist/main.nf
+@@ -1,6 +1,6 @@
+ process STARDIST {
+     tag "$meta.id"
+-    label 'process_medium'
++    label 'process_high'
+
+     conda "${moduleDir}/environment.yml"
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
