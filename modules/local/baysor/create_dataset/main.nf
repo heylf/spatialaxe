@@ -10,7 +10,7 @@ process BAYSOR_CREATE_DATASET {
 
     output:
     tuple val(meta), path("${prefix}/sampled_transcripts.csv"), emit: sampled_transcripts
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -36,10 +36,5 @@ process BAYSOR_CREATE_DATASET {
     """
     mkdir -p ${prefix}
     touch "${prefix}/sampled_transcripts.csv"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 }

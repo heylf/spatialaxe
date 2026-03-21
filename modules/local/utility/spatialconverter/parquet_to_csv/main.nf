@@ -10,7 +10,7 @@ process PARQUET_TO_CSV {
 
     output:
     tuple val(meta), path("${prefix}/*.csv*"), emit: transcripts_csv
-    path("versions.yml")                     , emit: versions
+    tuple val("${task.process}"), val('pyarrow'), eval('python3 -c "import pyarrow; print(pyarrow.__version__)"'), topic: versions, emit: versions_pyarrow
 
     when:
     task.ext.when == null || task.ext.when
@@ -35,10 +35,5 @@ process PARQUET_TO_CSV {
     """
     mkdir -p ${prefix}
     touch "${prefix}/${transcripts}.csv"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        spatialconverter: "${task.version}"
-    END_VERSIONS
     """
 }

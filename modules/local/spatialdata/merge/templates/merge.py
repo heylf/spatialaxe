@@ -66,11 +66,6 @@ def main():
                 json.dump(meta, f)
             print("[NOTE] Removed stale consolidated metadata from zarr.json")
 
-    #Output version information
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write(f'spatialdata: "{spatialdata.__version__}"\\n')
-
     print("[FINISH]")
 
 if __name__ == "__main__":

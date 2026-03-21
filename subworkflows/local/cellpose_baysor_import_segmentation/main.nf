@@ -38,7 +38,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     if (params.sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
-        ch_versions = ch_versions.mix(RESOLIFT.out.versions)
+        ch_versions = ch_versions.mix(RESOLIFT.out.versions_resolift)
 
         ch_image = RESOLIFT.out.enhanced_tiff
     }
@@ -116,7 +116,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions)
+        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
     }
     else if (params.cell_segmentation_only) {
 
@@ -149,7 +149,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions)
+        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
     }
     else {
 
@@ -166,7 +166,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions)
+        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
     }
 
 

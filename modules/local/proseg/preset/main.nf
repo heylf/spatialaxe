@@ -10,7 +10,7 @@ process PROSEG {
     output:
     tuple val(meta), path("${prefix}/cell-polygons.geojson.gz"), path("${prefix}/transcript-metadata.csv.gz"), emit: seg_outs
     tuple val(meta), path("${prefix}/proseg-output.zarr"), emit: zarr
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('proseg'), eval("proseg --version | sed 's/proseg //'"), topic: versions, emit: versions_proseg
 
     when:
     task.ext.when == null || task.ext.when
@@ -46,11 +46,6 @@ process PROSEG {
         --output-union-cell-polygons ${prefix}/union-cell-polygons.geojson.gz \\
         --output-spatialdata ${prefix}/proseg-output.zarr \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        proseg: \$(proseg --version | sed 's/proseg //')
-    END_VERSIONS
     """
 
     stub:
@@ -72,10 +67,5 @@ process PROSEG {
     touch "${prefix}/cell-polygons-layers.geojson.gz"
     touch "${prefix}/union-cell-polygons.geojson.gz"
     mkdir -p "${prefix}/proseg-output.zarr"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        proseg: \$(proseg --version | sed 's/proseg //')
-    END_VERSIONS
     """
 }

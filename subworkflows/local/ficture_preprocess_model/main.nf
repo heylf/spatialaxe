@@ -19,7 +19,7 @@ workflow FICTURE_PREPROCESS_MODEL {
 
     // convert parquet to csv
     PARQUET_TO_CSV(ch_transcripts_parquet, ".csv")
-    ch_versions = ch_versions.mix(PARQUET_TO_CSV.out.versions)
+    ch_versions = ch_versions.mix(PARQUET_TO_CSV.out.versions_pyarrow)
 
     // run ficture preprocessing
     ch_transcripts = PARQUET_TO_CSV.out.transcripts_csv
@@ -34,7 +34,7 @@ workflow FICTURE_PREPROCESS_MODEL {
         FICTURE_PREPROCESS.out.coordinate_minmax,
         ch_features_clean,
     )
-    ch_versions = ch_versions.mix(FICTURE.out.versions)
+    ch_versions = ch_versions.mix(FICTURE.out.versions_ficture)
 
     emit:
     transcripts       = FICTURE_PREPROCESS.out.transcripts // channel: [ val(meta), [ "*processed_transcripts.tsv.gz" ] ]

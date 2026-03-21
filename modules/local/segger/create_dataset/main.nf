@@ -10,7 +10,7 @@ process SEGGER_CREATE_DATASET {
 
     output:
     tuple val(meta), path("${prefix}/"), emit: datasetdir
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('segger'), eval("pip show segger | sed -n 's/^Version: //p'"), topic: versions, emit: versions_segger
 
     when:
     task.ext.when == null || task.ext.when
@@ -218,10 +218,6 @@ for split in ['train_tiles', 'test_tiles', 'val_tiles']:
 print(f"Fixed NaN bd.x in {fixed}/{total} tiles")
 PYEOF
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 
     stub:
@@ -235,10 +231,5 @@ PYEOF
     """
     mkdir -p ${prefix}/
     touch "${prefix}/fake_file.txt"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 }

@@ -44,7 +44,7 @@ workflow BAYSOR_GENERATE_SEGFREE {
     BAYSOR_SEGFREE(
         ch_baysor_segfree_input
     )
-    ch_versions = ch_versions.mix(BAYSOR_SEGFREE.out.versions)
+    ch_versions = ch_versions.mix(BAYSOR_SEGFREE.out.versions_baysor)
 
     emit:
     ncvs     = BAYSOR_SEGFREE.out.ncvs // channel: [ val(meta), ["ncvs.loom"] ]

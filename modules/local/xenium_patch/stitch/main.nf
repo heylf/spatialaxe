@@ -26,7 +26,8 @@ process XENIUM_PATCH_STITCH {
     tuple val(meta),
         path("output/xr-cell-polygons.geojson"),
         path("output/xr-transcript-metadata.csv")  , emit: xr_polygons_transcript
-    path("versions.yml")                            , emit: versions
+    tuple val("${task.process}"), val('python'), eval('python3 --version 2>&1 | sed \'s/Python //\''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('sopa'), eval('python3 -c "import sopa; print(sopa.__version__)"'), topic: versions, emit: versions_sopa
 
     when:
     task.ext.when == null || task.ext.when
@@ -96,11 +97,6 @@ if dropped_cells:
     print(f'CSV: {reassigned} transcripts reassigned to UNASSIGNED')
 "
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python3 --version 2>&1 | sed 's/Python //')
-        sopa: \$(python3 -c "import sopa; print(sopa.__version__)")
-    END_VERSIONS
     """
 
     stub:
@@ -108,11 +104,5 @@ if dropped_cells:
     mkdir -p output
     echo '{"type":"FeatureCollection","features":[]}' > output/xr-cell-polygons.geojson
     echo 'transcript_id,x,y,z,gene,cell,is_noise' > output/xr-transcript-metadata.csv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: "3.12.0"
-        sopa: "0.1.0"
-    END_VERSIONS
     """
 }

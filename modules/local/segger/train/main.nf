@@ -10,7 +10,7 @@ process SEGGER_TRAIN {
 
     output:
     tuple val(meta), path("trained_models"), emit: trained_models
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('segger'), eval("pip show segger | sed -n 's/^Version: //p'"), topic: versions, emit: versions_segger
 
     when:
     task.ext.when == null || task.ext.when
@@ -53,11 +53,6 @@ process SEGGER_TRAIN {
         --num_workers ${params.segger_num_workers} \\
         --accelerator ${accelerator} \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 
     stub:
@@ -71,10 +66,5 @@ process SEGGER_TRAIN {
     """
     mkdir -p trained_models/
     touch trained_models/fakefile.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 }

@@ -122,8 +122,3 @@ if __name__ == "__main__":
         metadata_path=metadata,
         output_path=output_mask,
     )
-
-    #Output versions.yml
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write('RESIZE_TIF: "1.0.0"\\n')

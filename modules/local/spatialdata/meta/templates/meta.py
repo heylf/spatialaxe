@@ -111,11 +111,6 @@ def main():
     convert_arrow_to_numpy(sdata)
     sdata.write(f"spatialdata/{output_path}/{output}", overwrite=True, consolidate_metadata=True, sdata_formats=None)
 
-    #Output version information
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write(f'spatialdata: "{sd.__version__}"\\n')
-
     print("[FINISH]")
 
 if __name__ == "__main__":

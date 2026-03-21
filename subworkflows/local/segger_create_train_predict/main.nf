@@ -22,7 +22,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
 
     // create dataset (always needed for predict step)
     SEGGER_CREATE_DATASET(ch_bundle)
-    ch_versions = ch_versions.mix(SEGGER_CREATE_DATASET.out.versions)
+    ch_versions = ch_versions.mix(SEGGER_CREATE_DATASET.out.versions_segger)
 
     // Determine model source and join all PREDICT inputs by meta.
     // Without meta-based join, queue channels align by emission order,
@@ -36,7 +36,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     } else {
         // Train a new model per sample, join all inputs by meta
         SEGGER_TRAIN(SEGGER_CREATE_DATASET.out.datasetdir)
-        ch_versions = ch_versions.mix(SEGGER_TRAIN.out.versions)
+        ch_versions = ch_versions.mix(SEGGER_TRAIN.out.versions_segger)
         ch_predict_paired = SEGGER_CREATE_DATASET.out.datasetdir
             .join(SEGGER_TRAIN.out.trained_models)
             .join(ch_transcripts_parquet)
@@ -48,7 +48,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
         ch_predict_paired.map { _meta, _dataset, models, _tx -> models },
         ch_predict_paired.map { _meta, _dataset, _m, tx -> [tx] },
     )
-    ch_versions = ch_versions.mix(SEGGER_PREDICT.out.versions)
+    ch_versions = ch_versions.mix(SEGGER_PREDICT.out.versions_segger)
 
     // convert parquet to XR compatible form
     SEGGER2XR(SEGGER_PREDICT.out.transcripts)

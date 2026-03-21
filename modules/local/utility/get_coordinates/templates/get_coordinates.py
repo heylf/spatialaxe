@@ -35,8 +35,3 @@ if __name__ == "__main__":
 
     transcripts = "${transcripts}"
     get_coordinates(transcripts)
-
-    #Output versions.yml
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write('GET_TRANSCRIPTS_COORDINATES: "1.0.0"\\n')

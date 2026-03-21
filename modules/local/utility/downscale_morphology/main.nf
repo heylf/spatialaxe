@@ -29,7 +29,9 @@ process DOWNSCALE_MORPHOLOGY {
     output:
     tuple val(meta), path("${prefix}/downscaled.tif"), emit: downscaled
     tuple val(meta), path("${prefix}/scale_info.json"), emit: scale_info
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('python'), eval("python3 --version | awk '{print \$2}'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('tifffile'), eval('python3 -c "import tifffile; print(tifffile.__version__)"'), topic: versions, emit: versions_tifffile
+    tuple val("${task.process}"), val('scikit-image'), eval('python3 -c "import skimage; print(skimage.__version__)"'), topic: versions, emit: versions_skimage
 
     when:
     task.ext.when == null || task.ext.when
@@ -88,12 +90,6 @@ json.dump({
 print(f'Done: downscaled.tif written, shape={img_ds.shape}')
 "
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python3 --version | awk '{print \$2}')
-        tifffile: \$(python3 -c 'import tifffile; print(tifffile.__version__)')
-        scikit-image: \$(python3 -c 'import skimage; print(skimage.__version__)')
-    END_VERSIONS
     """
 
     stub:
@@ -102,10 +98,5 @@ print(f'Done: downscaled.tif written, shape={img_ds.shape}')
     mkdir -p ${prefix}
     touch ${prefix}/downscaled.tif
     echo '{"scale": 0.3}' > ${prefix}/scale_info.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python3 --version | awk '{print \$2}')
-    END_VERSIONS
     """
 }

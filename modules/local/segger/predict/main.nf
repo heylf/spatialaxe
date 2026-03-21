@@ -12,7 +12,7 @@ process SEGGER_PREDICT {
     output:
     tuple val(meta), path("benchmarks_dir"), emit: benchmarks
     tuple val(meta), path("benchmarks_dir/*/segger_transcripts.parquet"), emit: transcripts
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('segger'), eval("pip show segger | sed -n 's/^Version: //p'"), topic: versions, emit: versions_segger
 
     when:
     task.ext.when == null || task.ext.when
@@ -71,11 +71,6 @@ print(','.join(str(i) for i in range(n)) if n > 0 else '0')
         --num_workers ${task.cpus} \\
         --gpu_ids \$GPU_IDS \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 
     stub:
@@ -89,10 +84,5 @@ print(','.join(str(i) for i in range(n)) if n > 0 else '0')
     """
     mkdir -p "benchmarks_dir"
     touch "benchmarks_dir/fake_file.txt"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 }

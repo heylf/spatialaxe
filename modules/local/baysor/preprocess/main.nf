@@ -14,7 +14,7 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
 
     output:
     tuple val(meta), path("${prefix}/filtered_transcripts.csv"), emit: transcripts_csv
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -40,10 +40,5 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
     """
     mkdir -p ${prefix}
     touch ${prefix}/filtered_transcripts.csv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor_preprocess_transcripts: "1.0.0"
-    END_VERSIONS
     """
 }

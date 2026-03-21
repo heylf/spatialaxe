@@ -30,7 +30,7 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     if (params.sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
-        ch_versions = ch_versions.mix(RESOLIFT.out.versions)
+        ch_versions = ch_versions.mix(RESOLIFT.out.versions_resolift)
 
         ch_image = RESOLIFT.out.enhanced_tiff
     }

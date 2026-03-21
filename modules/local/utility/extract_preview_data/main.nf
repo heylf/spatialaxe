@@ -10,7 +10,7 @@ process EXTRACT_PREVIEW_DATA {
     output:
     tuple val(meta), path("${prefix}/*_mqc.tsv"), emit: mqc_data
     tuple val(meta), path("${prefix}/*_mqc.png"), emit: mqc_img
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -39,10 +39,5 @@ process EXTRACT_PREVIEW_DATA {
     touch ${prefix}/umap_mqc.tsv
     touch ${prefix}/transcript_plots_mqc.png
     touch ${prefix}/noise_level_mqc.png
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        EXTRACT_PREVIEW_DATA: "1.0.0"
-    END_VERSIONS
     """
 }

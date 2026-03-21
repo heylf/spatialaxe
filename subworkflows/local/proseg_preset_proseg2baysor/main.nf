@@ -18,12 +18,12 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
 
     // run proseg with the xenium format
     PROSEG(ch_transcripts_parquet)
-    ch_versions = ch_versions.mix(PROSEG.out.versions)
+    ch_versions = ch_versions.mix(PROSEG.out.versions_proseg)
 
 
     // run proseg-to-baysor on the zarr output from proseg v3
     PROSEG2BAYSOR(PROSEG.out.zarr)
-    ch_versions = ch_versions.mix(PROSEG2BAYSOR.out.versions)
+    ch_versions = ch_versions.mix(PROSEG2BAYSOR.out.versions_proseg)
 
 
     // run xeniumranger import-segmentation

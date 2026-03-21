@@ -38,11 +38,11 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
 
     // Step 3: Run proseg on each patch independently
     PROSEG ( ch_patches )
-    ch_versions = ch_versions.mix( PROSEG.out.versions.first() )
+    ch_versions = ch_versions.mix( PROSEG.out.versions_proseg.first() )
 
     // Step 4: Convert proseg output to baysor format per patch
     PROSEG2BAYSOR ( PROSEG.out.zarr )
-    ch_versions = ch_versions.mix( PROSEG2BAYSOR.out.versions.first() )
+    ch_versions = ch_versions.mix( PROSEG2BAYSOR.out.versions_proseg.first() )
 
     // Step 5: Gather patch results per sample for stitching
     ch_for_stitch = PROSEG2BAYSOR.out.xr_polygons

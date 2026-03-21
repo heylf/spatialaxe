@@ -37,8 +37,3 @@ if __name__ == '__main__':
         extension=extension,
         prefix=prefix
     )
-
-    # Output versions.yml
-    with open("versions.yml", "w", encoding='utf-8') as fobj:
-        fobj.write('"${task.process}":\\n')
-        fobj.write('spatialconverter: "v0.0.1"\\n')

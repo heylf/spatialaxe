@@ -56,7 +56,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
         // Step 2b: Convert parquet to CSV (Baysor Julia Parquet.jl incompatibility)
         PARQUET_TO_CSV ( ch_patches )
-        ch_versions = ch_versions.mix( PARQUET_TO_CSV.out.versions.first() )
+        ch_versions = ch_versions.mix( PARQUET_TO_CSV.out.versions_pyarrow.first() )
 
         // Step 3: Run Baysor on each patch independently
         // Use baysor_tiling_scale (larger than baysor_scale) to compensate for EM
@@ -66,7 +66,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
                 tuple(meta, transcripts, [], params.baysor_config ? file(params.baysor_config) : [], params.baysor_tiling_scale)
             }
         )
-        ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions.first() )
+        ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions_baysor.first() )
 
         // Step 4: Gather patch results per sample and reconstruct patches directory
         ch_baysor_results = BAYSOR_RUN.out.segmentation
@@ -141,7 +141,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
                 tuple(meta, transcripts, mask, config, params.baysor_scale)
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions)
+        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
 
         // xeniumranger import-segmentation (non-tiled)
         // spatialxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units

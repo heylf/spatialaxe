@@ -25,7 +25,8 @@ process XENIUM_PATCH_DIVIDE {
     output:
     tuple val(meta), path("patches/patch_grid.json")              , emit: grid
     tuple val(meta), path("patches/patch_*/transcripts.parquet")  , emit: patch_transcripts
-    path("versions.yml")                                          , emit: versions
+    tuple val("${task.process}"), val('python'), eval('python3 --version 2>&1 | sed \'s/Python //\''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('pyarrow'), eval('python3 -c "import pyarrow; print(pyarrow.__version__)"'), topic: versions, emit: versions_pyarrow
 
     when:
     task.ext.when == null || task.ext.when
@@ -45,11 +46,6 @@ process XENIUM_PATCH_DIVIDE {
         --image-width \$(python3 -c "import tifffile; print(tifffile.imread('${image}').shape[-1])") \\
         --image-height \$(python3 -c "import tifffile; print(tifffile.imread('${image}').shape[-2])")
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python3 --version 2>&1 | sed 's/Python //')
-        pyarrow: \$(python3 -c "import pyarrow; print(pyarrow.__version__)")
-    END_VERSIONS
     """
 
     stub:
@@ -57,11 +53,5 @@ process XENIUM_PATCH_DIVIDE {
     mkdir -p patches/patch_0_0
     touch patches/patch_0_0/transcripts.parquet
     echo '{}' > patches/patch_grid.json
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: "3.12.0"
-        pyarrow: "17.0.0"
-    END_VERSIONS
     """
 }

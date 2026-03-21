@@ -9,7 +9,7 @@ process RESOLIFT {
 
     output:
     tuple val(meta), path("${prefix}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('python'), eval("python3 --version | awk '{print \$2}'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -30,11 +30,6 @@ process RESOLIFT {
         -i ${morphology_tiff} \\
         -o ${prefix}/morphology.ome.enhanced.tiff \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        resolift: v1.0.0
-    END_VERSIONS
     """
 
     stub:
@@ -47,10 +42,5 @@ process RESOLIFT {
     """
     mkdir -p ${prefix}
     touch "${prefix}/morphology.ome.enhanced.tiff"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        resolift: v1.0.0
-    END_VERSIONS
     """
 }

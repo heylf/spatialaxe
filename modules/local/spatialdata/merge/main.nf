@@ -12,7 +12,7 @@ process SPATIALDATA_MERGE {
 
     output:
     tuple val(meta), path("spatialdata/${prefix}/${outputfolder}"), emit: merged_bundle
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('spatialdata'), eval('python3 -c "import spatialdata; print(spatialdata.__version__)"'), topic: versions, emit: versions_spatialdata
 
     when:
     task.ext.when == null || task.ext.when
@@ -38,10 +38,5 @@ process SPATIALDATA_MERGE {
     """
     mkdir -p "spatialdata/${prefix}/${outputfolder}/"
     touch "spatialdata/${prefix}/${outputfolder}/fake_file.txt"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        spatialdata: \$(echo \$( python -c "import spatialdata; print(spatialdata.__version__)" 2>&1) )
-    END_VERSIONS
     """
 }

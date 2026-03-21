@@ -10,7 +10,7 @@ process PROSEG2BAYSOR {
     output:
     tuple val(meta), path("${prefix}/cell-polygons.geojson")  , emit: xr_polygons
     tuple val(meta), path("${prefix}/transcript-metadata.csv"), emit: xr_metadata
-    path("versions.yml")                                      , emit: versions
+    tuple val("${task.process}"), val('proseg'), eval("proseg --version | sed 's/proseg //'"), topic: versions, emit: versions_proseg
 
     script:
     // Exit if running this module with -profile conda / -profile mamba
@@ -29,12 +29,6 @@ process PROSEG2BAYSOR {
         --output-transcript-metadata ${prefix}/transcript-metadata.csv \\
         --output-cell-polygons ${prefix}/cell-polygons.geojson \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        proseg: \$(proseg --version | sed 's/proseg //')
-    END_VERSIONS
-
     """
 
     stub:
@@ -49,10 +43,5 @@ process PROSEG2BAYSOR {
     mkdir -p ${prefix}
     touch "${prefix}/transcript-metadata.csv"
     touch "${prefix}/cell-polygons.geojson"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        proseg: \$(proseg --version | sed 's/proseg //')
-    END_VERSIONS
     """
 }

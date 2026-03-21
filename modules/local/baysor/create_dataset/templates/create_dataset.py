@@ -49,15 +49,6 @@ class BaysorPreview():
 
         return None
 
-    @staticmethod
-    def generate_version_yml() -> None:
-        with open("versions.yml", "w") as yml:
-            yml.write('"${task.process}":\\n')
-            yml.write("Baysor-Preview Create Dataset: 0.7.1'\\n")
-
-        return None
-
-
 def main() -> None:
     """
     Run create dataset as nf module
@@ -74,9 +65,6 @@ def main() -> None:
         sample_fraction=float(sample_fraction),
         prefix=prefix
     )
-
-    # generate versions.yml
-    BaysorPreview.generate_version_yml()
 
     return None
 

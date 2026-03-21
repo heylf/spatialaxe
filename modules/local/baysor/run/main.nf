@@ -9,7 +9,7 @@ process BAYSOR_RUN {
 
     output:
     tuple val(meta), path("${prefix}/segmentation.csv"), path("${prefix}/segmentation_polygons_2d.json"), emit: segmentation
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('baysor'), eval('julia -e \'using Pkg; deps = Pkg.dependencies(); for (uuid, info) in deps; if info.name == "Baysor"; println(info.version); end; end\''), topic: versions, emit: versions_baysor
 
     when:
     task.ext.when == null || task.ext.when
@@ -49,11 +49,6 @@ process BAYSOR_RUN {
     mkdir -p ${prefix}
 
     ${cmd_parts.join(' \\\n    ')}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 
     stub:
@@ -68,10 +63,5 @@ process BAYSOR_RUN {
     mkdir -p ${prefix}
     touch "${prefix}/segmentation.csv"
     touch "${prefix}/segmentation_polygons_2d.json"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 }

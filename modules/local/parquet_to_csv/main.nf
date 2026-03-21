@@ -22,7 +22,7 @@ process PARQUET_TO_CSV {
 
     output:
     tuple val(meta), path("transcripts.csv"), emit: csv
-    path("versions.yml")                    , emit: versions
+    tuple val("${task.process}"), val('pyarrow'), eval("python3 -c 'import pyarrow; print(pyarrow.__version__)'"), topic: versions, emit: versions_pyarrow
 
     when:
     task.ext.when == null || task.ext.when
@@ -35,20 +35,10 @@ import pyarrow.csv as pa_csv
 t = pq.read_table('${parquet}')
 pa_csv.write_csv(t, 'transcripts.csv')
 "
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        pyarrow: \$(python3 -c "import pyarrow; print(pyarrow.__version__)")
-    END_VERSIONS
     """
 
     stub:
     """
     touch transcripts.csv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        pyarrow: "stub"
-    END_VERSIONS
     """
 }

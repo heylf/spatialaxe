@@ -181,8 +181,3 @@ if __name__ == "__main__":
 
     # get png files
     get_png_files(soup=soup, outdir=outdir)
-
-    # write versions.yml
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write('EXTRACT_PREVIEW_DATA: "1.0.0"\\n')

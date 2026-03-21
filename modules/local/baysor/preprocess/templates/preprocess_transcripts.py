@@ -59,14 +59,6 @@ def filter_transcripts (
     return None
 
 
-def generate_version_yml() -> None:
-    with open("versions.yml", "w") as yml:
-        yml.write('"${task.process}":\\n')
-        yml.write("Baysor-Preprocess Transcripts: 1.0.0'\\n")
-
-    return None
-
-
 if __name__ == "__main__":
 
     transcripts: str = "${transcripts}"
@@ -76,5 +68,3 @@ if __name__ == "__main__":
         transcripts=transcripts,
         prefix=prefix
     )
-
-    generate_version_yml()

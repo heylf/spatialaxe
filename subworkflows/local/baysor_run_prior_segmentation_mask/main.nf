@@ -52,7 +52,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
             )
         }
     BAYSOR_RUN(ch_baysor_input)
-    ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions)
+    ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
 
 
     // run import-segmentation with baysor outs

@@ -26,7 +26,9 @@ process CONVERT_MASK_UINT32 {
 
     output:
     tuple val(meta), path("${prefix}_uint32_mask.tif"), emit: mask
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('python'), eval("python3 --version | awk '{print \$2}'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('tifffile'), eval("python3 -c 'import tifffile; print(tifffile.__version__)'"), topic: versions, emit: versions_tifffile
+    tuple val("${task.process}"), val('numpy'), eval("python3 -c 'import numpy; print(numpy.__version__)'"), topic: versions, emit: versions_numpy
 
     when:
     task.ext.when == null || task.ext.when
@@ -44,24 +46,11 @@ tifffile.imwrite(output_path, mask.astype(np.uint32))
 print(f'Output dtype: uint32')
 PYEOF
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python --version | awk '{print \$2}')
-        tifffile: \$(python -c "import tifffile; print(tifffile.__version__)")
-        numpy: \$(python -c "import numpy; print(numpy.__version__)")
-    END_VERSIONS
     """
 
     stub:
     prefix = task.ext.prefix ?: "${meta.id}"
     """
     touch ${prefix}_uint32_mask.tif
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: "3.12.0"
-        tifffile: "2026.3.3"
-        numpy: "2.0.0"
-    END_VERSIONS
     """
 }

@@ -210,8 +210,3 @@ if __name__ == "__main__":
     min_transcripts: int = int("${task.ext.min_transcripts_per_cell ?: 3}")
 
     main(input_file=transcripts, prefix=prefix, min_transcripts=min_transcripts)
-
-    # Output versions.yml
-    with open("versions.yml", "w") as f:
-        f.write('"${task.process}":\\n')
-        f.write('segger2xr: "v0.0.1"\\n')
