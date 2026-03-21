@@ -529,7 +529,13 @@ workflow SPATIALXE {
         SPATIALXE - COLLATE & SAVE SOFTWARE VERSIONS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    softwareVersionsToYAML(ch_versions)
+    // Collect versions published via topic channels (local modules)
+    ch_topic_versions = channel.topic('versions')
+        .map { process, tool, version ->
+            "\"${process}\":\n    ${tool}: ${version}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(ch_topic_versions))
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_' + 'spatialxe_software_' + 'mqc_' + 'versions.yml',

@@ -28,7 +28,6 @@ workflow BAYSOR_GENERATE_SEGFREE {
         params.max_y,
         params.min_y,
     )
-    ch_versions = ch_versions.mix(BAYSOR_PREPROCESS_TRANSCRIPTS.out.versions)
     ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_csv
 
     // run baysor segfree
@@ -44,8 +43,6 @@ workflow BAYSOR_GENERATE_SEGFREE {
     BAYSOR_SEGFREE(
         ch_baysor_segfree_input
     )
-    ch_versions = ch_versions.mix(BAYSOR_SEGFREE.out.versions_baysor)
-
     emit:
     ncvs     = BAYSOR_SEGFREE.out.ncvs // channel: [ val(meta), ["ncvs.loom"] ]
     versions = ch_versions // channel: [ versions.yml ]

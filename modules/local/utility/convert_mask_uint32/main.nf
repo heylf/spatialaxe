@@ -26,7 +26,7 @@ process CONVERT_MASK_UINT32 {
 
     output:
     tuple val(meta), path("${prefix}_uint32_mask.tif"), emit: mask
-    tuple val("${task.process}"), val('python'), eval("python3 --version | awk '{print \$2}'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('tifffile'), eval("python3 -c 'import tifffile; print(tifffile.__version__)'"), topic: versions, emit: versions_tifffile
     tuple val("${task.process}"), val('numpy'), eval("python3 -c 'import numpy; print(numpy.__version__)'"), topic: versions, emit: versions_numpy
 

@@ -9,7 +9,7 @@ process GET_TRANSCRIPTS_COORDINATES {
 
     output:
     stdout()
-    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,7 +22,10 @@ process GET_TRANSCRIPTS_COORDINATES {
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('get_coordinates.py')
+    """
+    get_coordinates.py \\
+        --transcripts ${transcripts}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba

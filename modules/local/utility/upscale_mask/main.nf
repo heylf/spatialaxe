@@ -26,7 +26,7 @@ process UPSCALE_MASK {
 
     output:
     tuple val(meta), path("${prefix}/upscaled_*.tif"), emit: upscaled_mask
-    tuple val("${task.process}"), val('python'), eval("python3 --version | awk '{print \$2}'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('tifffile'), eval('python3 -c "import tifffile; print(tifffile.__version__)"'), topic: versions, emit: versions_tifffile
 
     when:

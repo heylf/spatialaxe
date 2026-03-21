@@ -10,7 +10,7 @@ process EXTRACT_PREVIEW_DATA {
     output:
     tuple val(meta), path("${prefix}/*_mqc.tsv"), emit: mqc_data
     tuple val(meta), path("${prefix}/*_mqc.png"), emit: mqc_img
-    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +23,11 @@ process EXTRACT_PREVIEW_DATA {
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('extract_data.py')
+    """
+    extract_data.py \\
+        --preview-html ${preview_html} \\
+        --prefix ${prefix}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba

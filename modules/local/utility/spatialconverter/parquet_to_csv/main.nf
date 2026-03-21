@@ -22,7 +22,12 @@ process PARQUET_TO_CSV {
     }
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('parquet_to_csv.py')
+    """
+    parquet_to_csv.py \\
+        --transcripts ${transcripts} \\
+        --extension ${extension} \\
+        --prefix ${prefix}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba

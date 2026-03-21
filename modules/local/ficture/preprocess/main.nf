@@ -22,11 +22,16 @@ process FICTURE_PREPROCESS {
     script:
     def args = task.ext.args ?: ''
 
-    template 'ficture_preprocess.py'
+    """
+    ficture_preprocess.py \\
+        --transcripts ${transcripts} \\
+        --features ${features} \\
+        --negative-control-regex '${params.negative_control_regex}'
+    """
 
     stub:
     """
-    mkdir -p "${meta.id}/ficture/preprocess/"
-    touch ${meta.id}/ficture/preprocess/fake_file.txt
+    touch processed_transcripts.tsv.gz
+    touch coordinate_minmax.tsv
     """
 }

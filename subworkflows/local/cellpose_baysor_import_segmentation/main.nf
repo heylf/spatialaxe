@@ -38,7 +38,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     if (params.sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
-        ch_versions = ch_versions.mix(RESOLIFT.out.versions_resolift)
 
         ch_image = RESOLIFT.out.enhanced_tiff
     }
@@ -52,20 +51,16 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     if (params.cell_segmentation_only) {
 
         CELLPOSE_CELLS(ch_image, cellpose_model)
-        ch_versions = ch_versions.mix(CELLPOSE_CELLS.out.versions_cellpose)
     }
 
     if (params.nucleus_segmentation_only) {
 
         // Extract DAPI channel, run StarDist, convert to uint32
         EXTRACT_DAPI(ch_image)
-        ch_versions = ch_versions.mix(EXTRACT_DAPI.out.versions)
 
         STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_nuclei_model, []])
-        ch_versions = ch_versions.mix(STARDIST_NUCLEI.out.versions_stardist)
 
         CONVERT_MASK_UINT32(STARDIST_NUCLEI.out.mask)
-        ch_versions = ch_versions.mix(CONVERT_MASK_UINT32.out.versions)
     }
 
 
@@ -80,7 +75,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
         params.max_y,
         params.min_y,
     )
-    ch_versions = ch_versions.mix(BAYSOR_PREPROCESS_TRANSCRIPTS.out.versions)
     ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_csv
 
 
@@ -100,7 +94,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         RESIZE_TIF(ch_resizetif_input)
-        ch_versions = ch_versions.mix(RESIZE_TIF.out.versions)
 
         // run baysor with nuclei mask
         ch_baysor_input = ch_transcripts
@@ -116,7 +109,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
     }
     else if (params.cell_segmentation_only) {
 
@@ -133,7 +125,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         RESIZE_TIF(ch_resizetif_input)
-        ch_versions = ch_versions.mix(RESIZE_TIF.out.versions)
 
         // run baysor with cell mask
         ch_baysor_input = ch_transcripts
@@ -149,7 +140,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
     }
     else {
 
@@ -166,7 +156,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
                 )
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions_baysor)
     }
 
 

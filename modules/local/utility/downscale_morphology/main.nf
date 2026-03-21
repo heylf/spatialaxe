@@ -29,7 +29,7 @@ process DOWNSCALE_MORPHOLOGY {
     output:
     tuple val(meta), path("${prefix}/downscaled.tif"), emit: downscaled
     tuple val(meta), path("${prefix}/scale_info.json"), emit: scale_info
-    tuple val("${task.process}"), val('python'), eval("python3 --version | awk '{print \$2}'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('tifffile'), eval('python3 -c "import tifffile; print(tifffile.__version__)"'), topic: versions, emit: versions_tifffile
     tuple val("${task.process}"), val('scikit-image'), eval('python3 -c "import skimage; print(skimage.__version__)"'), topic: versions, emit: versions_skimage
 

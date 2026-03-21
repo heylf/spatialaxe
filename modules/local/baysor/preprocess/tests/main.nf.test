@@ -33,7 +33,7 @@ nextflow_process {
                 { assert process.success },
                 { assert file(process.out.transcripts_csv[0][1]).exists() },
                 { assert file(process.out.transcripts_csv[0][1]).name == "filtered_transcripts.csv" },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions_python).match("versions") }
             )
         }
     }
@@ -61,7 +61,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions) }
+                { assert snapshot(process.out.versions_python).match("versions_stub") }
             )
         }
     }

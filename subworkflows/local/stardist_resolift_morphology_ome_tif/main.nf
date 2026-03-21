@@ -26,7 +26,6 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
     if (params.sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
-        ch_versions = ch_versions.mix(RESOLIFT.out.versions_resolift)
 
         ch_image = RESOLIFT.out.enhanced_tiff
     }
@@ -37,15 +36,12 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     // Extract DAPI channel for StarDist (expects single-channel input)
     EXTRACT_DAPI(ch_image)
-    ch_versions = ch_versions.mix(EXTRACT_DAPI.out.versions)
 
     // Run StarDist nuclei segmentation on DAPI channel
     STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_nuclei_model, []])
-    ch_versions = ch_versions.mix(STARDIST_NUCLEI.out.versions_stardist)
 
     // Convert mask to uint32 for XeniumRanger compatibility
     CONVERT_MASK_UINT32(STARDIST_NUCLEI.out.mask)
-    ch_versions = ch_versions.mix(CONVERT_MASK_UINT32.out.versions)
 
     // Run import-segmentation with nuclei only
     // XeniumRanger expands nuclei by expansion_distance to create cell boundaries

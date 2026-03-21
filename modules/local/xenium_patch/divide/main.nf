@@ -25,7 +25,7 @@ process XENIUM_PATCH_DIVIDE {
     output:
     tuple val(meta), path("patches/patch_grid.json")              , emit: grid
     tuple val(meta), path("patches/patch_*/transcripts.parquet")  , emit: patch_transcripts
-    tuple val("${task.process}"), val('python'), eval('python3 --version 2>&1 | sed \'s/Python //\''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('pyarrow'), eval('python3 -c "import pyarrow; print(pyarrow.__version__)"'), topic: versions, emit: versions_pyarrow
 
     when:

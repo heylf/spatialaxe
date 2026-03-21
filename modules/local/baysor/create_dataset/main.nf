@@ -10,7 +10,7 @@ process BAYSOR_CREATE_DATASET {
 
     output:
     tuple val(meta), path("${prefix}/sampled_transcripts.csv"), emit: sampled_transcripts
-    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +23,12 @@ process BAYSOR_CREATE_DATASET {
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('create_dataset.py')
+    """
+    create_dataset.py \\
+        --transcripts ${transcripts} \\
+        --sample-fraction ${sample_fraction} \\
+        --prefix ${prefix}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba

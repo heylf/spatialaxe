@@ -47,7 +47,6 @@ workflow SPATIALDATA_WRITE_META_MERGE {
         ch_segmented_object,
         ch_coordinate_space,
     )
-    ch_versions = ch_versions.mix(SPATIALDATA_WRITE_RAW_BUNDLE.out.versions)
 
 
     // write spatialdata object after running IMP_SEG
@@ -57,7 +56,6 @@ workflow SPATIALDATA_WRITE_META_MERGE {
         ch_segmented_object,
         ch_coordinate_space,
     )
-    ch_versions = ch_versions.mix(SPATIALDATA_WRITE_REDEFINED_BUNDLE.out.versions)
 
 
     // merge raw & redefined spatialdata objects
@@ -65,7 +63,6 @@ workflow SPATIALDATA_WRITE_META_MERGE {
         SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata.combine(ch_redefined_bundle, by: 0),
         'merged_bundle'
     )
-    ch_versions = ch_versions.mix(SPATIALDATA_MERGE_RAW_REDEFINED.out.versions)
 
 
     // write metadata with spatialdata object
@@ -73,7 +70,6 @@ workflow SPATIALDATA_WRITE_META_MERGE {
         SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle.combine(ch_bundle_path, by: 0),
         'metadata'
     )
-    ch_versions = ch_versions.mix(SPATIALDATA_META.out.versions)
 
     emit:
     sd_raw_bundle       = SPATIALDATA_WRITE_RAW_BUNDLE.out.spatialdata // channel: [ val(meta), "spatialdata_raw" ]

@@ -11,7 +11,7 @@ process RESIZE_TIF {
 
     output:
     tuple val(meta), path("${meta.id}/resized_*.tif"), emit: resized_mask
-    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('tifffile'), eval('python3 -c "import tifffile; print(tifffile.__version__)"'), topic: versions, emit: versions_tifffile
 
     when:
@@ -25,7 +25,14 @@ process RESIZE_TIF {
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('resize_tif.py')
+    """
+    resize_tif.py \\
+        --mask ${mask} \\
+        --transcripts ${transcripts} \\
+        --metadata ${metadata} \\
+        --prefix ${prefix} \\
+        --mask-filename ${mask}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba

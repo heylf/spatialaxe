@@ -13,7 +13,7 @@ process SEGGER2XR {
     tuple val(meta), path("${meta.id}/segmentation.csv")           , emit: segmentation_csv
     tuple val(meta), path("${meta.id}/transcripts.parquet")        , emit: transcripts_parquet
     tuple val(meta), path("${meta.id}/segmentation_polygons.json") , emit: viz_polygons
-    tuple val("${task.process}"), val('python'), eval('python3 --version | awk \\'\\'{print \\$2}\\'\\'''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -24,7 +24,14 @@ process SEGGER2XR {
         error "SEGGER2XR module does not support Conda. Please use Docker / Singularity / Podman instead."
     }
 
-    template 'segger2xr.py'
+    def min_transcripts = task.ext.min_transcripts_per_cell ?: 3
+
+    """
+    segger2xr.py \\
+        --transcripts ${transcripts} \\
+        --prefix ${meta.id} \\
+        --min-transcripts ${min_transcripts}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba

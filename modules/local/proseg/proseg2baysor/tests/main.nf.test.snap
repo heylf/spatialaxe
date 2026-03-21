@@ -11,7 +11,7 @@
                 "2": [
                     
                 ],
-                "versions": [
+                "versions_proseg": [
                     
                 ],
                 "xr_metadata": [
@@ -24,9 +24,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-20T23:57:41.672841472"
+        "timestamp": "2026-03-21T03:50:54.118409704"
     },
     "proseg2baysor stub": {
         "content": [
@@ -40,7 +40,7 @@
                 "2": [
                     
                 ],
-                "versions": [
+                "versions_proseg": [
                     
                 ],
                 "xr_metadata": [
@@ -53,8 +53,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-20T23:57:48.940574255"
+        "timestamp": "2026-03-21T03:51:01.546798675"
     }
 }

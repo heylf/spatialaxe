@@ -26,7 +26,7 @@ process XENIUM_PATCH_STITCH {
     tuple val(meta),
         path("output/xr-cell-polygons.geojson"),
         path("output/xr-transcript-metadata.csv")  , emit: xr_polygons_transcript
-    tuple val("${task.process}"), val('python'), eval('python3 --version 2>&1 | sed \'s/Python //\''), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
     tuple val("${task.process}"), val('sopa'), eval('python3 -c "import sopa; print(sopa.__version__)"'), topic: versions, emit: versions_sopa
 
     when:

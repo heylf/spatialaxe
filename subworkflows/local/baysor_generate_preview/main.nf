@@ -21,11 +21,9 @@ workflow BAYSOR_GENERATE_PREVIEW {
 
     // run parquet to csv
     PARQUET_TO_CSV(ch_transcripts_parquet, ".csv")
-    ch_versions = ch_versions.mix(PARQUET_TO_CSV.out.versions_pyarrow)
 
     // generate randomised sample data
     BAYSOR_CREATE_DATASET(PARQUET_TO_CSV.out.transcripts_csv, 0.3)
-    ch_versions = ch_versions.mix(BAYSOR_CREATE_DATASET.out.versions)
 
     // run baysor preview if param - generate_preview is true
     ch_sampled_transcripts = BAYSOR_CREATE_DATASET.out.sampled_transcripts
@@ -39,11 +37,9 @@ workflow BAYSOR_GENERATE_PREVIEW {
                                     )
                                 }
     BAYSOR_PREVIEW(ch_baysor_preview_input)
-    ch_versions = ch_versions.mix(BAYSOR_PREVIEW.out.versions_baysor)
 
     // clean the preview html file generated
     EXTRACT_PREVIEW_DATA(BAYSOR_PREVIEW.out.preview_html)
-    ch_versions = ch_versions.mix(EXTRACT_PREVIEW_DATA.out.versions)
 
     ch_preview_mqc_html = EXTRACT_PREVIEW_DATA.out.mqc_data
     ch_preview_mqc_png  = EXTRACT_PREVIEW_DATA.out.mqc_img
