@@ -44,8 +44,8 @@ def get_png_files(soup: BeautifulSoup, outdir: Path) -> None:
             print(f"[WARN] img src is not base64 PNG for h1#{h1_id}")
             continue
 
-        # save png files
-        img_name = f"{h1_id}.png".lower()
+        # save png files with _mqc suffix for MultiQC integration
+        img_name = f"{h1_id}_mqc.png".lower()
         out_path = outdir / img_name
         with open(out_path, "wb") as f:
             f.write(data)
@@ -103,7 +103,7 @@ def js_to_json(js: str) -> str:
     # Convert single-quoted strings to double-quoted strings
     js = re.sub(
         r"'((?:\\.|[^'\\])*)'",
-        lambda m: '"' + m.group(1).replace('\"', '\\"') + '\"',
+        lambda m: '"' + m.group(1).replace('"', '\\"') + '"',
         js,
     )
 

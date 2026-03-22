@@ -1,5 +1,5 @@
 name: "baysor_preprocess"
-description: Filter transcript.parquet fiel based on the specified thresholds
+description: Filter transcript.parquet file based on the specified thresholds
 keywords:
   - baysor
   - transcripts
@@ -48,7 +48,7 @@ input:
         if no limit is specified, the default minimum value will be 0.0
 
 output:
-  - - transcripts_csv:
+  - - transcripts_parquet:
         - meta:
           type: map
           description: |
@@ -59,10 +59,10 @@ output:
           description: filtered transcripts CSV (for Baysor 0.7.1 Parquet.jl compatibility)
           pattern: "filtered_transcripts.csv"
 
-  - - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+  - - versions_python:
+      type: tuple
+      description: Python version emitted via topic channel
+      pattern: "topic: versions"
 
 authors:
   - "@khersameesh24"

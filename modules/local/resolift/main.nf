@@ -9,7 +9,7 @@ process RESOLIFT {
 
     output:
     tuple val(meta), path("${prefix}/morphology.ome.enhanced.tiff"), emit: enhanced_tiff
-    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('resolift'), eval("pip show resolift | sed -n 's/^Version: //p'"), topic: versions, emit: versions_resolift
 
     when:
     task.ext.when == null || task.ext.when

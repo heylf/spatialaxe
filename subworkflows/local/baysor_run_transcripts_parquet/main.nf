@@ -124,7 +124,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         )
 
         // Run Baysor on full transcripts (with optional image-based prior mask)
-        ch_csv_with_mask = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_csv
+        ch_csv_with_mask = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
             .join(ch_prior_mask, by: 0, remainder: true)
             .map { meta, transcripts, mask ->
                 tuple(meta, transcripts, mask ?: [])
@@ -145,7 +145,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
                     segmentation_csv,
                     polygons2d,
                     [], [], [],
-                    "microns")
+                    ch_coordinate_space.val)
             }
 
         XENIUMRANGER_IMPORT_SEGMENTATION(ch_xr)

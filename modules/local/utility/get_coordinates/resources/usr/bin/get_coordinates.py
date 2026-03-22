@@ -56,4 +56,5 @@ def parse_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = parse_args()
-    get_coordinates(args.transcripts)
+    result = get_coordinates(args.transcripts)
+    print(",".join(str(v) for v in result))

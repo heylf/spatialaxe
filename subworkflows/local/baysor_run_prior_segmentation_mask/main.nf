@@ -34,7 +34,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
         params.max_y,
         params.min_y,
     )
-    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_csv
+    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
 
 
     // run baysor with prior segmentation mask
@@ -75,7 +75,7 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs
 
     emit:
-    coordinate_space = ch_coordinate_space // channel: [ "microns" ]
+    coordinate_space = ch_coordinate_space // channel: [ "pixels" ]
     redefined_bundle = ch_redefined_bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
     versions         = ch_versions // channel: [ versions.yml ]
 }
