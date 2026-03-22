@@ -7,7 +7,7 @@
                 "nf-core": {
                     "cellpose": {
                         "branch": "master",
-                        "git_sha": "ad65d06c959cff1da9e94c4a972deaf7430931fa",
+                        "git_sha": "0780b963d3ab087e861a4b74e9d0e404115e5352",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/cellpose/cellpose.diff"
                     },
