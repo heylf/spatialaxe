@@ -10,7 +10,7 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeni
 workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     take:
     ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
+    ch_transcripts_file // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
     ch_segmentation_mask   // channel: [ ["path-to-prior-segmentation-mask"] ]
     ch_config              // channel: [ "path-to-xenium.toml" ]
 
@@ -27,14 +27,14 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files from Xenium bundles.
     // Also applies optional spatial/QV filtering when params.filter_transcripts is true.
     BAYSOR_PREPROCESS_TRANSCRIPTS(
-        ch_transcripts_parquet,
+        ch_transcripts_file,
         params.min_qv,
         params.max_x,
         params.min_x,
         params.max_y,
         params.min_y,
     )
-    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
 
 
     // run baysor with prior segmentation mask

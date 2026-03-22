@@ -17,7 +17,7 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     take:
     ch_morphology_image          // channel: [ val(meta), ["path-to-morphology.ome.tif"] ]
     ch_bundle_path               // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet       // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
+    ch_transcripts_file       // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
     ch_experiment_metadata       // channel: [ val(meta), ["path-to-experiment.xenium"] ]
     ch_config                    // channel: ["path-to-xenium.toml"]
 
@@ -68,14 +68,14 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files from Xenium bundles.
     // Also applies optional spatial/QV filtering when params.filter_transcripts is true.
     BAYSOR_PREPROCESS_TRANSCRIPTS(
-        ch_transcripts_parquet,
+        ch_transcripts_file,
         params.min_qv,
         params.max_x,
         params.min_x,
         params.max_y,
         params.min_y,
     )
-    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
 
 
     // run baysor with cellpose results

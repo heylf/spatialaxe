@@ -9,7 +9,7 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeni
 workflow PROSEG_PRESET_PROSEG2BAYSOR {
     take:
     ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), [ "transcripts.parquet" ] ]
+    ch_transcripts_file // channel: [ val(meta), [ "transcripts.parquet" ] ]
 
     main:
 
@@ -17,7 +17,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
     ch_coordinate_space = Channel.value("microns")
 
     // run proseg with the xenium format
-    PROSEG(ch_transcripts_parquet)
+    PROSEG(ch_transcripts_file)
 
 
     // run proseg-to-baysor on the zarr output from proseg v3

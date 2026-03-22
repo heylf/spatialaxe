@@ -4,8 +4,9 @@
  process CELLPOSE {
      tag "${meta.id}"
 -    label 'process_medium'
+-    label 'process_gpu'
 +    label 'process_high'
-     label 'process_gpu'
++    label 'process_gpu_single'
  
      conda "${moduleDir}/environment.yml"
 @@ -13,9 +13,7 @@

@@ -9,7 +9,7 @@ include { PARQUET_TO_CSV        } from '../../../modules/local/utility/spatialco
 
 workflow BAYSOR_GENERATE_PREVIEW {
     take:
-    ch_transcripts_parquet // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
+    ch_transcripts_file // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
     ch_config              // channel: ["path-to-xenium.toml"]
 
     main:
@@ -20,7 +20,7 @@ workflow BAYSOR_GENERATE_PREVIEW {
 
 
     // run parquet to csv
-    PARQUET_TO_CSV(ch_transcripts_parquet, ".csv")
+    PARQUET_TO_CSV(ch_transcripts_file, ".csv")
 
     // generate randomised sample data
     BAYSOR_CREATE_DATASET(PARQUET_TO_CSV.out.transcripts_csv, 0.3)

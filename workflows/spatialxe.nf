@@ -83,7 +83,7 @@ workflow SPATIALXE {
     ch_redefined_bundle = Channel.empty()
     ch_coordinate_space = Channel.empty()
     ch_panel_probes_fasta = Channel.empty()
-    ch_transcripts_parquet = Channel.empty()
+    ch_transcripts_file = Channel.empty()
     ch_reference_annotations = Channel.empty()
     ch_multiqc_pre_xr_report = Channel.empty()
     ch_multiqc_post_xr_report = Channel.empty()
@@ -145,7 +145,7 @@ workflow SPATIALXE {
     }
 
     // get transcript.parquet from the xenium bundle
-    ch_transcripts_parquet = ch_input.map { meta, bundle, _image ->
+    ch_transcripts_file = ch_input.map { meta, bundle, _image ->
         def transcripts_parquet = file(
             bundle.toString().replaceFirst(/\/$/, '') + "/transcripts.parquet",
             checkIfExists: true
@@ -305,7 +305,7 @@ workflow SPATIALXE {
     if (params.mode == 'preview') {
 
         BAYSOR_GENERATE_PREVIEW(
-            ch_transcripts_parquet,
+            ch_transcripts_file,
             ch_config,
         )
         ch_preview_html = BAYSOR_GENERATE_PREVIEW.out.preview_html
@@ -340,7 +340,7 @@ workflow SPATIALXE {
             CELLPOSE_BAYSOR_IMPORT_SEGMENTATION(
                 ch_morphology_image,
                 ch_bundle_path,
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_exp_metadata,
                 ch_config,
             )
@@ -364,7 +364,7 @@ workflow SPATIALXE {
             if (params.segmentation_mask) {
                 BAYSOR_RUN_PRIOR_SEGMENTATION_MASK(
                     ch_bundle_path,
-                    ch_transcripts_parquet,
+                    ch_transcripts_file,
                     ch_segmentation_mask,
                     ch_config,
                 )
@@ -409,14 +409,14 @@ workflow SPATIALXE {
             if (params.tiling) {
                 PROSEG_PRESET_PROSEG2BAYSOR_TILED(
                     ch_bundle_path,
-                    ch_transcripts_parquet,
+                    ch_transcripts_file,
                 )
                 ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR_TILED.out.redefined_bundle
                 ch_coordinate_space = PROSEG_PRESET_PROSEG2BAYSOR_TILED.out.coordinate_space
             } else {
                 PROSEG_PRESET_PROSEG2BAYSOR(
                     ch_bundle_path,
-                    ch_transcripts_parquet,
+                    ch_transcripts_file,
                 )
                 ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR.out.redefined_bundle
                 ch_coordinate_space = PROSEG_PRESET_PROSEG2BAYSOR.out.coordinate_space
@@ -428,7 +428,7 @@ workflow SPATIALXE {
 
             SEGGER_CREATE_TRAIN_PREDICT(
                 ch_bundle_path,
-                ch_transcripts_parquet,
+                ch_transcripts_file,
             )
             ch_redefined_bundle = SEGGER_CREATE_TRAIN_PREDICT.out.redefined_bundle
             ch_coordinate_space = SEGGER_CREATE_TRAIN_PREDICT.out.coordinate_space
@@ -447,7 +447,7 @@ workflow SPATIALXE {
 
             BAYSOR_RUN_TRANSCRIPTS_PARQUET(
                 ch_bundle_path,
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_morphology_image,
                 ch_config,
                 ch_prior_mask,
@@ -507,7 +507,7 @@ workflow SPATIALXE {
         if (!params.method || params.method == 'baysor') {
 
             BAYSOR_GENERATE_SEGFREE(
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_config,
             )
         }
@@ -516,7 +516,7 @@ workflow SPATIALXE {
         if (params.method == 'ficture') {
 
             FICTURE_PREPROCESS_MODEL(
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_features,
             )
         }

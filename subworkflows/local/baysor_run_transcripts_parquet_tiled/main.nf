@@ -12,7 +12,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET_TILED {
 
     take:
     ch_bundle_path         // channel: [ val(meta), ["xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), ["transcripts.parquet"] ]
+    ch_transcripts_file // channel: [ val(meta), ["transcripts.parquet"] ]
     ch_config              // channel: ["path-to-xenium.toml"]
 
     main:
@@ -20,7 +20,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET_TILED {
     ch_coordinate_space = Channel.value("microns")
 
     // Step 1: Divide transcripts into overlapping patches
-    XENIUM_PATCH_DIVIDE ( ch_transcripts_parquet )
+    XENIUM_PATCH_DIVIDE ( ch_transcripts_file )
 
     // Step 2: Fan out patches for parallel processing
     ch_patches = XENIUM_PATCH_DIVIDE.out.patch_transcripts
@@ -46,7 +46,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET_TILED {
     )
 
     // Step 4: Run Baysor on each patch independently
-    ch_baysor_input = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+    ch_baysor_input = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
         .combine(ch_config)
         .map { meta, transcripts, config ->
             tuple(meta, transcripts, [], config, 30)

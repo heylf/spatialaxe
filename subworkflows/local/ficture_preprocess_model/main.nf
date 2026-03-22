@@ -10,7 +10,7 @@ include { PARQUET_TO_CSV     } from '../../../modules/local/utility/spatialconve
 
 workflow FICTURE_PREPROCESS_MODEL {
     take:
-    ch_transcripts_parquet // channel: [ val(meta), [ "transcripts.parquet" ] ]
+    ch_transcripts_file // channel: [ val(meta), [ "transcripts.parquet" ] ]
     ch_features            // channel: [ ["features"] ]
 
     main:
@@ -18,7 +18,7 @@ workflow FICTURE_PREPROCESS_MODEL {
     ch_versions = Channel.empty()
 
     // convert parquet to csv
-    PARQUET_TO_CSV(ch_transcripts_parquet, ".csv")
+    PARQUET_TO_CSV(ch_transcripts_file, ".csv")
 
     // run ficture preprocessing
     ch_transcripts = PARQUET_TO_CSV.out.transcripts_csv

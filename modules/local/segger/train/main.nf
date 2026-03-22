@@ -1,5 +1,6 @@
 process SEGGER_TRAIN {
     tag "${meta.id}"
+    label 'process_xl'
     label 'process_gpu'
     maxForks params.restrict_concurrency ? 1 : 0
 

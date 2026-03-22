@@ -1,6 +1,6 @@
 process SEGGER_CREATE_DATASET {
     tag "${meta.id}"
-    label 'process_high'
+    label 'process_xl'
     maxForks params.restrict_concurrency ? 1 : 0
 
     container "quay.io/dongzehe/segger:1.0.14"

@@ -8,7 +8,7 @@ include { BAYSOR_SEGFREE                } from '../../../modules/local/baysor/se
 
 workflow BAYSOR_GENERATE_SEGFREE {
     take:
-    ch_transcripts_parquet // channel: [ val(meta), ["transcripts.parquet"] ]
+    ch_transcripts_file // channel: [ val(meta), ["transcripts.parquet"] ]
     ch_config              // channel: [ ["path-to-xenium.toml"] ]
 
     main:
@@ -21,14 +21,14 @@ workflow BAYSOR_GENERATE_SEGFREE {
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files from Xenium bundles.
     // Also applies optional spatial/QV filtering when params.filter_transcripts is true.
     BAYSOR_PREPROCESS_TRANSCRIPTS(
-        ch_transcripts_parquet,
+        ch_transcripts_file,
         params.min_qv,
         params.max_x,
         params.min_x,
         params.max_y,
         params.min_y,
     )
-    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+    ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
 
     // run baysor segfree
     ch_baysor_segfree_input = ch_transcripts

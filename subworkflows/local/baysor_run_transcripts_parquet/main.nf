@@ -21,7 +21,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
     take:
     ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), ["transcripts.parquet"] ]
+    ch_transcripts_file // channel: [ val(meta), ["transcripts.parquet"] ]
     ch_morphology_image    // channel: [ val(meta), ["morphology_focus.ome.tif"] ]
     ch_config              // channel: ["path-to-xenium.toml"]
     ch_prior_mask          // channel: [ val(meta), ["resized_mask.tif"] ] or empty (cellpose)
@@ -36,7 +36,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         // ── TILED PATH ──────────────────────────────────────────────────
 
         // Step 1: Divide transcripts into overlapping patches
-        ch_divide_input = ch_transcripts_parquet
+        ch_divide_input = ch_transcripts_file
             .join(ch_morphology_image, by: 0)
 
         XENIUM_PATCH_DIVIDE ( ch_divide_input )
@@ -115,7 +115,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
         // Preprocess: parquet → CSV with optional spatial/QV filtering
         BAYSOR_PREPROCESS_TRANSCRIPTS(
-            ch_transcripts_parquet,
+            ch_transcripts_file,
             params.min_qv,
             params.max_x,
             params.min_x,
@@ -124,7 +124,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         )
 
         // Run Baysor on full transcripts (with optional image-based prior mask)
-        ch_csv_with_mask = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_parquet
+        ch_csv_with_mask = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
             .join(ch_prior_mask, by: 0, remainder: true)
             .map { meta, transcripts, mask ->
                 tuple(meta, transcripts, mask ?: [])

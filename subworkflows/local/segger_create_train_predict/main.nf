@@ -11,7 +11,7 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeni
 workflow SEGGER_CREATE_TRAIN_PREDICT {
     take:
     ch_bundle              // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), [bundle + "/transcripts.parquet"]]
+    ch_transcripts_file // channel: [ val(meta), [bundle + "/transcripts.parquet"]]
 
     main:
 
@@ -30,14 +30,14 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
         // Use pre-trained model - skip training
         def model_path = file(params.segger_model)
         ch_predict_paired = SEGGER_CREATE_DATASET.out.datasetdir
-            .join(ch_transcripts_parquet)
+            .join(ch_transcripts_file)
             .map { meta, dataset, tx -> [meta, dataset, model_path, tx] }
     } else {
         // Train a new model per sample, join all inputs by meta
         SEGGER_TRAIN(SEGGER_CREATE_DATASET.out.datasetdir)
         ch_predict_paired = SEGGER_CREATE_DATASET.out.datasetdir
             .join(SEGGER_TRAIN.out.trained_models)
-            .join(ch_transcripts_parquet)
+            .join(ch_transcripts_file)
     }
     // ch_predict_paired: [meta, dataset_dir, models_dir, transcripts]
 
