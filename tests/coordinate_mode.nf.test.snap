@@ -35,11 +35,15 @@
                 "coordinate/multiqc",
                 "coordinate/multiqc/raw_bundle",
                 "coordinate/multiqc/raw_bundle/multiqc_data",
+                "coordinate/multiqc/raw_bundle/multiqc_data/.stub",
                 "coordinate/multiqc/raw_bundle/multiqc_plots",
+                "coordinate/multiqc/raw_bundle/multiqc_plots/.stub",
                 "coordinate/multiqc/raw_bundle/multiqc_report.html",
                 "coordinate/multiqc/redefined_bundle",
                 "coordinate/multiqc/redefined_bundle/multiqc_data",
+                "coordinate/multiqc/redefined_bundle/multiqc_data/.stub",
                 "coordinate/multiqc/redefined_bundle/multiqc_plots",
+                "coordinate/multiqc/redefined_bundle/multiqc_plots/.stub",
                 "coordinate/multiqc/redefined_bundle/multiqc_report.html",
                 "coordinate/proseg",
                 "coordinate/proseg/preset",
@@ -83,7 +87,11 @@
                 "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml"
             ],
             [
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "cell-polygons.geojson:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "transcript-metadata.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -102,6 +110,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-21T03:09:35.909544667"
+        "timestamp": "2026-03-22T19:54:10.312439732"
     }
 }

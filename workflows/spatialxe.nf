@@ -562,6 +562,9 @@ workflow SPATIALXE {
         ? Channel.fromPath(params.multiqc_logo, checkIfExists: true)
         : Channel.empty()
 
+    // Combine default and custom configs into a single list for the tuple-based MULTIQC input
+    ch_multiqc_configs = ch_multiqc_config.mix(ch_multiqc_custom_config).collect()
+
     summary_params = paramsSummaryMap(
         workflow,
         parameters_schema: "nextflow_schema.json"
@@ -598,14 +601,14 @@ workflow SPATIALXE {
         )
 
         MULTIQC_PRE_XR_RUN (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_files.collect().map { [it] }
+                .combine(ch_multiqc_configs.map { [it] })
+                .combine(ch_multiqc_logo.toList().map { [it] })
+                .map { files, configs, logo ->
+                    [ [id: 'multiqc_pre_xr'], files, configs, logo ? logo[0] : [], [], [] ]
+                }
         )
-        ch_multiqc_pre_xr_report = MULTIQC_PRE_XR_RUN.out.report.toList()
+        ch_multiqc_pre_xr_report = MULTIQC_PRE_XR_RUN.out.report.map { _meta, report -> report }.toList()
 
         // get path to the redefined bundle
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -613,14 +616,14 @@ workflow SPATIALXE {
         )
 
         MULTIQC_POST_XR_RUN (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_files.collect().map { [it] }
+                .combine(ch_multiqc_configs.map { [it] })
+                .combine(ch_multiqc_logo.toList().map { [it] })
+                .map { files, configs, logo ->
+                    [ [id: 'multiqc_post_xr'], files, configs, logo ? logo[0] : [], [], [] ]
+                }
         )
-        ch_multiqc_post_xr_report = MULTIQC_POST_XR_RUN.out.report.toList()
+        ch_multiqc_post_xr_report = MULTIQC_POST_XR_RUN.out.report.map { _meta, report -> report }.toList()
 
     } else {
 
@@ -652,14 +655,14 @@ workflow SPATIALXE {
 
 
         MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_files.collect().map { [it] }
+                .combine(ch_multiqc_configs.map { [it] })
+                .combine(ch_multiqc_logo.toList().map { [it] })
+                .map { files, configs, logo ->
+                    [ [id: 'multiqc'], files, configs, logo ? logo[0] : [], [], [] ]
+                }
         )
-        ch_multiqc_report = MULTIQC.out.report.toList()
+        ch_multiqc_report = MULTIQC.out.report.map { _meta, report -> report }.toList()
 
     }
 
