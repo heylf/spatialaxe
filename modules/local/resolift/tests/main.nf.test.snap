@@ -13,8 +13,8 @@
                 "1": [
                     [
                         "RESOLIFT",
-                        "python",
-                        "3.12.3"
+                        "resolift",
+                        "1.0"
                     ]
                 ],
                 "enhanced_tiff": [
@@ -25,11 +25,11 @@
                         "morphology.ome.enhanced.tiff:md5,d41d8cd98f00b204e9800998ecf8427e"
                     ]
                 ],
-                "versions_python": [
+                "versions_resolift": [
                     [
                         "RESOLIFT",
-                        "python",
-                        "3.12.3"
+                        "resolift",
+                        "1.0"
                     ]
                 ]
             }
@@ -38,7 +38,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-21T03:51:20.481604812"
+        "timestamp": "2026-03-22T16:00:00.000000000"
     },
     "resolift tif": {
         "content": [
@@ -54,8 +54,8 @@
                 "1": [
                     [
                         "RESOLIFT",
-                        "python",
-                        "3.12.3"
+                        "resolift",
+                        "1.0"
                     ]
                 ],
                 "enhanced_tiff": [
@@ -66,11 +66,11 @@
                         "morphology.ome.enhanced.tiff:md5,a9feec67b317d8e5c5c93bc45d5a8763"
                     ]
                 ],
-                "versions_python": [
+                "versions_resolift": [
                     [
                         "RESOLIFT",
-                        "python",
-                        "3.12.3"
+                        "resolift",
+                        "1.0"
                     ]
                 ]
             }
@@ -79,6 +79,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-21T03:51:11.728712465"
+        "timestamp": "2026-03-22T16:00:00.000000000"
     }
 }
