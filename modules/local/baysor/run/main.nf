@@ -9,7 +9,7 @@ process BAYSOR_RUN {
 
     output:
     tuple val(meta), path("${prefix}/segmentation.csv"), path("${prefix}/segmentation_polygons_2d.json"), emit: segmentation
-    tuple val("${task.process}"), val('baysor'), eval('julia -e \'using Pkg; deps = Pkg.dependencies(); for (uuid, info) in deps; if info.name == "Baysor"; println(info.version); end; end\''), topic: versions, emit: versions_baysor
+    tuple val("${task.process}"), val('baysor'), eval("baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_baysor
 
     when:
     task.ext.when == null || task.ext.when

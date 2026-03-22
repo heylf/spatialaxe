@@ -35,6 +35,6 @@ process GET_TRANSCRIPTS_COORDINATES {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    echo
+    echo "0,0,1000,1000"
     """
 }
