@@ -6,7 +6,7 @@
                     "python": "3.14.0"
                 },
                 "BAYSOR_SEGFREE": {
-                    "baysor": null
+                    "baysor": "0.7.1"
                 },
                 "UNTAR": {
                     "untar": 1.34

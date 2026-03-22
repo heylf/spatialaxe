@@ -6,7 +6,7 @@
                     "python": "3.14.0"
                 },
                 "BAYSOR_RUN": {
-                    "baysor": null
+                    "baysor": "0.7.1"
                 },
                 "CELLPOSE_CELLS": {
                     "torch": "2.10.0+cu128"
