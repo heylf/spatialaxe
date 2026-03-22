@@ -19,25 +19,25 @@
                     },
                     "opt/flip": {
                         "branch": "master",
-                        "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
+                        "git_sha": "7d3e5c9d3d44",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/opt/flip/opt-flip.diff"
                     },
                     "opt/stat": {
                         "branch": "master",
-                        "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
+                        "git_sha": "7d3e5c9d3d44",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/opt/stat/opt-stat.diff"
                     },
                     "opt/track": {
                         "branch": "master",
-                        "git_sha": "66d5baa4e9b6ac3ab95e84f88709b8e3ebf4b62b",
+                        "git_sha": "7d3e5c9d3d44",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/opt/track/opt-track.diff"
                     },
                     "stardist": {
                         "branch": "master",
-                        "git_sha": "b75cf1a894cc2d63a81dc3bd58126de7f023acf9",
+                        "git_sha": "4e783502ab661bed13f15189401b73c93966831f",
                         "installed_by": ["modules"],
                         "patch": "modules/nf-core/stardist/stardist.diff"
                     },

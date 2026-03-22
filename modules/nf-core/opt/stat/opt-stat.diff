@@ -23,11 +23,10 @@ Changes in 'opt/stat/main.nf':
  
      """
      opt \\
-@@ -41,8 +41,12 @@
+@@ -41,7 +41,12 @@
      """
  
      stub:
--    def args = task.ext.args ?: ''
 -    def prefix = task.ext.prefix ?: "${meta.id}"
 +    // Exit if running this module with -profile conda / -profile mamba
 +    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {

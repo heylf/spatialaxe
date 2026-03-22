@@ -1,10 +1,11 @@
 Changes in module 'nf-core/stardist'
 --- modules/nf-core/stardist/main.nf
 +++ modules/nf-core/stardist/main.nf
-@@ -1,6 +1,7 @@
+@@ -1,7 +1,7 @@
  process STARDIST {
      tag "$meta.id"
 -    label 'process_medium'
+-    label 'process_gpu'
 +    label 'process_high'
 +    label 'process_gpu_single'
 

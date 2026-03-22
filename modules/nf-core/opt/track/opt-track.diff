@@ -22,20 +22,21 @@ Changes in 'opt/track/main.nf':
  
      """
      opt \\
-@@ -41,8 +41,11 @@
+@@ -41,8 +41,12 @@
      """
  
      stub:
--    def args = task.ext.args ?: ''
 -    def prefix = task.ext.prefix ?: "${meta.id}"
+-
 +    // Exit if running this module with -profile conda / -profile mamba
 +    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
 +        error "OPT_TRACK module does not support Conda. Please use Docker / Singularity / Podman instead."
 +    }
 +    prefix = task.ext.prefix ?: "${meta.id}"
-     
++    
      """
      mkdir -p ${prefix}
+     touch "${prefix}/probe2targets.tsv"
 
 'modules/nf-core/opt/track/meta.yml' is unchanged
 'modules/nf-core/opt/track/tests/main.nf.test' is unchanged
