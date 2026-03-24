@@ -29,7 +29,7 @@ nextflow_process {
                 { assert process.success },
                 { assert file(process.out.ncvs[0][1]).exists() },
                 { assert file(process.out.ncvs[0][1]).name == "ncvs.loom" },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions_baysor).match("versions") }
             )
         }
     }
@@ -53,7 +53,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions) }
+                { assert snapshot(process.out.versions_baysor).match("versions_stub") }
             )
         }
     }

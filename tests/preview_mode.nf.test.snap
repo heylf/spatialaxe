@@ -2,6 +2,18 @@
     "-profile test": {
         "content": [
             {
+                "BAYSOR_CREATE_DATASET": {
+                    "python": "3.11.2"
+                },
+                "BAYSOR_PREVIEW": {
+                    "baysor": "0.7.1"
+                },
+                "EXTRACT_PREVIEW_DATA": {
+                    "python": "3.14.0"
+                },
+                "PARQUET_TO_CSV": {
+                    "pyarrow": "21.0.0"
+                },
                 "UNTAR": {
                     "untar": 1.34
                 },
@@ -17,14 +29,14 @@
                 "preview/baysor/create_dataset",
                 "preview/baysor/create_dataset/test_run",
                 "preview/baysor/create_dataset/test_run/sampled_transcripts.csv",
-                "preview/baysor/create_dataset/versions.yml",
                 "preview/baysor/preview",
                 "preview/baysor/preview/test_run",
                 "preview/baysor/preview/test_run/preview.html",
-                "preview/baysor/preview/versions.yml",
                 "preview/multiqc",
                 "preview/multiqc/multiqc_data",
+                "preview/multiqc/multiqc_data/.stub",
                 "preview/multiqc/multiqc_plots",
+                "preview/multiqc/multiqc_plots/.stub",
                 "preview/multiqc/multiqc_report.html",
                 "preview/untar",
                 "preview/untar/test_run",
@@ -32,7 +44,6 @@
                 "preview/untar/test_run/gene_panel.json",
                 "preview/untar/test_run/morphology.ome.tif",
                 "preview/untar/test_run/transcripts.parquet",
-                "preview/untar/versions.yml",
                 "preview/utility",
                 "preview/utility/preview_data",
                 "preview/utility/preview_data/test_run",
@@ -41,38 +52,33 @@
                 "preview/utility/preview_data/test_run/noise_level_mqc.png",
                 "preview/utility/preview_data/test_run/transcript_plots_mqc.png",
                 "preview/utility/preview_data/test_run/umap_mqc.tsv",
-                "preview/utility/preview_data/versions.yml",
                 "preview/utility/spatialconverter",
                 "preview/utility/spatialconverter/parquet_to_csv",
                 "preview/utility/spatialconverter/parquet_to_csv/test_run",
-                "preview/utility/spatialconverter/parquet_to_csv/test_run/transcripts.parquet.csv",
-                "preview/utility/spatialconverter/parquet_to_csv/versions.yml"
+                "preview/utility/spatialconverter/parquet_to_csv/test_run/transcripts.parquet.csv"
             ],
             [
                 "sampled_transcripts.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "versions.yml:md5,ba06b22355a650c8b7118fcbc171162b",
                 "preview.html:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "versions.yml:md5,dc0516ae9a452f7949e0e2e65b0201b0",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
+                ".stub:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "multiqc_report.html:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "experiment.xenium:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gene_panel.json:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "morphology.ome.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "versions.yml:md5,4054f048e726d8faf84c982f8180a9e0",
                 "gene_structure_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "noise_distribution_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "noise_level_mqc.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "transcript_plots_mqc.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "umap_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "versions.yml:md5,df5efa071f7cde92b1671a88ecc20959",
-                "transcripts.parquet.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "versions.yml:md5,b7a26f2cff61d87a77f2db813dbc851a"
+                "transcripts.parquet.csv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-10-30T20:21:33.929224"
+        "timestamp": "2026-03-22T19:59:13.325489211"
     }
 }

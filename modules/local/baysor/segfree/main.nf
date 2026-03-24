@@ -9,7 +9,7 @@ process BAYSOR_SEGFREE {
 
     output:
     tuple val(meta), path("${prefix}/ncvs.loom"), emit: ncvs
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('baysor'), eval("baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_baysor
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,11 +33,6 @@ process BAYSOR_SEGFREE {
     --config ${config} \\
     --output=${prefix}/ncvs.loom \\
     ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 
     stub:
@@ -51,10 +46,5 @@ process BAYSOR_SEGFREE {
     """
     mkdir -p ${prefix}
     touch "${prefix}/ncvs.loom"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 }

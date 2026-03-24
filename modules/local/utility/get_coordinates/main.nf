@@ -9,7 +9,7 @@ process GET_TRANSCRIPTS_COORDINATES {
 
     output:
     stdout()
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,7 +22,10 @@ process GET_TRANSCRIPTS_COORDINATES {
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('get_coordinates.py')
+    """
+    get_coordinates.py \\
+        --transcripts ${transcripts}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
@@ -32,11 +35,6 @@ process GET_TRANSCRIPTS_COORDINATES {
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    echo
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        GET_TRANSCRIPTS_COORDINATES: "1.0.0"
-    END_VERSIONS
+    echo "0,0,1000,1000"
     """
 }

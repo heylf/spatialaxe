@@ -83,7 +83,7 @@ workflow SPATIALXE {
     ch_redefined_bundle = Channel.empty()
     ch_coordinate_space = Channel.empty()
     ch_panel_probes_fasta = Channel.empty()
-    ch_transcripts_parquet = Channel.empty()
+    ch_transcripts_file = Channel.empty()
     ch_reference_annotations = Channel.empty()
     ch_multiqc_pre_xr_report = Channel.empty()
     ch_multiqc_post_xr_report = Channel.empty()
@@ -145,7 +145,7 @@ workflow SPATIALXE {
     }
 
     // get transcript.parquet from the xenium bundle
-    ch_transcripts_parquet = ch_input.map { meta, bundle, _image ->
+    ch_transcripts_file = ch_input.map { meta, bundle, _image ->
         def transcripts_parquet = file(
             bundle.toString().replaceFirst(/\/$/, '') + "/transcripts.parquet",
             checkIfExists: true
@@ -305,7 +305,7 @@ workflow SPATIALXE {
     if (params.mode == 'preview') {
 
         BAYSOR_GENERATE_PREVIEW(
-            ch_transcripts_parquet,
+            ch_transcripts_file,
             ch_config,
         )
         ch_preview_html = BAYSOR_GENERATE_PREVIEW.out.preview_html
@@ -340,7 +340,7 @@ workflow SPATIALXE {
             CELLPOSE_BAYSOR_IMPORT_SEGMENTATION(
                 ch_morphology_image,
                 ch_bundle_path,
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_exp_metadata,
                 ch_config,
             )
@@ -364,7 +364,7 @@ workflow SPATIALXE {
             if (params.segmentation_mask) {
                 BAYSOR_RUN_PRIOR_SEGMENTATION_MASK(
                     ch_bundle_path,
-                    ch_transcripts_parquet,
+                    ch_transcripts_file,
                     ch_segmentation_mask,
                     ch_config,
                 )
@@ -409,14 +409,14 @@ workflow SPATIALXE {
             if (params.tiling) {
                 PROSEG_PRESET_PROSEG2BAYSOR_TILED(
                     ch_bundle_path,
-                    ch_transcripts_parquet,
+                    ch_transcripts_file,
                 )
                 ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR_TILED.out.redefined_bundle
                 ch_coordinate_space = PROSEG_PRESET_PROSEG2BAYSOR_TILED.out.coordinate_space
             } else {
                 PROSEG_PRESET_PROSEG2BAYSOR(
                     ch_bundle_path,
-                    ch_transcripts_parquet,
+                    ch_transcripts_file,
                 )
                 ch_redefined_bundle = PROSEG_PRESET_PROSEG2BAYSOR.out.redefined_bundle
                 ch_coordinate_space = PROSEG_PRESET_PROSEG2BAYSOR.out.coordinate_space
@@ -428,7 +428,7 @@ workflow SPATIALXE {
 
             SEGGER_CREATE_TRAIN_PREDICT(
                 ch_bundle_path,
-                ch_transcripts_parquet,
+                ch_transcripts_file,
             )
             ch_redefined_bundle = SEGGER_CREATE_TRAIN_PREDICT.out.redefined_bundle
             ch_coordinate_space = SEGGER_CREATE_TRAIN_PREDICT.out.coordinate_space
@@ -447,7 +447,7 @@ workflow SPATIALXE {
 
             BAYSOR_RUN_TRANSCRIPTS_PARQUET(
                 ch_bundle_path,
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_morphology_image,
                 ch_config,
                 ch_prior_mask,
@@ -507,7 +507,7 @@ workflow SPATIALXE {
         if (!params.method || params.method == 'baysor') {
 
             BAYSOR_GENERATE_SEGFREE(
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_config,
             )
         }
@@ -516,7 +516,7 @@ workflow SPATIALXE {
         if (params.method == 'ficture') {
 
             FICTURE_PREPROCESS_MODEL(
-                ch_transcripts_parquet,
+                ch_transcripts_file,
                 ch_features,
             )
         }
@@ -529,7 +529,13 @@ workflow SPATIALXE {
         SPATIALXE - COLLATE & SAVE SOFTWARE VERSIONS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    softwareVersionsToYAML(ch_versions)
+    // Collect versions published via topic channels (local modules)
+    ch_topic_versions = channel.topic('versions')
+        .map { process, tool, version ->
+            "\"${process}\":\n    ${tool}: ${version}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(ch_topic_versions))
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name: 'nf_core_' + 'spatialxe_software_' + 'mqc_' + 'versions.yml',
@@ -555,6 +561,9 @@ workflow SPATIALXE {
     ch_multiqc_logo = params.multiqc_logo
         ? Channel.fromPath(params.multiqc_logo, checkIfExists: true)
         : Channel.empty()
+
+    // Combine default and custom configs into a single list for the tuple-based MULTIQC input
+    ch_multiqc_configs = ch_multiqc_config.mix(ch_multiqc_custom_config).collect()
 
     summary_params = paramsSummaryMap(
         workflow,
@@ -592,14 +601,14 @@ workflow SPATIALXE {
         )
 
         MULTIQC_PRE_XR_RUN (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_files.collect().map { [it] }
+                .combine(ch_multiqc_configs.map { [it] })
+                .combine(ch_multiqc_logo.toList().map { [it] })
+                .map { files, configs, logo ->
+                    [ [id: 'multiqc_pre_xr'], files, configs, logo ? logo[0] : [], [], [] ]
+                }
         )
-        ch_multiqc_pre_xr_report = MULTIQC_PRE_XR_RUN.out.report.toList()
+        ch_multiqc_pre_xr_report = MULTIQC_PRE_XR_RUN.out.report.map { _meta, report -> report }.toList()
 
         // get path to the redefined bundle
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -607,14 +616,14 @@ workflow SPATIALXE {
         )
 
         MULTIQC_POST_XR_RUN (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_files.collect().map { [it] }
+                .combine(ch_multiqc_configs.map { [it] })
+                .combine(ch_multiqc_logo.toList().map { [it] })
+                .map { files, configs, logo ->
+                    [ [id: 'multiqc_post_xr'], files, configs, logo ? logo[0] : [], [], [] ]
+                }
         )
-        ch_multiqc_post_xr_report = MULTIQC_POST_XR_RUN.out.report.toList()
+        ch_multiqc_post_xr_report = MULTIQC_POST_XR_RUN.out.report.map { _meta, report -> report }.toList()
 
     } else {
 
@@ -646,14 +655,14 @@ workflow SPATIALXE {
 
 
         MULTIQC (
-            ch_multiqc_files.collect(),
-            ch_multiqc_config.toList(),
-            ch_multiqc_custom_config.toList(),
-            ch_multiqc_logo.toList(),
-            [],
-            [],
+            ch_multiqc_files.collect().map { [it] }
+                .combine(ch_multiqc_configs.map { [it] })
+                .combine(ch_multiqc_logo.toList().map { [it] })
+                .map { files, configs, logo ->
+                    [ [id: 'multiqc'], files, configs, logo ? logo[0] : [], [], [] ]
+                }
         )
-        ch_multiqc_report = MULTIQC.out.report.toList()
+        ch_multiqc_report = MULTIQC.out.report.map { _meta, report -> report }.toList()
 
     }
 

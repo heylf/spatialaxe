@@ -12,7 +12,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
 
     take:
     ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), [ "transcripts.parquet" ] ]
+    ch_transcripts_file // channel: [ val(meta), [ "transcripts.parquet" ] ]
 
     main:
 
@@ -20,8 +20,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
     ch_coordinate_space = Channel.value("microns")
 
     // Step 1: Divide transcripts into overlapping patches
-    XENIUM_PATCH_DIVIDE ( ch_transcripts_parquet )
-    ch_versions = ch_versions.mix( XENIUM_PATCH_DIVIDE.out.versions )
+    XENIUM_PATCH_DIVIDE ( ch_transcripts_file )
 
     // Step 2: Fan out patches for parallel processing
     // transpose() emits one item per patch file: [meta, parquet_path]
@@ -38,11 +37,9 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
 
     // Step 3: Run proseg on each patch independently
     PROSEG ( ch_patches )
-    ch_versions = ch_versions.mix( PROSEG.out.versions.first() )
 
     // Step 4: Convert proseg output to baysor format per patch
     PROSEG2BAYSOR ( PROSEG.out.zarr )
-    ch_versions = ch_versions.mix( PROSEG2BAYSOR.out.versions.first() )
 
     // Step 5: Gather patch results per sample for stitching
     ch_for_stitch = PROSEG2BAYSOR.out.xr_polygons
@@ -72,7 +69,6 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
 
     // Step 6: Stitch patch results into unified segmentation output
     XENIUM_PATCH_STITCH ( ch_stitch_input )
-    ch_versions = ch_versions.mix( XENIUM_PATCH_STITCH.out.versions )
 
     // Step 7: Run xeniumranger import-segmentation
     // Note: Cell size filtering is handled inline by STITCH via --filter-method

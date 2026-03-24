@@ -13,8 +13,8 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
     val min_y
 
     output:
-    tuple val(meta), path("${prefix}/filtered_transcripts.csv"), emit: transcripts_csv
-    path ("versions.yml"), emit: versions
+    tuple val(meta), path("${prefix}/filtered_transcripts.csv"), emit: transcripts_file
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -27,7 +27,16 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
 
     prefix = task.ext.prefix ?: "${meta.id}"
 
-    template('preprocess_transcripts.py')
+    """
+    preprocess_transcripts.py \\
+        --transcripts ${transcripts} \\
+        --prefix ${prefix} \\
+        --min-qv ${min_qv} \\
+        --min-x ${min_x} \\
+        --max-x ${max_x} \\
+        --min-y ${min_y} \\
+        --max-y ${max_y}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
@@ -40,10 +49,5 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
     """
     mkdir -p ${prefix}
     touch ${prefix}/filtered_transcripts.csv
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor_preprocess_transcripts: "1.0.0"
-    END_VERSIONS
     """
 }

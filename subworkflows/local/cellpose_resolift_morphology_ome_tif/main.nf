@@ -30,7 +30,6 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     if (params.sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
-        ch_versions = ch_versions.mix(RESOLIFT.out.versions)
 
         ch_image = RESOLIFT.out.enhanced_tiff
     }
@@ -44,7 +43,6 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     if (params.cellpose_downscale && !params.nucleus_segmentation_only) {
 
         DOWNSCALE_MORPHOLOGY(ch_image)
-        ch_versions = ch_versions.mix(DOWNSCALE_MORPHOLOGY.out.versions)
 
         ch_cellpose_input = DOWNSCALE_MORPHOLOGY.out.downscaled
         ch_scale_info = DOWNSCALE_MORPHOLOGY.out.scale_info
@@ -58,19 +56,15 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     // run cellpose on morphology tiff (or downscaled version)
     if (!params.nucleus_segmentation_only) {
         CELLPOSE_CELLS(ch_cellpose_input, cellpose_model)
-        ch_versions = ch_versions.mix(CELLPOSE_CELLS.out.versions_cellpose)
     }
 
     // StarDist for nuclei — extract DAPI first, then run on original resolution
     EXTRACT_DAPI(ch_image)
-    ch_versions = ch_versions.mix(EXTRACT_DAPI.out.versions)
 
     STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_nuclei_model, []])
-    ch_versions = ch_versions.mix(STARDIST_NUCLEI.out.versions_stardist)
 
     // Convert StarDist mask to uint32 for XeniumRanger compatibility
     CONVERT_MASK_UINT32(STARDIST_NUCLEI.out.mask)
-    ch_versions = ch_versions.mix(CONVERT_MASK_UINT32.out.versions)
 
     ch_nuclei_mask = CONVERT_MASK_UINT32.out.mask
 
@@ -82,7 +76,6 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
             ch_cells_for_upscale = CELLPOSE_CELLS.out.mask
                 .combine(ch_scale_info, by: 0)
             UPSCALE_CELLS(ch_cells_for_upscale)
-            ch_versions = ch_versions.mix(UPSCALE_CELLS.out.versions)
             ch_cells_mask = UPSCALE_CELLS.out.upscaled_mask
         }
     }

@@ -13,7 +13,7 @@ process FICTURE {
 
     output:
     tuple val(meta), path("results/**"), emit: results
-    path "versions.yml"                , emit: versions
+    tuple val("${task.process}"), val('ficture'), eval("pip show ficture | sed -n 's/^Version: //p'"), topic: versions, emit: versions_ficture
 
     when:
     task.ext.when == null || task.ext.when
@@ -34,11 +34,6 @@ process FICTURE {
         --n-jobs ${task.cpus} \\
         --plot-each-factor \\
         --all
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        ficture: \$(pip show ficture | grep "^Version:" | awk '{print \$2}')
-    END_VERSIONS
     """
 
     stub:
@@ -46,10 +41,5 @@ process FICTURE {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir -p results/
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        ficture: \$(pip show ficture | grep "^Version:" | awk '{print \$2}')
-    END_VERSIONS
     """
 }

@@ -31,7 +31,7 @@ nextflow_process {
                 { assert file(process.out.seg_outs[0][1]).name == "cell-polygons.geojson.gz" },
                 { assert file(process.out.seg_outs[0][2]).exists() },
                 { assert file(process.out.seg_outs[0][2]).name == "transcript-metadata.csv.gz" },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions_proseg).match("versions") }
             )
         }
     }
@@ -54,7 +54,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions) }
+                { assert snapshot(process.out.versions_proseg).match("versions_stub") }
             )
         }
     }

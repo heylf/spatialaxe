@@ -26,7 +26,8 @@ process UPSCALE_MASK {
 
     output:
     tuple val(meta), path("${prefix}/upscaled_*.tif"), emit: upscaled_mask
-    path "versions.yml", emit: versions
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
+    tuple val("${task.process}"), val('tifffile'), eval('python3 -c "import tifffile; print(tifffile.__version__)"'), topic: versions, emit: versions_tifffile
 
     when:
     task.ext.when == null || task.ext.when
@@ -56,11 +57,6 @@ tifffile.imwrite(out_name, mask_up, compression='zlib')
 print(f'Done: {out_name}, unique cells: {len(np.unique(mask_up)) - 1}')
 "
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python3 --version | awk '{print \$2}')
-        tifffile: \$(python3 -c 'import tifffile; print(tifffile.__version__)')
-    END_VERSIONS
     """
 
     stub:
@@ -68,10 +64,5 @@ print(f'Done: {out_name}, unique cells: {len(np.unique(mask_up)) - 1}')
     """
     mkdir -p ${prefix}
     touch ${prefix}/upscaled_mask.tif
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        python: \$(python3 --version | awk '{print \$2}')
-    END_VERSIONS
     """
 }

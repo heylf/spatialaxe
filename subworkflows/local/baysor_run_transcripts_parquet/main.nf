@@ -21,7 +21,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
     take:
     ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
-    ch_transcripts_parquet // channel: [ val(meta), ["transcripts.parquet"] ]
+    ch_transcripts_file // channel: [ val(meta), ["transcripts.parquet"] ]
     ch_morphology_image    // channel: [ val(meta), ["morphology_focus.ome.tif"] ]
     ch_config              // channel: ["path-to-xenium.toml"]
     ch_prior_mask          // channel: [ val(meta), ["resized_mask.tif"] ] or empty (cellpose)
@@ -36,11 +36,10 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         // ── TILED PATH ──────────────────────────────────────────────────
 
         // Step 1: Divide transcripts into overlapping patches
-        ch_divide_input = ch_transcripts_parquet
+        ch_divide_input = ch_transcripts_file
             .join(ch_morphology_image, by: 0)
 
         XENIUM_PATCH_DIVIDE ( ch_divide_input )
-        ch_versions = ch_versions.mix( XENIUM_PATCH_DIVIDE.out.versions )
 
         // Step 2: Fan out patches for parallel processing
         ch_patches = XENIUM_PATCH_DIVIDE.out.patch_transcripts
@@ -56,7 +55,6 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
         // Step 2b: Convert parquet to CSV (Baysor Julia Parquet.jl incompatibility)
         PARQUET_TO_CSV ( ch_patches )
-        ch_versions = ch_versions.mix( PARQUET_TO_CSV.out.versions.first() )
 
         // Step 3: Run Baysor on each patch independently
         // Use baysor_tiling_scale (larger than baysor_scale) to compensate for EM
@@ -66,7 +64,6 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
                 tuple(meta, transcripts, [], params.baysor_config ? file(params.baysor_config) : [], params.baysor_tiling_scale)
             }
         )
-        ch_versions = ch_versions.mix( BAYSOR_RUN.out.versions.first() )
 
         // Step 4: Gather patch results per sample and reconstruct patches directory
         ch_baysor_results = BAYSOR_RUN.out.segmentation
@@ -95,7 +92,6 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         // Step 5: Stitch patch results
         RECONSTRUCT_PATCHES ( ch_stitch_input )
         XENIUM_PATCH_STITCH ( RECONSTRUCT_PATCHES.out.patches_dir )
-        ch_versions = ch_versions.mix( XENIUM_PATCH_STITCH.out.versions )
 
         // Step 6: xeniumranger import-segmentation (tiled)
         // spatialxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units
@@ -112,7 +108,6 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
             }
 
         XENIUMRANGER_IMPORT_SEGMENTATION (ch_xr)
-        ch_versions = ch_versions.mix( XENIUMRANGER_IMPORT_SEGMENTATION.out.versions_xeniumranger )
 
     } else {
 
@@ -120,17 +115,16 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
         // Preprocess: parquet → CSV with optional spatial/QV filtering
         BAYSOR_PREPROCESS_TRANSCRIPTS(
-            ch_transcripts_parquet,
+            ch_transcripts_file,
             params.min_qv,
             params.max_x,
             params.min_x,
             params.max_y,
             params.min_y,
         )
-        ch_versions = ch_versions.mix(BAYSOR_PREPROCESS_TRANSCRIPTS.out.versions)
 
         // Run Baysor on full transcripts (with optional image-based prior mask)
-        ch_csv_with_mask = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_csv
+        ch_csv_with_mask = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
             .join(ch_prior_mask, by: 0, remainder: true)
             .map { meta, transcripts, mask ->
                 tuple(meta, transcripts, mask ?: [])
@@ -141,7 +135,6 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
                 tuple(meta, transcripts, mask, config, params.baysor_scale)
             }
         BAYSOR_RUN(ch_baysor_input)
-        ch_versions = ch_versions.mix(BAYSOR_RUN.out.versions)
 
         // xeniumranger import-segmentation (non-tiled)
         // spatialxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units
@@ -152,11 +145,10 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
                     segmentation_csv,
                     polygons2d,
                     [], [], [],
-                    "microns")
+                    ch_coordinate_space.val)
             }
 
         XENIUMRANGER_IMPORT_SEGMENTATION(ch_xr)
-        ch_versions = ch_versions.mix(XENIUMRANGER_IMPORT_SEGMENTATION.out.versions_xeniumranger)
     }
 
     emit:

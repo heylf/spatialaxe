@@ -128,6 +128,6 @@ containers:
       https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/34/34e733a9ae16a27e80fe00f863ea1479c96416017f24a907996126283e7ecd4d/data
       name: oras://community.wave.seqera.io/library/multiqc:1.33--e3576ddf588fa00d
     linux/arm64:
-      build_id: bd-58d7dee710ab3aa8_1
+      build_id: bd-2537ca5f8445e3c2_1
       https: https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/78/78b89e91d89e9cc99ad5ade5be311f347838cb2acbfb4f13bc343b170be09ce4/data
       name: oras://community.wave.seqera.io/library/multiqc:1.33--2537ca5f8445e3c2

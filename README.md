@@ -103,22 +103,22 @@ For more details about the output files and reports, please refer to the
 
 ## Runtime and resource estimations
 
-Tool | Compute | Runtime (min / med / max) | Peak RSS (min / med / max)
--- | -- | -- | --
-Cellpose | GPU | 1m / 4m / 1.4h | 10 GB / 26 GB / 554 GB
-Cellpose | CPU | 1.3h / 2.3h / 6.5h | 161 GB / 426 GB / 1115 GB
-StarDist | GPU | 1m / 4m / 7m | 5 GB / 12 GB / 18 GB
-StarDist | CPU | 5m / 6m / 7m | 18 GB / 18 GB / 18 GB
-Segger (create_dataset) | GPU | 2m / 9m / 31m | 1.7 GB / 14 GB / 50 GB
-Segger (create_dataset) | CPU | 13m / 21m / 46m | 13 GB / 19 GB / 49 GB
-Segger (train) | GPU | 10m / 43m / 2.9h | 30 GB / 33 GB / 60 GB
-Segger (predict) | GPU | 2m / 16m / 59m | 10 GB / 25 GB / 87 GB
-Baysor (whole-image) | CPU | 2m / 30m / 17h | 6 GB / 10 GB / 650 GB
-Baysor (tiled) | CPU | 1m / 18m / 13h | 0.2 GB / 34 GB / 530 GB
-Proseg | CPU | 1m / 18m / 6.8h | 279 MB / 3.8 GB / 136 GB
-XeniumRanger (resegment) | CPU | 18m / 39m / 3.7h | 28 GB / 54 GB / 60 GB
-XeniumRanger (import_seg) | CPU | 2m / 7m / 2.7h | 2.6 GB / 11 GB / 51 GB
-Ficture (preprocess) | CPU | 3m / 4m / 13m | 331 MB / 357 MB / 21 GB
+| Tool                      | Compute | Runtime (min / med / max) | Peak RSS (min / med / max) |
+| ------------------------- | ------- | ------------------------- | -------------------------- |
+| Cellpose                  | GPU     | 1m / 4m / 1.4h            | 10 GB / 26 GB / 554 GB     |
+| Cellpose                  | CPU     | 1.3h / 2.3h / 6.5h        | 161 GB / 426 GB / 1115 GB  |
+| StarDist                  | GPU     | 1m / 4m / 7m              | 5 GB / 12 GB / 18 GB       |
+| StarDist                  | CPU     | 5m / 6m / 7m              | 18 GB / 18 GB / 18 GB      |
+| Segger (create_dataset)   | GPU     | 2m / 9m / 31m             | 1.7 GB / 14 GB / 50 GB     |
+| Segger (create_dataset)   | CPU     | 13m / 21m / 46m           | 13 GB / 19 GB / 49 GB      |
+| Segger (train)            | GPU     | 10m / 43m / 2.9h          | 30 GB / 33 GB / 60 GB      |
+| Segger (predict)          | GPU     | 2m / 16m / 59m            | 10 GB / 25 GB / 87 GB      |
+| Baysor (whole-image)      | CPU     | 2m / 30m / 17h            | 6 GB / 10 GB / 650 GB      |
+| Baysor (tiled)            | CPU     | 1m / 18m / 13h            | 0.2 GB / 34 GB / 530 GB    |
+| Proseg                    | CPU     | 1m / 18m / 6.8h           | 279 MB / 3.8 GB / 136 GB   |
+| XeniumRanger (resegment)  | CPU     | 18m / 39m / 3.7h          | 28 GB / 54 GB / 60 GB      |
+| XeniumRanger (import_seg) | CPU     | 2m / 7m / 2.7h            | 2.6 GB / 11 GB / 51 GB     |
+| Ficture (preprocess)      | CPU     | 3m / 4m / 13m             | 331 MB / 357 MB / 21 GB    |
 
 - Cellpose GPU vs CPU: 35x faster on GPU (4m median vs 2.3h), 16x less memory (26 GB vs 426 GB)
 - Segger: Only tool that truly requires GPU for all 3 steps (create_dataset, train, predict)
@@ -126,7 +126,7 @@ Ficture (preprocess) | CPU | 3m / 4m / 13m | 331 MB / 357 MB / 21 GB
 
 ## Credits
 
-nf-core/spatialxe is mainly developed by [Sameesh Kher](https://github.com/khersameesh24), [Dongze He](https://github.com/an-altosian), and [Florian Heyl](https://github.com/heylf).
+nf-core/spatialxe is mainly developed by [Sameesh Kher](https://github.com/khersameesh24), [Dongze He](https://github.com/dongzehe), and [Florian Heyl](https://github.com/heylf).
 
 We thank the following people for their extensive assistance in the development of this pipeline:
 

@@ -34,7 +34,7 @@ nextflow_process {
                 { assert file(process.out.segmentation[0][1]).name == "segmentation.csv" },
                 { assert file(process.out.segmentation[0][2]).exists() },
                 { assert file(process.out.segmentation[0][2]).name == "segmentation_polygons_2d.json" },
-                { assert snapshot(process.out.versions).match("versions") }
+                { assert snapshot(process.out.versions_baysor).match("versions") }
             )
         }
     }
@@ -60,7 +60,7 @@ nextflow_process {
         then {
             assertAll(
                 { assert process.success },
-                { assert snapshot(process.out.versions) }
+                { assert snapshot(process.out.versions_baysor).match("versions_stub") }
             )
         }
     }

@@ -11,7 +11,7 @@ process SPLIT_TRANSCRIPTS {
 
     output:
     tuple val(meta), path("${meta.id}/splits.csv"), emit: splits_csv
-    path("versions.yml")                          , emit: versions
+    tuple val("${task.process}"), val('python'), eval("python3 --version | sed 's/Python //'"), topic: versions, emit: versions_python
 
     when:
     task.ext.when == null || task.ext.when
@@ -23,7 +23,13 @@ process SPLIT_TRANSCRIPTS {
     }
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-    template 'split_transcripts.py'
+    """
+    split_transcripts.py \\
+        --transcripts ${transcripts} \\
+        --x-bins ${x_bins} \\
+        --y-bins ${y_bins} \\
+        --prefix ${prefix}
+    """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
@@ -33,11 +39,6 @@ process SPLIT_TRANSCRIPTS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir -p ${prefix}
-    touch "${prefix}/${transcripts}.parquet"
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor_split_parquet: "1.0.0"
-    END_VERSIONS
+    touch "${prefix}/splits.csv"
     """
 }

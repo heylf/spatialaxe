@@ -9,7 +9,7 @@ process BAYSOR_PREVIEW {
 
     output:
     tuple val(meta), path("${prefix}/preview.html"), emit: preview_html
-    path ("versions.yml"), emit: versions
+    tuple val("${task.process}"), val('baysor'), eval("baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_baysor
 
     when:
     task.ext.when == null || task.ext.when
@@ -33,11 +33,6 @@ process BAYSOR_PREVIEW {
     --config ${config} \\
     --output ${prefix}/preview.html
     ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 
     stub:
@@ -51,10 +46,5 @@ process BAYSOR_PREVIEW {
     """
     mkdir -p ${prefix}
     touch ${prefix}/preview.html
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        baysor: 0.7.1
-    END_VERSIONS
     """
 }

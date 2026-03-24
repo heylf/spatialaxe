@@ -1,38 +1,32 @@
---- a/modules/nf-core/cellpose/main.nf	2026-03-09 23:13:42.359216339 +0000
-+++ b/modules/nf-core/cellpose/main.nf	2026-03-09 23:14:14.408548975 +0000
-@@ -1,6 +1,6 @@
+Changes in component 'nf-core/cellpose'
+'modules/nf-core/cellpose/environment.yml' is unchanged
+'modules/nf-core/cellpose/meta.yml' is unchanged
+'modules/nf-core/cellpose/tests/main.nf.test' is unchanged
+'modules/nf-core/cellpose/tests/main.nf.test.snap' is unchanged
+'modules/nf-core/cellpose/tests/nextflow_wflows.config' is unchanged
+Changes in 'cellpose/main.nf':
+--- modules/nf-core/cellpose/main.nf
++++ modules/nf-core/cellpose/main.nf
+@@ -1,7 +1,7 @@
  process CELLPOSE {
      tag "${meta.id}"
 -    label 'process_medium'
+-    label 'process_gpu'
 +    label 'process_high'
-     label 'process_gpu'
- 
++    label 'process_gpu_single'
+
      conda "${moduleDir}/environment.yml"
-@@ -13,9 +13,7 @@
-     path(model)
- 
-     output:
--    tuple val(meta), path("${prefix}/*masks.tif"), emit: mask
--    tuple val(meta), path("${prefix}/*flows.tif"), emit: flows, optional: true
--    tuple val(meta), path("${prefix}/*seg.npy"), emit: cells, optional: true
-+    tuple val(meta), path("${prefix}/*_cp_masks.tif"), emit: mask
-     tuple val("${task.process}"), val('cellpose'), eval("cellpose --version | sed -n 's/cellpose version:[[:space:]]*//p' | tr -d '[:space:]'"), topic: versions, emit: versions_cellpose
-     tuple val("${task.process}"), val('python'), eval("cellpose --version | sed -n 's/python version:[[:space:]]*//p' | tr -d '[:space:]'"), topic: versions, emit: versions_python
-     tuple val("${task.process}"), val('torch'), eval("cellpose --version | sed -n 's/torch version:[[:space:]]*//p' | tr -d '[:space:]'"), topic: versions, emit: versions_torch
-@@ -45,10 +43,13 @@
+     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+@@ -45,6 +45,11 @@
          ${model_command} \\
          ${args}
- 
+
 +    # Fail fast if cellpose detected zero cells
 +    if grep -q "No cell pixels found" .cellpose/run.log 2>/dev/null; then
 +        echo "ERROR: cellpose detected 0 cells" >&2; exit 1
 +    fi
 +
      mkdir -p ${prefix}
--    mv *masks.tif ${prefix}/
--    mv *flows.tif ${prefix}/ 2>/dev/null || true
--    mv *seg.npy ${prefix}/ 2>/dev/null || true
-+    mv *_cp_masks.tif ${prefix}/
-     """
- 
-     stub:
+     mv *masks.tif ${prefix}/
+     mv *flows.tif ${prefix}/ 2>/dev/null || true
+************************************************************

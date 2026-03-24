@@ -14,24 +14,25 @@ process FICTURE_PREPROCESS {
     tuple val(meta), path("*processed_transcripts.tsv.gz"), emit: transcripts
     path("*coordinate_minmax.tsv")                        , emit: coordinate_minmax
     path("*feature.clean.tsv.gz")                         , optional:true, emit: features
-    path "versions.yml"                                   , emit: versions
+    tuple val("${task.process}"), val('ficture'), eval("pip show ficture | sed -n 's/^Version: //p'"), topic: versions, emit: versions_ficture
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
+    def features_arg = features ? "--features ${features}" : ""
 
-    template 'ficture_preprocess.py'
+    """
+    ficture_preprocess.py \\
+        --transcripts ${transcripts} \\
+        ${features_arg} \\
+        --negative-control-regex '${params.negative_control_regex}'
+    """
 
     stub:
     """
-    mkdir -p "${meta.id}/ficture/preprocess/"
-    touch ${meta.id}/ficture/preprocess/fake_file.txt
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        ficture_preprocess: v.1.0.0
-    END_VERSIONS
+    touch processed_transcripts.tsv.gz
+    touch coordinate_minmax.tsv
     """
 }
