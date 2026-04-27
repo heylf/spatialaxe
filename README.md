@@ -21,7 +21,7 @@
 
 ## Introduction
 
-**nf-core/spatialxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium data. The current plan for the pipeline implementation is shown in the metromap below. **The pipeline is under active developement and changes might occure frequently**. 
+**nf-core/spatialxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium data. The current plan for the pipeline implementation is shown in the metromap below. **The pipeline is under active developement and changes might occure frequently**.
 
 ![nf-core/spatialxe-metromap](docs/images/spatialxe-metromap.png)
 
@@ -102,9 +102,8 @@ nextflow run nf-core/spatialxe \
 ```
 
 - spatialxe supports the following QC tools:
-   - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
-   - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
-
+  - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
+  - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
 
 ### Additional information
 
