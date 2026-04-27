@@ -153,6 +153,7 @@ We thank the following people for their extensive assistance in the development 
 - Tobias Krause
 - Krešimir Beštak (kbestak)
 - Matthias Hörtenhuber (mashehu)
+- Maxime Garcia (maxulysse)
 
 ## Contributions and Support
 
