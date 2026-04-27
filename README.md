@@ -104,8 +104,6 @@ nextflow run nf-core/spatialxe \
 - spatialxe supports the following QC tools:
    - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
    - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
-   - [spoQC]()
-   - [ovrl.py](https://github.com/HiDiHlabs/ovrl.py)
 
 
 ### Additional information
