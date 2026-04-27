@@ -29,8 +29,6 @@
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/spatialxe/results).
 
-## Pipeline summary
-
 ## Quick Start
 
 `samplesheet.csv`:
@@ -42,7 +40,7 @@ test_sample,/path/to/xenium-bundle,/path/to/morphology.ome.tif
 
 Now, you can run the pipeline using:
 
-## Run image-based segmentation mode <br>
+### Run image-based segmentation mode <br>
 
 `CELLPOSE -> BAYSOR -> XR-IMPORT_SEGMENTATION -> SPATIALDATA -> QC`
 
@@ -54,7 +52,7 @@ nextflow run nf-core/spatialxe \
    --mode <MODE>
 ```
 
-## Run coordinate-based segmentation mode <br>
+### Run coordinate-based segmentation mode <br>
 
 `PROSEG -> PROSEG2BAYSOR -> XR-IMPORT_SEGMENTATION -> SPATIALDATA -> QC`
 
@@ -66,7 +64,7 @@ nextflow run nf-core/spatialxe \
    --mode coordinate
 ```
 
-## Run segfree mode <br>
+### Run segfree mode <br>
 
 `BAYSOR_SEGFREE`
 
@@ -78,7 +76,7 @@ nextflow run nf-core/spatialxe \
    --mode segfree
 ```
 
-## Run preview mode <br>
+### Run preview mode <br>
 
 `BAYSOR_PREVIEW`
 
@@ -89,6 +87,27 @@ nextflow run nf-core/spatialxe \
    --outdir <OUTDIR> \
    --mode preview
 ```
+
+### Run just the quality control <br>
+
+`MultiQC Xenium Extra Plugin, OPT, spoQC (+ ovrlpy)`
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode qc
+```
+
+- spatialxe supports the following QC tools:
+   - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
+   - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
+   - [spoQC]()
+   - [ovrl.py](https://github.com/HiDiHlabs/ovrl.py)
+
+
+### Additional information
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
