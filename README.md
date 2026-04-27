@@ -93,8 +93,6 @@ nextflow run nf-core/spatialxe \
 
 ### Run just the quality control <br>
 
-`MultiQC Xenium Extra Plugin, OPT, spoQC (+ ovrlpy)`
-
 ```bash
 nextflow run nf-core/spatialxe \
    -profile <docker/singularity/.../institute> \
