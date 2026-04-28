@@ -151,7 +151,7 @@ We thank the following people for their extensive assistance in the development 
 - Krešimir Beštak (kbestak)
 - Matthias Hörtenhuber (mashehu)
 - Maxime Garcia (maxulysse)
-- Kübra Narcı (kubranarci) 
+- Kübra Narcı (kubranarci)
 
 ## Contributions and Support
 
