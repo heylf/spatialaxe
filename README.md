@@ -21,15 +21,16 @@
 
 ## Introduction
 
-**nf-core/spatialxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium data. **The pipeline is currently under developement and not completed yet!**. The current plan for the pipeline implementation is shown in the metromap below. Please note that the pipeline steps and methods might change as we move forward in the development cycle.
+**nf-core/spatialxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium data. The current plan for the pipeline implementation is shown in the metromap below. **The pipeline is under active developement and changes might occure frequently**.
 
 ![nf-core/spatialxe-metromap](docs/images/spatialxe-metromap.png)
+
+> [!NOTE]
+> We are currently testing the pipeline for the [10x Atera system](https://www.10xgenomics.com/platforms/atera).
 
 ## Usage
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/spatialxe/results).
-
-## Pipeline summary
 
 ## Quick Start
 
@@ -42,7 +43,7 @@ test_sample,/path/to/xenium-bundle,/path/to/morphology.ome.tif
 
 Now, you can run the pipeline using:
 
-## Run image-based segmentation mode <br>
+### Run image-based segmentation mode <br>
 
 `CELLPOSE -> BAYSOR -> XR-IMPORT_SEGMENTATION -> SPATIALDATA -> QC`
 
@@ -54,7 +55,7 @@ nextflow run nf-core/spatialxe \
    --mode <MODE>
 ```
 
-## Run coordinate-based segmentation mode <br>
+### Run coordinate-based segmentation mode <br>
 
 `PROSEG -> PROSEG2BAYSOR -> XR-IMPORT_SEGMENTATION -> SPATIALDATA -> QC`
 
@@ -66,7 +67,7 @@ nextflow run nf-core/spatialxe \
    --mode coordinate
 ```
 
-## Run segfree mode <br>
+### Run segfree mode <br>
 
 `BAYSOR_SEGFREE`
 
@@ -78,7 +79,7 @@ nextflow run nf-core/spatialxe \
    --mode segfree
 ```
 
-## Run preview mode <br>
+### Run preview mode <br>
 
 `BAYSOR_PREVIEW`
 
@@ -89,6 +90,22 @@ nextflow run nf-core/spatialxe \
    --outdir <OUTDIR> \
    --mode preview
 ```
+
+### Run just the quality control <br>
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode qc
+```
+
+- spatialxe supports the following QC tools:
+  - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
+  - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
+
+### Additional information
 
 > [!WARNING]
 > Please provide pipeline parameters via the CLI or Nextflow `-params-file` option. Custom config files including those provided by the `-c` Nextflow option can be used to provide any configuration _**except for parameters**_; see [docs](https://nf-co.re/docs/usage/getting_started/configuration#custom-configuration-files).
@@ -133,6 +150,7 @@ We thank the following people for their extensive assistance in the development 
 - Tobias Krause
 - Krešimir Beštak (kbestak)
 - Matthias Hörtenhuber (mashehu)
+- Maxime Garcia (maxulysse)
 
 ## Contributions and Support
 
