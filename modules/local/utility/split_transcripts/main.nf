@@ -2,7 +2,9 @@ process SPLIT_TRANSCRIPTS {
     tag "$meta.id"
     label 'process_low'
 
-    container "community.wave.seqera.io/library/pip_pandas:5c59aaec7d5d4750"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/b9/b900c562dadb26dedce5254f88ae85440d7a08cd5e7f72cc4c3ce5aef89b5aa8/data' :
+        'community.wave.seqera.io/library/pip_pandas:257725bfe0d2df83' }"
 
     input:
     tuple val(meta), path(transcripts)

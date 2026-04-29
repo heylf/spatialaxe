@@ -2,7 +2,9 @@ process BAYSOR_PREPROCESS_TRANSCRIPTS {
     tag "${meta.id}"
     label 'process_medium'
 
-    container "community.wave.seqera.io/library/pandas_procs_pyarrow_pip_pruned:a01d9a7721ecb2b7"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/94/9409ce399922a5746bea1b7df5668c3d1d79b9af49a15950d9818c4fe45ac749/data' :
+        'community.wave.seqera.io/library/pandas_procs_pyarrow:d8f882b65dfea451' }"
 
     input:
     tuple val(meta), path(transcripts)
