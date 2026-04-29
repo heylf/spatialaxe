@@ -1384,7 +1384,7 @@
          y="392.1058"
          x="370.34717"
          sodipodi:role="line"
-         id="tspan58-2-1">import</tspan><tspan
+         id="tspan58-2-1">XR import</tspan><tspan
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
          y="395.63358"
          x="370.34717"
@@ -1703,14 +1703,14 @@
        inkscape:export-filename="./polygon4618.png"
        id="text706-0-9-4-4"
        y="394.14322"
-       x="326.38098"
+       x="326.46713"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;line-height:1.25;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
        xml:space="preserve"><tspan
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Maven Pro';-inkscape-font-specification:'Maven Pro, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;stroke-width:0.264583"
          y="394.14322"
-         x="326.38098"
+         x="326.46713"
          sodipodi:role="line"
-         id="tspan60-6">relabel</tspan></text><g
+         id="tspan60-6">XR relabel</tspan></text><g
        id="g65"><ellipse
          cy="-400.47116"
          cx="345.23145"
@@ -2166,7 +2166,7 @@
            y="338.76126"
            x="355.21573"
            sodipodi:role="line"
-           id="tspan58-2-19">XOA resegment</tspan></text><ellipse
+           id="tspan58-2-19">XR resegment</tspan></text><ellipse
          cy="-343.56155"
          cx="355.224"
          id="circle1664-91-2-6-0"
