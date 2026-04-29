@@ -30,20 +30,21 @@
 ## Tools supported
 
 The pipeline supports the following tools:
+
 - Segmenation methods:
-   - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
-   - [Cellpose](https://doi.org/10.1038/s41592-020-01018-x)
-   - [Xenium ranger (XR)](https://www.10xgenomics.com/support/software/xenium-ranger/latest)
-   - [StarDist](https://doi.org/10.48550/arXiv.2203.02284)
+  - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
+  - [Cellpose](https://doi.org/10.1038/s41592-020-01018-x)
+  - [Xenium ranger (XR)](https://www.10xgenomics.com/support/software/xenium-ranger/latest)
+  - [StarDist](https://doi.org/10.48550/arXiv.2203.02284)
 - Segmentation free methods:
-   - [Ficture](https://doi.org/10.1038/s41592-024-02415-2)
-   - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
+  - [Ficture](https://doi.org/10.1038/s41592-024-02415-2)
+  - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
 - Transcript assignment methods:
-   - [Segger](https://doi.org/10.1101/2025.03.14.643160)
-   - [Proseg](https://doi.org/10.1038/s41592-025-02697-0)
+  - [Segger](https://doi.org/10.1101/2025.03.14.643160)
+  - [Proseg](https://doi.org/10.1038/s41592-025-02697-0)
 - Utility methods:
-   - [SpatialData](https://doi.org/10.1038/s41592-024-02212-x)
-   - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
+  - [SpatialData](https://doi.org/10.1038/s41592-024-02212-x)
+  - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
 - QC methods:
   - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
   - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
