@@ -59,17 +59,74 @@ nextflow run nf-core/spatialxe \
         --mode coordinate
 ```
 
+### Segmenation free mode
+
+`BAYSOR_SEGFREE`
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode segfree
+```
+
+### Preview mode <br>
+
+`BAYSOR_PREVIEW`
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode preview
+```
+
+### Quality control <br>
+
+It is possible to run the quality control with `--run_qc` to couple it with another mode like so:
+
+```bash
+nextflow run nf-core/spatialxe \
+        -profile <docker/singularity/...>
+        --input ./samplesheet.csv \
+        --outdir ./results \
+        --mode image \
+        --run_qc
+```
+
+It is also possible to run just he QC with:
+
+```bash
+nextflow run nf-core/spatialxe \
+   -profile <docker/singularity/.../institute> \
+   --input samplesheet.csv \
+   --outdir <OUTDIR> \
+   --mode qc
+```
+
+- QC methods:
+  - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
+  - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
+
 ### Image-based Segmentation mode (--mode image): <br>
 
 - cellpose
 - baysor
 - xeniumranger
+- stardist
 
 ### Coordinate-based (transcripts-based) Segmentation methods (--mode coordinate): <br>
 
 - proseg
 - baysor
 - segger
+
+### Segmentation free methods (--mode segfree): <br>
+
+- baysor
+- ficture
 
 #### Run Segmentation with the methods methods mentioned above : <br>
 
@@ -141,7 +198,7 @@ nextflow pull nf-core/spatialxe
 
 It is a good idea to specify the pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.
 
-First, go to the [nf-core/spatialxe releases page](https://github.com/nf-core/spatialxe/releases) and find the latest pipeline version - numeric only (eg. `1.3.1`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.3.1`. Of course, you can switch to another version by changing the number after the `-r` flag.
+First, go to the [nf-core/spatialxe releases page](https://github.com/nf-core/spatialxe/releases) and find the latest pipeline version - numeric only (eg. `1.0.0`). Then specify this when running the pipeline with `-r` (one hyphen) - eg. `-r 1.0.0`. Of course, you can switch to another version by changing the number after the `-r` flag.
 
 This version number will be logged in reports when you run the pipeline, so that you'll know what you used when you look back in the future. For example, at the bottom of the MultiQC reports.
 
