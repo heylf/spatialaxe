@@ -12,7 +12,6 @@
 
 [![Nextflow](https://img.shields.io/badge/version-%E2%89%A525.04.0-green?style=flat&logo=nextflow&logoColor=white&color=%230DC09D&link=https%3A%2F%2Fnextflow.io)](https://www.nextflow.io/)
 [![nf-core template version](https://img.shields.io/badge/nf--core_template-3.4.1-green?style=flat&logo=nfcore&logoColor=white&color=%2324B064&link=https%3A%2F%2Fnf-co.re)](https://github.com/nf-core/tools/releases/tag/3.4.1)
-[![run with conda](http://img.shields.io/badge/run%20with-conda-3EB049?labelColor=000000&logo=anaconda)](https://docs.conda.io/en/latest/)
 [![run with docker](https://img.shields.io/badge/run%20with-docker-0db7ed?labelColor=000000&logo=docker)](https://www.docker.com/)
 [![run with singularity](https://img.shields.io/badge/run%20with-singularity-1d355c.svg?labelColor=000000)](https://sylabs.io/docs/)
 [![Launch on Seqera Platform](https://img.shields.io/badge/Launch%20%F0%9F%9A%80-Seqera%20Platform-%234256e7)](https://cloud.seqera.io/launch?pipeline=https://github.com/nf-core/spatialxe)
@@ -28,9 +27,34 @@
 > [!NOTE]
 > We are currently testing the pipeline for the [10x Atera system](https://www.10xgenomics.com/platforms/atera).
 
+## Tools supported
+
+The pipeline supports the following tools:
+
+- Segmenation methods:
+  - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
+  - [Cellpose](https://doi.org/10.1038/s41592-020-01018-x)
+  - [Xenium ranger (XR)](https://www.10xgenomics.com/support/software/xenium-ranger/latest)
+  - [StarDist](https://doi.org/10.48550/arXiv.2203.02284)
+- Segmentation free methods:
+  - [Ficture](https://doi.org/10.1038/s41592-024-02415-2)
+  - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
+- Transcript assignment methods:
+  - [Segger](https://doi.org/10.1101/2025.03.14.643160)
+  - [Proseg](https://doi.org/10.1038/s41592-025-02697-0)
+- Utility methods:
+  - [SpatialData](https://doi.org/10.1038/s41592-024-02212-x)
+  - [Baysor](https://doi.org/10.1038/s41587-021-01044-w)
+- QC methods:
+  - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
+  - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
+
 ## Usage
 
 On release, automated continuous integration tests run the pipeline on a full-sized dataset on the AWS cloud infrastructure. This ensures that the pipeline runs on AWS, has sensible resource allocation defaults set to run on real-world datasets, and permits the persistent storage of results to benchmark between pipeline releases and other analysis sources. The results obtained from the full-sized test can be viewed on the [nf-core website](https://nf-co.re/spatialxe/results).
+
+> [!NOTE]
+> The pipeline does not support conda currently. We are working on it.
 
 ## Quick Start
 
@@ -100,10 +124,6 @@ nextflow run nf-core/spatialxe \
    --outdir <OUTDIR> \
    --mode qc
 ```
-
-- spatialxe supports the following QC tools:
-  - [MultiQC Xenium Extra Plugin](https://github.com/MultiQC/xenium-extra)
-  - [OPT](https://github.com/JEFworks-Lab/off-target-probe-tracker)
 
 ### Additional information
 

@@ -39,7 +39,7 @@ output:
       - "ncvs.loom":
         type: file
         description: loom file with neighborhood results
-        pattern: "preview.html"
+        pattern: "ncvs.loom"
 
   - ncvs_log:
     type: file

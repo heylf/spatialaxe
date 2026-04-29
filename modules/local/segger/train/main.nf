@@ -26,7 +26,7 @@ process SEGGER_TRAIN {
     def script_path = "/workspace/segger_dev/src/segger/cli/train_model.py"
     prefix = task.ext.prefix ?: "${meta.id}"
     // Scale GPU count with retries: 4 → 8 (capped at params.devices)
-    def gpu_count = Math.min((int)Math.pow(2, task.attempt + 1), params.devices as int)
+    def gpu_count = 2 * task.attempt
     def cuda_visible = gpu_count == 1 ? "export CUDA_VISIBLE_DEVICES=0" : ""
     def accelerator = task.accelerator ? 'gpu' : 'auto'
 
