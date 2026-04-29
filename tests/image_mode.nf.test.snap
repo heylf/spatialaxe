@@ -3,7 +3,7 @@
         "content": [
             {
                 "BAYSOR_PREPROCESS_TRANSCRIPTS": {
-                    "python": "3.14.0"
+                    "python": "3.14.4"
                 },
                 "BAYSOR_RUN": {
                     "baysor": "0.7.1"
@@ -121,10 +121,10 @@
                 "resized_morphology.ome_cp_masks.tif.tif:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-04-29T19:30:52.537301132",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-22T19:58:09.252204996"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }
