@@ -16,7 +16,6 @@ process CONVERT_MASK_UINT32 {
     tag "${meta.id}"
     label 'process_low'
 
-    conda "conda-forge::python=3.12 conda-forge::tifffile conda-forge::numpy"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/d9/d964e0bef867bb2ff1a309c9c087d8d83ac734ce3aa315dd8311d4c1bfdafd8e/data' :
         'community.wave.seqera.io/library/python_pip_imagecodecs_nvidia-cublas-cu12_pruned:b668bcb6d531d350' }"
