@@ -9,24 +9,27 @@ include { SPATIALDATA_WRITE as SPATIALDATA_WRITE_REDEFINED_BUNDLE } from '../../
 
 workflow SPATIALDATA_WRITE_META_MERGE {
     take:
-    ch_bundle_path      // channel: [ val(meta), [ "path-to-xenium-bundle" ] ]
-    ch_redefined_bundle // channel: [ val(meta), [ "redefined-xenium-bundle" ] ]
-    ch_coordinate_space // channel: [ "pixels" or "microns" ]
+    ch_bundle_path             // channel: [ val(meta), [ "path-to-xenium-bundle" ] ]
+    ch_redefined_bundle        // channel: [ val(meta), [ "redefined-xenium-bundle" ] ]
+    ch_coordinate_space        // channel: [ "pixels" or "microns" ]
+    cell_segmentation_only     // value: bool
+    mode                       // value: pipeline mode (image/coordinate/...)
+    nucleus_segmentation_only  // value: bool
 
     main:
 
     ch_segmented_object = channel.empty()
 
     // check segmentation - only nuclei, cells or both cells & nuclei
-    if (params.mode == 'image') {
+    if (mode == 'image') {
 
-        if (params.nucleus_segmentation_only && params.cell_segmentation_only) {
+        if (nucleus_segmentation_only && cell_segmentation_only) {
             ch_segmented_object = channel.value('cells_and_nuclei')
         }
-        else if (params.nucleus_segmentation_only) {
+        else if (nucleus_segmentation_only) {
             ch_segmented_object = channel.value('nuclei')
         }
-        else if (params.cell_segmentation_only) {
+        else if (cell_segmentation_only) {
             ch_segmented_object = channel.value('cells')
         }
         else {
@@ -35,7 +38,7 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     }
 
     // set all boundaries as false - default
-    if (params.mode == 'coordinate') {
+    if (mode == 'coordinate') {
         ch_segmented_object = channel.value([])
     }
 

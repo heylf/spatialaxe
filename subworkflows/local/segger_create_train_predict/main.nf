@@ -12,6 +12,7 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     take:
     ch_bundle              // channel: [ val(meta), ["path-to-xenium-bundle"] ]
     ch_transcripts_file // channel: [ val(meta), [bundle + "/transcripts.parquet"]]
+    segger_model           // value: path to a pre-trained segger model checkpoint (or null)
 
     main:
 
@@ -25,9 +26,9 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     // Determine model source and join all PREDICT inputs by meta.
     // Without meta-based join, queue channels align by emission order,
     // which is non-deterministic and causes cross-sample input mispairing.
-    if (params.segger_model) {
+    if (segger_model) {
         // Use pre-trained model - skip training
-        def model_path = file(params.segger_model)
+        def model_path = file(segger_model)
         ch_predict_paired = SEGGER_CREATE_DATASET.out.datasetdir
             .join(ch_transcripts_file)
             .map { meta, dataset, tx -> [meta, dataset, model_path, tx] }

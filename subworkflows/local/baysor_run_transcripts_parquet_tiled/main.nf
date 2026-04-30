@@ -14,6 +14,11 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET_TILED {
     ch_bundle_path         // channel: [ val(meta), ["xenium-bundle"] ]
     ch_transcripts_file // channel: [ val(meta), ["transcripts.parquet"] ]
     ch_config              // channel: ["path-to-xenium.toml"]
+    max_x                  // value: spatial filter upper x bound
+    max_y                  // value: spatial filter upper y bound
+    min_qv                 // value: minimum transcript QV
+    min_x                  // value: spatial filter lower x bound
+    min_y                  // value: spatial filter lower y bound
 
     main:
 
@@ -38,11 +43,11 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET_TILED {
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files
     BAYSOR_PREPROCESS_TRANSCRIPTS (
         ch_patches,
-        params.min_qv,
-        params.max_x,
-        params.min_x,
-        params.max_y,
-        params.min_y,
+        min_qv,
+        max_x,
+        min_x,
+        max_y,
+        min_y,
     )
 
     // Step 4: Run Baysor on each patch independently

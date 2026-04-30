@@ -26,12 +26,21 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
     ch_morphology_image    // channel: [ val(meta), ["morphology_focus.ome.tif"] ]
     ch_config              // channel: ["path-to-xenium.toml"]
     ch_prior_mask          // channel: [ val(meta), ["resized_mask.tif"] ] or empty (cellpose)
+    baysor_config          // value: path to baysor config TOML (or null)
+    baysor_scale           // value: Baysor --scale for non-tiled runs
+    baysor_tiling          // value: bool — enable tiling
+    baysor_tiling_scale    // value: Baysor --scale for tiled runs
+    max_x                  // value: spatial filter upper x bound
+    max_y                  // value: spatial filter upper y bound
+    min_qv                 // value: minimum transcript QV
+    min_x                  // value: spatial filter lower x bound
+    min_y                  // value: spatial filter lower y bound
 
     main:
 
     ch_coordinate_space = channel.value("microns")
 
-    if ( params.baysor_tiling ) {
+    if ( baysor_tiling ) {
 
         // ── TILED PATH ──────────────────────────────────────────────────
 
@@ -61,7 +70,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         // convergence producing smaller cells on tile-sized datasets.
         BAYSOR_RUN (
             PARQUET_TO_CSV.out.csv.map { meta, transcripts ->
-                tuple(meta, transcripts, [], params.baysor_config ? file(params.baysor_config) : [], params.baysor_tiling_scale)
+                tuple(meta, transcripts, [], baysor_config ? file(baysor_config) : [], baysor_tiling_scale)
             }
         )
 
@@ -116,11 +125,11 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         // Preprocess: parquet → CSV with optional spatial/QV filtering
         BAYSOR_PREPROCESS_TRANSCRIPTS(
             ch_transcripts_file,
-            params.min_qv,
-            params.max_x,
-            params.min_x,
-            params.max_y,
-            params.min_y,
+            min_qv,
+            max_x,
+            min_x,
+            max_y,
+            min_y,
         )
 
         // Run Baysor on full transcripts (with optional image-based prior mask)
@@ -132,7 +141,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         ch_baysor_input = ch_csv_with_mask
             .combine(ch_config)
             .map { meta, transcripts, mask, config ->
-                tuple(meta, transcripts, mask, config, params.baysor_scale)
+                tuple(meta, transcripts, mask, config, baysor_scale)
             }
         BAYSOR_RUN(ch_baysor_input)
 
