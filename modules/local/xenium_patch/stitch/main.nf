@@ -40,64 +40,11 @@ process XENIUM_PATCH_STITCH {
         --output output \\
         ${args}
 
-    # Post-process: ensure all GeoJSON geometries are Polygon.
-    # make_valid() and solve_conflicts() can produce MultiPolygon,
-    # MultiLineString, or GeometryCollection — XeniumRanger rejects these.
-    # Dropped cells must also be removed from the transcript CSV.
-    python3 -c "
-import csv, json, shapely
-from shapely.geometry import mapping, shape
-
-geojson_path = 'output/xr-cell-polygons.geojson'
-csv_path = 'output/xr-transcript-metadata.csv'
-
-with open(geojson_path) as f:
-    data = json.load(f)
-
-clean = []
-dropped_cells = set()
-for feat in data['features']:
-    geom = shape(feat['geometry'])
-    if not geom.is_valid:
-        geom = shapely.make_valid(geom)
-    poly = None
-    if geom.geom_type == 'Polygon':
-        poly = geom
-    elif geom.geom_type == 'MultiPolygon':
-        poly = max(geom.geoms, key=lambda g: g.area)
-    elif geom.geom_type == 'GeometryCollection':
-        polys = [g for g in geom.geoms if g.geom_type == 'Polygon']
-        if polys:
-            poly = max(polys, key=lambda g: g.area)
-    if poly is not None and not poly.is_empty:
-        feat['geometry'] = mapping(poly)
-        clean.append(feat)
-    else:
-        cell_id = feat.get('id') or feat.get('properties', {}).get('cell_id', '')
-        dropped_cells.add(str(cell_id))
-
-print(f'GeoJSON: {len(clean)} kept, {len(dropped_cells)} dropped: {dropped_cells}')
-data['features'] = clean
-with open(geojson_path, 'w') as f:
-    json.dump(data, f)
-
-if dropped_cells:
-    with open(csv_path) as f:
-        reader = csv.DictReader(f)
-        rows = list(reader)
-    reassigned = 0
-    for row in rows:
-        if row['cell'] in dropped_cells:
-            row['cell'] = ''
-            row['is_noise'] = '1'
-            reassigned += 1
-    with open(csv_path, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=reader.fieldnames)
-        writer.writeheader()
-        writer.writerows(rows)
-    print(f'CSV: {reassigned} transcripts reassigned to UNASSIGNED')
-"
-
+    # Post-process: ensure all GeoJSON geometries are Polygon and
+    # reconcile dropped cells in the transcript CSV.
+    stitch_postprocess.py \\
+        --geojson output/xr-cell-polygons.geojson \\
+        --csv output/xr-transcript-metadata.csv
     """
 
     stub:
