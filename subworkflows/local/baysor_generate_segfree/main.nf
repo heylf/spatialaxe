@@ -41,7 +41,7 @@ workflow BAYSOR_GENERATE_SEGFREE {
     BAYSOR_SEGFREE(
         ch_baysor_segfree_input
     )
-    
+
     emit:
     ncvs     = BAYSOR_SEGFREE.out.ncvs // channel: [ val(meta), ["ncvs.loom"] ]
 }
