@@ -41,11 +41,6 @@ process SEGGER_CREATE_DATASET {
         --tile-height ${params.tile_height} \\
         --n-workers ${task.cpus} \\
         ${args}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        segger: 0.1.0
-    END_VERSIONS
     """
 
     stub:
