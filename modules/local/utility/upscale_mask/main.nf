@@ -35,28 +35,10 @@ process UPSCALE_MASK {
     script:
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    mkdir -p ${prefix}
-
-    python3 -c "
-import tifffile, numpy as np, json
-from PIL import Image
-
-info = json.load(open('${scale_info}'))
-orig_h, orig_w = info['orig_h'], info['orig_w']
-
-mask = tifffile.imread('${mask}')
-print(f'Mask: {mask.shape}, dtype={mask.dtype}, unique cells: {len(np.unique(mask)) - 1}')
-print(f'Upscaling to ({orig_h}, {orig_w})')
-
-pil_mask = Image.fromarray(mask)
-pil_mask = pil_mask.resize((orig_w, orig_h), Image.NEAREST)
-mask_up = np.array(pil_mask, dtype=mask.dtype)
-
-out_name = '${prefix}/upscaled_${mask.baseName}.tif'
-tifffile.imwrite(out_name, mask_up, compression='zlib')
-print(f'Done: {out_name}, unique cells: {len(np.unique(mask_up)) - 1}')
-"
-
+    upscale_mask.py \\
+        --mask ${mask} \\
+        --scale-info ${scale_info} \\
+        --prefix ${prefix}
     """
 
     stub:
