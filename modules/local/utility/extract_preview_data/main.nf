@@ -2,7 +2,9 @@ process EXTRACT_PREVIEW_DATA {
     tag "${meta.id}"
     label 'process_low'
 
-    container "community.wave.seqera.io/library/beautifulsoup4_pandas:d3b8b3eb86514c3c"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/c6/c6ebf365fbfd7bdde9e1453d646f45c39eddde92df5922b9881785f347bdbc2b/data' :
+        'community.wave.seqera.io/library/beautifulsoup4_pandas:a3f88f59088edad5' }"
 
     input:
     tuple val(meta), path(preview_html)

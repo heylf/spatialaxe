@@ -3,7 +3,7 @@
         "content": [
             {
                 "BAYSOR_PREPROCESS_TRANSCRIPTS": {
-                    "python": "3.14.0"
+                    "python": "3.14.4"
                 },
                 "BAYSOR_SEGFREE": {
                     "baysor": "0.7.1"
@@ -51,10 +51,10 @@
                 "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
+        "timestamp": "2026-04-29T19:35:23.216079554",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-22T20:00:05.123416185"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }

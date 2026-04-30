@@ -5,15 +5,15 @@
                 [
                     "BAYSOR_PREPROCESS_TRANSCRIPTS",
                     "python",
-                    "3.14.0"
+                    "3.14.4"
                 ]
             ]
         ],
+        "timestamp": "2026-04-29T18:32:45.74436808",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-21T03:57:35.931300816"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     },
     "versions": {
         "content": [
@@ -21,14 +21,14 @@
                 [
                     "BAYSOR_PREPROCESS_TRANSCRIPTS",
                     "python",
-                    "3.14.0"
+                    "3.14.4"
                 ]
             ]
         ],
+        "timestamp": "2026-04-29T18:32:39.447114547",
         "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-03-21T05:06:04.040573391"
+            "nf-test": "0.9.5",
+            "nextflow": "25.10.4"
+        }
     }
 }
