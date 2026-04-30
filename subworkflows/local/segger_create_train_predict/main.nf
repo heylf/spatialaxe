@@ -15,10 +15,10 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
     // Note: spatialxe uses "pixels" but per 10x docs, transcript-based segmentation
     // (like Baysor/Segger) must use "microns" since Xenium coordinates are in microns
-    ch_coordinate_space = Channel.value("microns")
+    ch_coordinate_space = channel.value("microns")
 
     // create dataset (always needed for predict step)
     SEGGER_CREATE_DATASET(ch_bundle)

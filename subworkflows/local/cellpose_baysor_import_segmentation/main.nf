@@ -23,11 +23,11 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_transcripts = Channel.empty()
-    ch_imp_seg_inputs = Channel.empty()
-    ch_filtered_transcripts = Channel.empty()
-    ch_coordinate_space = Channel.value("microns")
+    ch_versions = channel.empty()
+    ch_transcripts = channel.empty()
+    ch_imp_seg_inputs = channel.empty()
+    ch_filtered_transcripts = channel.empty()
+    ch_coordinate_space = channel.value("microns")
 
 
     // Use empty list when no model is provided; path input for official cellpose module

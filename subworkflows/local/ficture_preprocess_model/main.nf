@@ -15,7 +15,7 @@ workflow FICTURE_PREPROCESS_MODEL {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
     // convert parquet to csv
     PARQUET_TO_CSV(ch_transcripts_file, ".csv")
@@ -26,7 +26,7 @@ workflow FICTURE_PREPROCESS_MODEL {
     FICTURE_PREPROCESS(ch_transcripts, ch_features)
 
     // run the ficture wrapper pipeline
-    ch_features_clean = params.features ? FICTURE_PREPROCESS.out.features : Channel.value([])
+    ch_features_clean = params.features ? FICTURE_PREPROCESS.out.features : channel.value([])
     FICTURE(
         FICTURE_PREPROCESS.out.transcripts,
         FICTURE_PREPROCESS.out.coordinate_minmax,

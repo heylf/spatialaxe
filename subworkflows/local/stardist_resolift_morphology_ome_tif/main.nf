@@ -15,9 +15,9 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_imp_seg_inputs = Channel.empty()
-    ch_coordinate_space = Channel.value("pixels")
+    ch_versions = channel.empty()
+    ch_imp_seg_inputs = channel.empty()
+    ch_coordinate_space = channel.value("pixels")
 
     // Use default model when no model is provided
     stardist_nuclei_model = params.stardist_nuclei_model ?: '2D_versatile_fluo'

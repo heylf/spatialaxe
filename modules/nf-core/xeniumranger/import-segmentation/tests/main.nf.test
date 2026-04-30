@@ -26,7 +26,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                         [id: "test_xeniumranger_import-segmentation"],
                     ]).combine(UNZIP.out.unzipped_archive.map { it[1] })
                 input[1] = 0
@@ -93,7 +93,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                         [id: "test_xeniumranger_import-segmentation"],
                     ]).combine(UNZIP.out.unzipped_archive.map { it[1] })
                 input[1] = 0
@@ -159,7 +159,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                         [id: "test_xeniumranger_import-segmentation"],
                     ]).combine(UNZIP.out.unzipped_archive.map { it[1] })
                 input[1] = 0
@@ -225,7 +225,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                         [id: "test_xeniumranger_import-segmentation"],
                     ]).combine(UNZIP.out.unzipped_archive.map { it[1] })
                 input[1] = 0
@@ -292,7 +292,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                         [id: "test_xeniumranger_import-segmentation"],
                     ]).combine(UNZIP.out.unzipped_archive.map { it[1] })
                 input[1] = 0

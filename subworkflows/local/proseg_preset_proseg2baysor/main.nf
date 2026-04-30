@@ -13,8 +13,8 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_coordinate_space = Channel.value("microns")
+    ch_versions = channel.empty()
+    ch_coordinate_space = channel.value("microns")
 
     // run proseg with the xenium format
     PROSEG(ch_transcripts_file)

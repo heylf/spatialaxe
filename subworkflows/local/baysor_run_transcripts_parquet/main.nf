@@ -29,8 +29,8 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_coordinate_space = Channel.value("microns")
+    ch_versions = channel.empty()
+    ch_coordinate_space = channel.value("microns")
 
     if ( params.baysor_tiling ) {
 

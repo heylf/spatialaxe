@@ -14,9 +14,9 @@ workflow BAYSOR_GENERATE_PREVIEW {
 
     main:
 
-    ch_versions         = Channel.empty()
-    ch_preview_mqc_html = Channel.empty()
-    ch_preview_mqc_png  = Channel.empty()
+    ch_versions         = channel.empty()
+    ch_preview_mqc_html = channel.empty()
+    ch_preview_mqc_png  = channel.empty()
 
 
     // run parquet to csv

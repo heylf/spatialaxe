@@ -18,9 +18,9 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_imp_seg_inputs = Channel.empty()
-    ch_coordinate_space = Channel.value("pixels")
+    ch_versions = channel.empty()
+    ch_imp_seg_inputs = channel.empty()
+    ch_coordinate_space = channel.value("pixels")
 
     // Use empty list when no model is provided; path input for official cellpose module
     cellpose_model = params.cellpose_model ? file(params.cellpose_model) : []
@@ -50,7 +50,7 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     else {
 
         ch_cellpose_input = ch_image
-        ch_scale_info = Channel.empty()
+        ch_scale_info = channel.empty()
     }
 
     // run cellpose on morphology tiff (or downscaled version)
