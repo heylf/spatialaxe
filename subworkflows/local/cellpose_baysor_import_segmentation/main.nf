@@ -26,7 +26,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     ch_versions = channel.empty()
     ch_transcripts = channel.empty()
     ch_imp_seg_inputs = channel.empty()
-    ch_filtered_transcripts = channel.empty()
     ch_coordinate_space = channel.value("microns")
 
 
