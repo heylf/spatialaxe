@@ -14,7 +14,6 @@ workflow BAYSOR_GENERATE_PREVIEW {
 
     main:
 
-    ch_versions         = channel.empty()
     ch_preview_mqc_html = channel.empty()
     ch_preview_mqc_png  = channel.empty()
 
@@ -47,5 +46,4 @@ workflow BAYSOR_GENERATE_PREVIEW {
     emit:
     preview_html = ch_preview_mqc_html // channel: [ val(meta), ["*_mqc.tsv"] ]
     preview_img  = ch_preview_mqc_png  // channel: [ val(meta), ["*_mqc.png"] ]
-    versions     = ch_versions         // channel: [ versions.yml ]
 }

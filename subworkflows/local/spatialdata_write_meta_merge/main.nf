@@ -15,7 +15,6 @@ workflow SPATIALDATA_WRITE_META_MERGE {
 
     main:
 
-    ch_versions = channel.empty()
     ch_segmented_object = channel.empty()
 
     // check segmentation - only nuclei, cells or both cells & nuclei
@@ -76,5 +75,4 @@ workflow SPATIALDATA_WRITE_META_MERGE {
     sd_redefined_bundle = SPATIALDATA_WRITE_REDEFINED_BUNDLE.out.spatialdata // channel: [ val(meta), "spatialdata_redefined" ]
     sd_merged_bundle    = SPATIALDATA_MERGE_RAW_REDEFINED.out.merged_bundle // channel: [ val(meta), "spatialdata_merged" ]
     sd_metadata         = SPATIALDATA_META.out.metadata // channel: [ val(meta), "spatialdata_meta" ]
-    versions            = ch_versions // channel: [ versions.yml ]
 }

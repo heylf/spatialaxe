@@ -635,7 +635,7 @@ workflow SPATIALXE {
         // get the qc htmls if qc mode is run
         if (params.mode == 'qc' || params.run_qc) {
 
-            ch_multiqc_files = ch_multiqc_files.mix(
+            ch_multiqc_files = ch_multiqc_files.mix(    
                 ch_qc_reports.map { _meta, qc_reports -> qc_reports }.collect().ifEmpty([])
             )
 

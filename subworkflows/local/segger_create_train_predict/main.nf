@@ -15,7 +15,6 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
 
     main:
 
-    ch_versions = channel.empty()
     // Note: spatialxe uses "pixels" but per 10x docs, transcript-based segmentation
     // (like Baysor/Segger) must use "microns" since Xenium coordinates are in microns
     ch_coordinate_space = channel.value("microns")
@@ -74,5 +73,4 @@ workflow SEGGER_CREATE_TRAIN_PREDICT {
     emit:
     coordinate_space = ch_coordinate_space // channel: [ "microns" ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
 }

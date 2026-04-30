@@ -15,8 +15,6 @@ workflow FICTURE_PREPROCESS_MODEL {
 
     main:
 
-    ch_versions = channel.empty()
-
     // convert parquet to csv
     PARQUET_TO_CSV(ch_transcripts_file, ".csv")
 
@@ -37,5 +35,4 @@ workflow FICTURE_PREPROCESS_MODEL {
     coordinate_minmax = FICTURE_PREPROCESS.out.coordinate_minmax // channel: [ "*coordinate_minmax.tsv" ]
     features          = FICTURE_PREPROCESS.out.features // channel: [ "*feature.clean.tsv.gz" ]
     results           = FICTURE.out.results // channel: [ val(meta), [ "results/** ] ]
-    versions          = ch_versions // channel: [ versions.yml ]
 }

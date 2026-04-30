@@ -16,8 +16,6 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     main:
 
-    ch_versions = channel.empty()
-
     ch_transcripts = channel.empty()
 
     ch_redefined_bundle = channel.empty()
@@ -77,5 +75,4 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     emit:
     coordinate_space = ch_coordinate_space // channel: [ "pixels" ]
     redefined_bundle = ch_redefined_bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
 }

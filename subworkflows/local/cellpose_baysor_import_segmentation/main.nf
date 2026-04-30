@@ -23,7 +23,6 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     main:
 
-    ch_versions = channel.empty()
     ch_transcripts = channel.empty()
     ch_imp_seg_inputs = channel.empty()
     ch_coordinate_space = channel.value("microns")
@@ -179,5 +178,4 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     emit:
     coordinate_space = ch_coordinate_space                         // channel: [ val("microns") ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions = ch_versions                                         // channel: [ versions.yml ]
 }

@@ -18,7 +18,6 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     main:
 
-    ch_versions = channel.empty()
     ch_imp_seg_inputs = channel.empty()
     ch_coordinate_space = channel.value("pixels")
 
@@ -134,5 +133,4 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     emit:
     coordinate_space = ch_coordinate_space // channel: [ ["pixels"] ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
 }

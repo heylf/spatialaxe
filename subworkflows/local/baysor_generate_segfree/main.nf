@@ -13,8 +13,6 @@ workflow BAYSOR_GENERATE_SEGFREE {
 
     main:
 
-    ch_versions = channel.empty()
-
     ch_transcripts = channel.empty()
 
     // Always preprocess transcripts.parquet to CSV for Baysor 0.7.1 compatibility.
@@ -43,7 +41,7 @@ workflow BAYSOR_GENERATE_SEGFREE {
     BAYSOR_SEGFREE(
         ch_baysor_segfree_input
     )
+    
     emit:
     ncvs     = BAYSOR_SEGFREE.out.ncvs // channel: [ val(meta), ["ncvs.loom"] ]
-    versions = ch_versions // channel: [ versions.yml ]
 }
