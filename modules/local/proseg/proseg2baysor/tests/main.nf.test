@@ -30,7 +30,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                             [id: "test_run_proseg2baysor"],
                         ]).combine(PROSEG.out.seg_outs, by: 0)
                 """
@@ -53,7 +53,7 @@ nextflow_process {
         when {
             process {
                 """
-                input[0] = Channel.of([
+                input[0] = channel.of([
                             [id: "test_run_proseg2baysor"],
                         ]).combine(PROSEG.out.seg_outs, by: 0)
                 """

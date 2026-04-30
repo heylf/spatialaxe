@@ -13,9 +13,7 @@ workflow BAYSOR_GENERATE_SEGFREE {
 
     main:
 
-    ch_versions = Channel.empty()
-
-    ch_transcripts = Channel.empty()
+    ch_transcripts = channel.empty()
 
     // Always preprocess transcripts.parquet to CSV for Baysor 0.7.1 compatibility.
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files from Xenium bundles.
@@ -43,7 +41,7 @@ workflow BAYSOR_GENERATE_SEGFREE {
     BAYSOR_SEGFREE(
         ch_baysor_segfree_input
     )
+
     emit:
     ncvs     = BAYSOR_SEGFREE.out.ncvs // channel: [ val(meta), ["ncvs.loom"] ]
-    versions = ch_versions // channel: [ versions.yml ]
 }

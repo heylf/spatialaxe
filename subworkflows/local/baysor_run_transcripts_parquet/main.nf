@@ -29,8 +29,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_coordinate_space = Channel.value("microns")
+    ch_coordinate_space = channel.value("microns")
 
     if ( params.baysor_tiling ) {
 
@@ -155,5 +154,4 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
     emit:
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs
     coordinate_space = ch_coordinate_space
-    versions         = ch_versions
 }

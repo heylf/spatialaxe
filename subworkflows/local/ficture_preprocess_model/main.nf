@@ -4,7 +4,7 @@
 
 include { FICTURE_PREPROCESS } from '../../../modules/local/ficture/preprocess/main'
 include { FICTURE            } from '../../../modules/local/ficture/model/main'
-include { PARQUET_TO_CSV     } from '../../../modules/local/utility/spatialconverter/parquet_to_csv/main'
+include { PARQUET_TO_CSV     } from '../../../modules/local/utility/parquet_to_csv/main'
 
 
 
@@ -15,8 +15,6 @@ workflow FICTURE_PREPROCESS_MODEL {
 
     main:
 
-    ch_versions = Channel.empty()
-
     // convert parquet to csv
     PARQUET_TO_CSV(ch_transcripts_file, ".csv")
 
@@ -26,7 +24,7 @@ workflow FICTURE_PREPROCESS_MODEL {
     FICTURE_PREPROCESS(ch_transcripts, ch_features)
 
     // run the ficture wrapper pipeline
-    ch_features_clean = params.features ? FICTURE_PREPROCESS.out.features : Channel.value([])
+    ch_features_clean = params.features ? FICTURE_PREPROCESS.out.features : channel.value([])
     FICTURE(
         FICTURE_PREPROCESS.out.transcripts,
         FICTURE_PREPROCESS.out.coordinate_minmax,
@@ -37,5 +35,4 @@ workflow FICTURE_PREPROCESS_MODEL {
     coordinate_minmax = FICTURE_PREPROCESS.out.coordinate_minmax // channel: [ "*coordinate_minmax.tsv" ]
     features          = FICTURE_PREPROCESS.out.features // channel: [ "*feature.clean.tsv.gz" ]
     results           = FICTURE.out.results // channel: [ val(meta), [ "results/** ] ]
-    versions          = ch_versions // channel: [ versions.yml ]
 }

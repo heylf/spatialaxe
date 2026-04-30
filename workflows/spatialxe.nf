@@ -43,7 +43,7 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE } from '../subworkflo
 // spatialdata subworkflows
 include { SPATIALDATA_WRITE_META_MERGE                     } from '../subworkflows/local/spatialdata_write_meta_merge/main'
 
-// TODO qc layer subworkflows
+// qc layer subworkflows
 include { OPT_FLIP_TRACK_STAT                              } from '../subworkflows/local/opt_flip_track_stat/main'
 
 /*
@@ -64,29 +64,29 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    ch_versions = Channel.empty()
+    ch_versions = channel.empty()
 
-    ch_input = Channel.empty()
-    ch_config = Channel.empty()
-    ch_features = Channel.value([])
-    ch_raw_bundle = Channel.empty()
-    ch_gene_panel = Channel.empty()
-    ch_qc_reports = Channel.empty()
-    ch_bundle_path = Channel.empty()
-    ch_preview_html = Channel.empty()
-    ch_exp_metadata = Channel.empty()
-    ch_gene_synonyms = Channel.empty()
-    ch_multiqc_files = Channel.empty()
-    ch_multiqc_report = Channel.empty()
-    ch_qupath_polygons = Channel.empty()
-    ch_morphology_image = Channel.empty()
-    ch_redefined_bundle = Channel.empty()
-    ch_coordinate_space = Channel.empty()
-    ch_panel_probes_fasta = Channel.empty()
-    ch_transcripts_file = Channel.empty()
-    ch_reference_annotations = Channel.empty()
-    ch_multiqc_pre_xr_report = Channel.empty()
-    ch_multiqc_post_xr_report = Channel.empty()
+    ch_input = channel.empty()
+    ch_config = channel.empty()
+    ch_features = channel.value([])
+    ch_raw_bundle = channel.empty()
+    ch_gene_panel = channel.empty()
+    ch_qc_reports = channel.empty()
+    ch_bundle_path = channel.empty()
+    ch_preview_html = channel.empty()
+    ch_exp_metadata = channel.empty()
+    ch_gene_synonyms = channel.empty()
+    ch_multiqc_files = channel.empty()
+    ch_multiqc_report = channel.empty()
+    ch_qupath_polygons = channel.empty()
+    ch_morphology_image = channel.empty()
+    ch_redefined_bundle = channel.empty()
+    ch_coordinate_space = channel.empty()
+    ch_panel_probes_fasta = channel.empty()
+    ch_transcripts_file = channel.empty()
+    ch_reference_annotations = channel.empty()
+    ch_multiqc_pre_xr_report = channel.empty()
+    ch_multiqc_post_xr_report = channel.empty()
 
 
     /*
@@ -95,7 +95,6 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // TODO: Replace with params.test_data_mode for robustness
     if (workflow.profile.contains('test')) {
 
         // get sample, xenium bundle and image path
@@ -191,7 +190,7 @@ workflow SPATIALXE {
     }
 
     // get baysor xenium config
-    ch_config = Channel.fromPath(
+    ch_config = channel.fromPath(
             "${projectDir}/assets/config/xenium.toml",
             checkIfExists: true
         )
@@ -199,7 +198,7 @@ workflow SPATIALXE {
 
     // get segmentation mask if provided with --segmentation_mask for the baysor method
     if (params.segmentation_mask) {
-        ch_segmentation_mask = Channel.fromPath(
+        ch_segmentation_mask = channel.fromPath(
                 params.segmentation_mask,
                 checkIfExists: true
             )
@@ -208,12 +207,12 @@ workflow SPATIALXE {
 
     // get a list of features if provided with the --features for the ficture method
     ch_features = params.features
-        ? Channel.fromPath(params.features, checkIfExists: true).flatten()
-        : Channel.value([])
+        ? channel.fromPath(params.features, checkIfExists: true).flatten()
+        : channel.value([])
 
     // get custom cellpose model if provided with the --cellpose_model for the cellpose method
     if (params.cellpose_model) {
-        ch_cellpose_model = Channel.fromPath(
+        ch_cellpose_model = channel.fromPath(
                 params.cellpose_model,
                 checkIfExists: true
             )
@@ -222,7 +221,7 @@ workflow SPATIALXE {
 
     // get panel probes fasta for off-target-probe tracking
     if (params.probes_fasta) {
-        ch_panel_probes_fasta = Channel.fromPath(
+        ch_panel_probes_fasta = channel.fromPath(
                 params.probes_fasta,
                 checkIfExists: true
             )
@@ -231,7 +230,7 @@ workflow SPATIALXE {
 
     // get reference annotation files (gff,fa) for off-target-probe tracking
     if (params.reference_annotations) {
-        ch_reference_annotations = Channel.fromPath(
+        ch_reference_annotations = channel.fromPath(
                 "${params.reference_annotations}/*.{fa,gff}".toString(),
                 checkIfExists: true
             )
@@ -240,7 +239,7 @@ workflow SPATIALXE {
 
     // get gene synonyms for off-target-probe tracking
     if (params.gene_synonyms) {
-        ch_gene_synonyms = Channel.fromPath(
+        ch_gene_synonyms = channel.fromPath(
                 params.gene_synonyms,
                 checkIfExists: true
             )
@@ -249,7 +248,7 @@ workflow SPATIALXE {
 
     // get qupath ploygons
     if (params.qupath_polygons) {
-        ch_qupath_polygons = Channel.fromPath(
+        ch_qupath_polygons = channel.fromPath(
                 "${params.qupath_polygons}/*.geojson",
                 checkIfExists: true
             )
@@ -443,7 +442,7 @@ workflow SPATIALXE {
                       "For tiled Baysor, use baysor_prior='cells' (column-based)."
             }
 
-            ch_prior_mask = Channel.empty()
+            ch_prior_mask = channel.empty()
 
             BAYSOR_RUN_TRANSCRIPTS_PARQUET(
                 ch_bundle_path,
@@ -549,18 +548,18 @@ workflow SPATIALXE {
         SPATIALXE - MultiQC
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    ch_multiqc_config = Channel.fromPath(
+    ch_multiqc_config = channel.fromPath(
         "${projectDir}/assets/multiqc_config.yml",
         checkIfExists: true
     )
 
     ch_multiqc_custom_config = params.multiqc_config
-        ? Channel.fromPath(params.multiqc_config, checkIfExists: true)
-        : Channel.empty()
+        ? channel.fromPath(params.multiqc_config, checkIfExists: true)
+        : channel.empty()
 
     ch_multiqc_logo = params.multiqc_logo
-        ? Channel.fromPath(params.multiqc_logo, checkIfExists: true)
-        : Channel.empty()
+        ? channel.fromPath(params.multiqc_logo, checkIfExists: true)
+        : channel.empty()
 
     // Combine default and custom configs into a single list for the tuple-based MULTIQC input
     ch_multiqc_configs = ch_multiqc_config.mix(ch_multiqc_custom_config).collect()
@@ -570,7 +569,7 @@ workflow SPATIALXE {
         parameters_schema: "nextflow_schema.json"
     )
 
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
 
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
@@ -580,7 +579,7 @@ workflow SPATIALXE {
         ? file(params.multiqc_methods_description, checkIfExists: true)
         : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
 
-    ch_methods_description = Channel.value(
+    ch_methods_description = channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description)
     )
 
@@ -636,7 +635,6 @@ workflow SPATIALXE {
         // get the qc htmls if qc mode is run
         if (params.mode == 'qc' || params.run_qc) {
 
-            // TODO collect all qc outs in a channel to be passed to multiqc
             ch_multiqc_files = ch_multiqc_files.mix(
                 ch_qc_reports.map { _meta, qc_reports -> qc_reports }.collect().ifEmpty([])
             )

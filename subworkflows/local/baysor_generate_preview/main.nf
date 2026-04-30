@@ -5,7 +5,7 @@
 include { BAYSOR_PREVIEW        } from '../../../modules/local/baysor/preview/main'
 include { BAYSOR_CREATE_DATASET } from '../../../modules/local/baysor/create_dataset/main'
 include { EXTRACT_PREVIEW_DATA  } from '../../../modules/local/utility/extract_preview_data/main'
-include { PARQUET_TO_CSV        } from '../../../modules/local/utility/spatialconverter/parquet_to_csv/main'
+include { PARQUET_TO_CSV        } from '../../../modules/local/utility/parquet_to_csv/main'
 
 workflow BAYSOR_GENERATE_PREVIEW {
     take:
@@ -14,9 +14,8 @@ workflow BAYSOR_GENERATE_PREVIEW {
 
     main:
 
-    ch_versions         = Channel.empty()
-    ch_preview_mqc_html = Channel.empty()
-    ch_preview_mqc_png  = Channel.empty()
+    ch_preview_mqc_html = channel.empty()
+    ch_preview_mqc_png  = channel.empty()
 
 
     // run parquet to csv
@@ -47,5 +46,4 @@ workflow BAYSOR_GENERATE_PREVIEW {
     emit:
     preview_html = ch_preview_mqc_html // channel: [ val(meta), ["*_mqc.tsv"] ]
     preview_img  = ch_preview_mqc_png  // channel: [ val(meta), ["*_mqc.png"] ]
-    versions     = ch_versions         // channel: [ versions.yml ]
 }

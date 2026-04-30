@@ -13,9 +13,9 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_redefined_bundle = Channel.empty()
-    ch_coordinate_space = Channel.empty()
+    ch_versions = channel.empty()
+    ch_redefined_bundle = channel.empty()
+    ch_coordinate_space = channel.empty()
 
     cells = ch_bundle_path.map { meta, bundle ->
         return [meta, bundle + "/cells.zarr.zip"]

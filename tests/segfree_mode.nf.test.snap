@@ -1,5 +1,5 @@
 {
-    "-profile test": {
+    "-profile test stub": {
         "content": [
             {
                 "BAYSOR_PREPROCESS_TRANSCRIPTS": {

@@ -11,9 +11,8 @@ workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_redefined_bundle = Channel.empty()
-    ch_coordinate_space = Channel.value("pixels")
+    ch_redefined_bundle = channel.empty()
+    ch_coordinate_space = channel.value("pixels")
 
     // run resegment with changed config values
     XENIUMRANGER_RESEGMENT(ch_bundle_path)
@@ -58,5 +57,4 @@ workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
     emit:
     redefined_bundle = ch_redefined_bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
     coordinate_space = ch_coordinate_space // channel: [ ["pixels"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
 }

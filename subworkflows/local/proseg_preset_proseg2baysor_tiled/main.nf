@@ -16,8 +16,7 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_coordinate_space = Channel.value("microns")
+    ch_coordinate_space = channel.value("microns")
 
     // Step 1: Divide transcripts into overlapping patches
     XENIUM_PATCH_DIVIDE ( ch_transcripts_file )
@@ -84,5 +83,4 @@ workflow PROSEG_PRESET_PROSEG2BAYSOR_TILED {
     emit:
     coordinate_space = ch_coordinate_space                          // channel: [ "microns" ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs    // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions                                  // channel: [ versions.yml ]
 }

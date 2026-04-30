@@ -15,9 +15,8 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_imp_seg_inputs = Channel.empty()
-    ch_coordinate_space = Channel.value("pixels")
+    ch_imp_seg_inputs = channel.empty()
+    ch_coordinate_space = channel.value("pixels")
 
     // Use default model when no model is provided
     stardist_nuclei_model = params.stardist_nuclei_model ?: '2D_versatile_fluo'
@@ -66,5 +65,4 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
     emit:
     coordinate_space = ch_coordinate_space // channel: [ ["pixels"] ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
 }

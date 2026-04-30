@@ -27,7 +27,8 @@ process FICTURE_PREPROCESS {
     ficture_preprocess.py \\
         --transcripts ${transcripts} \\
         ${features_arg} \\
-        --negative-control-regex '${params.negative_control_regex}'
+        --negative-control-regex '${params.negative_control_regex}' \\
+        ${args}
     """
 
     stub:

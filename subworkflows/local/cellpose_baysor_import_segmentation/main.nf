@@ -23,11 +23,9 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_transcripts = Channel.empty()
-    ch_imp_seg_inputs = Channel.empty()
-    ch_filtered_transcripts = Channel.empty()
-    ch_coordinate_space = Channel.value("microns")
+    ch_transcripts = channel.empty()
+    ch_imp_seg_inputs = channel.empty()
+    ch_coordinate_space = channel.value("microns")
 
 
     // Use empty list when no model is provided; path input for official cellpose module
@@ -180,5 +178,4 @@ workflow CELLPOSE_BAYSOR_IMPORT_SEGMENTATION {
     emit:
     coordinate_space = ch_coordinate_space                         // channel: [ val("microns") ]
     redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION.out.outs // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions = ch_versions                                         // channel: [ versions.yml ]
 }

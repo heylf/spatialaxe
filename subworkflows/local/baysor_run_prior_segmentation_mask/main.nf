@@ -16,12 +16,10 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     main:
 
-    ch_versions = Channel.empty()
+    ch_transcripts = channel.empty()
 
-    ch_transcripts = Channel.empty()
-
-    ch_redefined_bundle = Channel.empty()
-    ch_coordinate_space = Channel.value("pixels")
+    ch_redefined_bundle = channel.empty()
+    ch_coordinate_space = channel.value("pixels")
 
     // Always preprocess transcripts.parquet to CSV for Baysor 0.7.1 compatibility.
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files from Xenium bundles.
@@ -77,5 +75,4 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     emit:
     coordinate_space = ch_coordinate_space // channel: [ "pixels" ]
     redefined_bundle = ch_redefined_bundle // channel: [ val(meta), ["redefined-xenium-bundle"] ]
-    versions         = ch_versions // channel: [ versions.yml ]
 }

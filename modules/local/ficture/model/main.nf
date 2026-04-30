@@ -20,7 +20,6 @@ process FICTURE {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     def features_list = features ? "--in-feature ${features}": ""
 
     """
@@ -33,12 +32,11 @@ process FICTURE {
         --n-factor 6,12 \\
         --n-jobs ${task.cpus} \\
         --plot-each-factor \\
-        --all
+        --all \\
+        ${args}
     """
 
     stub:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mkdir -p results/
     """
