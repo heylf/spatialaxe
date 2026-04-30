@@ -15,13 +15,11 @@
             },
             "bundle": {
                 "type": "string",
-                "format": "directory-path",
                 "pattern": "^\\S+$",
                 "errorMessage": "Please provide a bundle as input data"
             },
             "image": {
                 "type": "string",
-                "format": "file-path",
                 "pattern": "^\\S+$",
                 "errorMessage": "You can provide an image. If you do not then please leave the field empty."
             }
