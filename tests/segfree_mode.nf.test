@@ -5,7 +5,7 @@ nextflow_pipeline {
     tag "pipeline"
     config "../conf/test_segfree_mode.config"
 
-    test("-profile test") {
+    test("-profile test stub") {
 
         options "-stub"
 
