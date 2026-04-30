@@ -35,16 +35,9 @@ process CONVERT_MASK_UINT32 {
     script:
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    python3 - ${mask} ${prefix}_uint32_mask.tif <<'PYEOF'
-import sys, tifffile, numpy as np
-
-mask_path, output_path = sys.argv[1], sys.argv[2]
-mask = tifffile.imread(mask_path)
-print(f'Input dtype: {mask.dtype}, shape: {mask.shape}, labels: {mask.max()}')
-tifffile.imwrite(output_path, mask.astype(np.uint32))
-print(f'Output dtype: uint32')
-PYEOF
-
+    convert_mask_uint32.py \\
+        --input ${mask} \\
+        --output ${prefix}_uint32_mask.tif
     """
 
     stub:
