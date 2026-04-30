@@ -1,9 +1,9 @@
-name: "spatialconverter_parquet_to_csv"
+name: "parquet_to_csv"
 description: Tool suite for spatial omics data conversions.
 keywords:
   - xenium
 tools:
-  - "spatialconverter":
+  - "parquet_to_csv":
       description: "Collects functions to convert data formats for various types of data processing and analysis for spatial omics data."
       homepage: "https://github.com/heylf/spatialconverter"
       documentation: "https://github.com/heylf/spatialconverter"

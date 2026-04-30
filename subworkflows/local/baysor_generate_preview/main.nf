@@ -5,7 +5,7 @@
 include { BAYSOR_PREVIEW        } from '../../../modules/local/baysor/preview/main'
 include { BAYSOR_CREATE_DATASET } from '../../../modules/local/baysor/create_dataset/main'
 include { EXTRACT_PREVIEW_DATA  } from '../../../modules/local/utility/extract_preview_data/main'
-include { PARQUET_TO_CSV        } from '../../../modules/local/utility/spatialconverter/parquet_to_csv/main'
+include { PARQUET_TO_CSV        } from '../../../modules/local/utility/parquet_to_csv/main'
 
 workflow BAYSOR_GENERATE_PREVIEW {
     take:

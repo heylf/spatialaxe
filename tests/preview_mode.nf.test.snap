@@ -52,10 +52,9 @@
                 "preview/utility/preview_data/test_run/noise_level_mqc.png",
                 "preview/utility/preview_data/test_run/transcript_plots_mqc.png",
                 "preview/utility/preview_data/test_run/umap_mqc.tsv",
-                "preview/utility/spatialconverter",
-                "preview/utility/spatialconverter/parquet_to_csv",
-                "preview/utility/spatialconverter/parquet_to_csv/test_run",
-                "preview/utility/spatialconverter/parquet_to_csv/test_run/transcripts.parquet.csv"
+                "preview/utility/parquet_to_csv",
+                "preview/utility/parquet_to_csv/test_run",
+                "preview/utility/parquet_to_csv/test_run/transcripts.parquet.csv"
             ],
             [
                 "sampled_transcripts.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
