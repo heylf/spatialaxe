@@ -45,16 +45,16 @@
                 "preview/untar/test_run/morphology.ome.tif",
                 "preview/untar/test_run/transcripts.parquet",
                 "preview/utility",
+                "preview/utility/parquet_to_csv",
+                "preview/utility/parquet_to_csv/test_run",
+                "preview/utility/parquet_to_csv/test_run/transcripts.parquet.csv",
                 "preview/utility/preview_data",
                 "preview/utility/preview_data/test_run",
                 "preview/utility/preview_data/test_run/gene_structure_mqc.tsv",
                 "preview/utility/preview_data/test_run/noise_distribution_mqc.tsv",
                 "preview/utility/preview_data/test_run/noise_level_mqc.png",
                 "preview/utility/preview_data/test_run/transcript_plots_mqc.png",
-                "preview/utility/preview_data/test_run/umap_mqc.tsv",
-                "preview/utility/parquet_to_csv",
-                "preview/utility/parquet_to_csv/test_run",
-                "preview/utility/parquet_to_csv/test_run/transcripts.parquet.csv"
+                "preview/utility/preview_data/test_run/umap_mqc.tsv"
             ],
             [
                 "sampled_transcripts.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
@@ -66,18 +66,18 @@
                 "gene_panel.json:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "morphology.ome.tif:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e",
+                "transcripts.parquet.csv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "gene_structure_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "noise_distribution_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "noise_level_mqc.png:md5,d41d8cd98f00b204e9800998ecf8427e",
                 "transcript_plots_mqc.png:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "umap_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e",
-                "transcripts.parquet.csv:md5,d41d8cd98f00b204e9800998ecf8427e"
+                "umap_mqc.tsv:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-04-29T19:23:42.749448196",
+        "timestamp": "2026-04-30T19:00:29.84624323",
         "meta": {
             "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
+            "nextflow": "26.04.0"
         }
     }
 }
