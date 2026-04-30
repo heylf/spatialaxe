@@ -54,7 +54,30 @@ include { OPT_FLIP_TRACK_STAT                              } from '../subworkflo
 
 workflow SPATIALXE {
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    ch_samplesheet                       // channel: samplesheet read in from --input
+    baysor_prior
+    baysor_tiling
+    buffer_samples
+    buffer_size
+    cellpose_model
+    features
+    gene_panel
+    gene_synonyms
+    method
+    mode
+    multiqc_config
+    multiqc_logo
+    multiqc_methods_description
+    offtarget_probe_tracking
+    outdir
+    probes_fasta
+    qupath_polygons
+    reference_annotations
+    relabel_genes
+    run_qc
+    segmentation_mask
+    tiling
+    xeniumranger_only
 
     main:
 
@@ -120,8 +143,8 @@ workflow SPATIALXE {
         // for all other profile runs
 
         // check if samples are buffered
-        if (params.buffer_samples) {
-            ch_input = ch_samplesheet.buffer(size: params.buffer_size).map
+        if (buffer_samples) {
+            ch_input = ch_samplesheet.buffer(size: buffer_size).map
             { buffered_sample ->
                 def (meta, bundle, tif) = buffered_sample[0]
                 tuple(meta, bundle, tif)
@@ -197,69 +220,69 @@ workflow SPATIALXE {
         .flatten()
 
     // get segmentation mask if provided with --segmentation_mask for the baysor method
-    if (params.segmentation_mask) {
+    if (segmentation_mask) {
         ch_segmentation_mask = channel.fromPath(
-                params.segmentation_mask,
+                segmentation_mask,
                 checkIfExists: true
             )
             .flatten()
     }
 
     // get a list of features if provided with the --features for the ficture method
-    ch_features = params.features
-        ? channel.fromPath(params.features, checkIfExists: true).flatten()
+    ch_features = features
+        ? channel.fromPath(features, checkIfExists: true).flatten()
         : channel.value([])
 
     // get custom cellpose model if provided with the --cellpose_model for the cellpose method
-    if (params.cellpose_model) {
+    if (cellpose_model) {
         ch_cellpose_model = channel.fromPath(
-                params.cellpose_model,
+                cellpose_model,
                 checkIfExists: true
             )
             .flatten()
     }
 
     // get panel probes fasta for off-target-probe tracking
-    if (params.probes_fasta) {
+    if (probes_fasta) {
         ch_panel_probes_fasta = channel.fromPath(
-                params.probes_fasta,
+                probes_fasta,
                 checkIfExists: true
             )
             .flatten()
     }
 
     // get reference annotation files (gff,fa) for off-target-probe tracking
-    if (params.reference_annotations) {
+    if (reference_annotations) {
         ch_reference_annotations = channel.fromPath(
-                "${params.reference_annotations}/*.{fa,gff}".toString(),
+                "${reference_annotations}/*.{fa,gff}".toString(),
                 checkIfExists: true
             )
             .flatten()
     }
 
     // get gene synonyms for off-target-probe tracking
-    if (params.gene_synonyms) {
+    if (gene_synonyms) {
         ch_gene_synonyms = channel.fromPath(
-                params.gene_synonyms,
+                gene_synonyms,
                 checkIfExists: true
             )
             .flatten()
     }
 
     // get qupath ploygons
-    if (params.qupath_polygons) {
+    if (qupath_polygons) {
         ch_qupath_polygons = channel.fromPath(
-                "${params.qupath_polygons}/*.geojson",
+                "${qupath_polygons}/*.geojson",
                 checkIfExists: true
             )
             .flatten()
     }
 
     // get gene_panel.json if provided with --gene_panel, sets relabel_genes to true
-    def do_relabel = params.gene_panel ? true : params.relabel_genes
-    if (params.gene_panel) {
+    def do_relabel = gene_panel ? true : relabel_genes
+    if (gene_panel) {
 
-        def gene_panel_file = file(params.gene_panel, checkIfExists: true)
+        def gene_panel_file = file(gene_panel, checkIfExists: true)
         ch_gene_panel = ch_input.map { meta, _bundle, _image ->
             return [meta, gene_panel_file]
         }
@@ -301,7 +324,7 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     // run baysor preview if `generate_preview ` is true
-    if (params.mode == 'preview') {
+    if (mode == 'preview') {
 
         BAYSOR_GENERATE_PREVIEW(
             ch_transcripts_file,
@@ -316,7 +339,7 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     // run only xeniumranger import segmentation with changes xr specific params
-    if (params.mode == 'image' && params.xeniumranger_only) {
+    if (mode == 'image' && xeniumranger_only) {
 
         XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE(
             ch_bundle_path
@@ -331,10 +354,10 @@ workflow SPATIALXE {
         SPATIALXE - IMAGE-BASED SEGMENTATION LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    if (params.mode == 'image') {
+    if (mode == 'image') {
 
         // trigger the default image-based workflow if no method is specified
-        if (!params.method) {
+        if (!method) {
 
             CELLPOSE_BAYSOR_IMPORT_SEGMENTATION(
                 ch_morphology_image,
@@ -348,7 +371,7 @@ workflow SPATIALXE {
         }
 
         // run xeniumranger resegment with morphology_ome.tif
-        if (params.method == 'xeniumranger') {
+        if (method == 'xeniumranger') {
 
             XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF(
                 ch_bundle_path
@@ -358,9 +381,9 @@ workflow SPATIALXE {
         }
 
         // run baysor run with morphology_ome.tif
-        if (params.method == 'baysor') {
+        if (method == 'baysor') {
 
-            if (params.segmentation_mask) {
+            if (segmentation_mask) {
                 BAYSOR_RUN_PRIOR_SEGMENTATION_MASK(
                     ch_bundle_path,
                     ch_transcripts_file,
@@ -373,7 +396,7 @@ workflow SPATIALXE {
         }
 
         // run cellpose on the morphology_ome.tif
-        if (params.method == 'cellpose') {
+        if (method == 'cellpose') {
 
             CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF(
                 ch_morphology_image,
@@ -384,7 +407,7 @@ workflow SPATIALXE {
         }
 
         // run stardist on the morphology_ome.tif
-        if (params.method == 'stardist') {
+        if (method == 'stardist') {
 
             STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF(
                 ch_morphology_image,
@@ -400,12 +423,12 @@ workflow SPATIALXE {
         SPATIALXE - TRANSCRIPT-BASED SEGMENTATION LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    if (params.mode == 'coordinate') {
+    if (mode == 'coordinate') {
 
         // run proseg with transcripts.parquet if method = proseg or is not provided (default workflow)
-        if (!params.method || params.method == 'proseg') {
+        if (!method || method == 'proseg') {
 
-            if (params.tiling) {
+            if (tiling) {
                 PROSEG_PRESET_PROSEG2BAYSOR_TILED(
                     ch_bundle_path,
                     ch_transcripts_file,
@@ -423,7 +446,7 @@ workflow SPATIALXE {
         }
 
         // run segger with transcripts.parquet
-        if (params.method == 'segger') {
+        if (method == 'segger') {
 
             SEGGER_CREATE_TRAIN_PREDICT(
                 ch_bundle_path,
@@ -434,10 +457,10 @@ workflow SPATIALXE {
         }
 
         // run baysor with transcripts.parquet (unified tiled/non-tiled subworkflow)
-        if (params.method == 'baysor') {
+        if (method == 'baysor') {
 
             // Image-based prior (cellpose mask) requires non-tiled Baysor
-            if ( params.baysor_tiling && params.baysor_prior == 'cellpose' ) {
+            if ( baysor_tiling && baysor_prior == 'cellpose' ) {
                 error "ERROR: baysor_prior='cellpose' (image-based) requires baysor_tiling=false. " +
                       "For tiled Baysor, use baysor_prior='cells' (column-based)."
             }
@@ -465,7 +488,7 @@ workflow SPATIALXE {
     */
 
     // run spatialdata modules to generate sd objects in image or coordinate mode
-    if (params.mode == 'image' || params.mode == 'coordinate') {
+    if (mode == 'image' || mode == 'coordinate') {
 
         SPATIALDATA_WRITE_META_MERGE(
             ch_bundle_path,
@@ -481,9 +504,9 @@ workflow SPATIALXE {
     */
 
     // check to run the qc layer
-    if (params.mode == 'qc' || params.run_qc) {
+    if (mode == 'qc' || run_qc) {
 
-        if (params.offtarget_probe_tracking) {
+        if (offtarget_probe_tracking) {
 
             // run off-target probe tracking
             OPT_FLIP_TRACK_STAT(
@@ -500,10 +523,10 @@ workflow SPATIALXE {
         SPATIALXE - SEGMENTATION-FREE LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
-    if (params.mode == 'segfree') {
+    if (mode == 'segfree') {
 
         // trigger the default segfree workflow if no method or if the method is baysor
-        if (!params.method || params.method == 'baysor') {
+        if (!method || method == 'baysor') {
 
             BAYSOR_GENERATE_SEGFREE(
                 ch_transcripts_file,
@@ -512,7 +535,7 @@ workflow SPATIALXE {
         }
 
         // run ficture with transcripts.parquet
-        if (params.method == 'ficture') {
+        if (method == 'ficture') {
 
             FICTURE_PREPROCESS_MODEL(
                 ch_transcripts_file,
@@ -536,7 +559,7 @@ workflow SPATIALXE {
 
     softwareVersionsToYAML(ch_versions.mix(ch_topic_versions))
         .collectFile(
-            storeDir: "${params.outdir}/pipeline_info",
+            storeDir: "${outdir}/pipeline_info",
             name: 'nf_core_' + 'spatialxe_software_' + 'mqc_' + 'versions.yml',
             sort: true,
             newLine: true,
@@ -553,12 +576,12 @@ workflow SPATIALXE {
         checkIfExists: true
     )
 
-    ch_multiqc_custom_config = params.multiqc_config
-        ? channel.fromPath(params.multiqc_config, checkIfExists: true)
+    ch_multiqc_custom_config = multiqc_config
+        ? channel.fromPath(multiqc_config, checkIfExists: true)
         : channel.empty()
 
-    ch_multiqc_logo = params.multiqc_logo
-        ? channel.fromPath(params.multiqc_logo, checkIfExists: true)
+    ch_multiqc_logo = multiqc_logo
+        ? channel.fromPath(multiqc_logo, checkIfExists: true)
         : channel.empty()
 
     // Combine default and custom configs into a single list for the tuple-based MULTIQC input
@@ -575,8 +598,8 @@ workflow SPATIALXE {
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml')
     )
 
-    ch_multiqc_custom_methods_description = params.multiqc_methods_description
-        ? file(params.multiqc_methods_description, checkIfExists: true)
+    ch_multiqc_custom_methods_description = multiqc_methods_description
+        ? file(multiqc_methods_description, checkIfExists: true)
         : file("${projectDir}/assets/methods_description_template.yml", checkIfExists: true)
 
     ch_methods_description = channel.value(
@@ -592,7 +615,7 @@ workflow SPATIALXE {
         )
     )
 
-    if (params.mode == 'image' || params.mode == 'coordinate') {
+    if (mode == 'image' || mode == 'coordinate') {
 
         // get path to the raw bundle
         ch_multiqc_files = ch_multiqc_files.mix(
@@ -633,7 +656,7 @@ workflow SPATIALXE {
 
 
         // get the qc htmls if qc mode is run
-        if (params.mode == 'qc' || params.run_qc) {
+        if (mode == 'qc' || run_qc) {
 
             ch_multiqc_files = ch_multiqc_files.mix(
                 ch_qc_reports.map { _meta, qc_reports -> qc_reports }.collect().ifEmpty([])
@@ -643,7 +666,7 @@ workflow SPATIALXE {
 
 
         // get the preview html if preview mode is run
-        if (params.mode == 'preview') {
+        if (mode == 'preview') {
 
             ch_multiqc_files = ch_multiqc_files.mix(
                 ch_preview_html.map { _meta, preview_html -> preview_html }.collect().ifEmpty([])
