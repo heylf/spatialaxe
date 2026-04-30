@@ -43,7 +43,7 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE } from '../subworkflo
 // spatialdata subworkflows
 include { SPATIALDATA_WRITE_META_MERGE                     } from '../subworkflows/local/spatialdata_write_meta_merge/main'
 
-// TODO qc layer subworkflows
+// qc layer subworkflows
 include { OPT_FLIP_TRACK_STAT                              } from '../subworkflows/local/opt_flip_track_stat/main'
 
 /*
@@ -95,7 +95,6 @@ workflow SPATIALXE {
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
-    // TODO: Replace with params.test_data_mode for robustness
     if (workflow.profile.contains('test')) {
 
         // get sample, xenium bundle and image path
@@ -636,7 +635,6 @@ workflow SPATIALXE {
         // get the qc htmls if qc mode is run
         if (params.mode == 'qc' || params.run_qc) {
 
-            // TODO collect all qc outs in a channel to be passed to multiqc
             ch_multiqc_files = ch_multiqc_files.mix(
                 ch_qc_reports.map { _meta, qc_reports -> qc_reports }.collect().ifEmpty([])
             )
