@@ -41,55 +41,11 @@ process DOWNSCALE_MORPHOLOGY {
     def diam_mean = 30
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    mkdir -p ${prefix}
-
-    python3 -c "
-import tifffile, numpy as np, json
-from skimage.transform import resize
-
-diameter = ${diameter}
-diam_mean = ${diam_mean}
-scale = min(diameter / diam_mean, 1.0)  # clamp to prevent upscaling
-
-img = tifffile.imread('${image}')
-print(f'Original: {img.shape}, dtype={img.dtype}, ndim={img.ndim}')
-
-# Handle multichannel OME-TIFFs: shape can be (H, W), (C, H, W), or (Z, C, H, W)
-if img.ndim == 2:
-    orig_h, orig_w = img.shape
-    # Floor of 256px: cellpose network requires minimum spatial dimensions
-    new_h = max(int(orig_h * scale), 256)
-    new_w = max(int(orig_w * scale), 256)
-    output_shape = (new_h, new_w)
-elif img.ndim == 3:
-    orig_h, orig_w = img.shape[1], img.shape[2]
-    new_h = max(int(orig_h * scale), 256)
-    new_w = max(int(orig_w * scale), 256)
-    output_shape = (img.shape[0], new_h, new_w)
-else:
-    orig_h, orig_w = img.shape[-2], img.shape[-1]
-    new_h = max(int(orig_h * scale), 256)
-    new_w = max(int(orig_w * scale), 256)
-    output_shape = img.shape[:-2] + (new_h, new_w)
-
-print(f'Downscaling by {scale:.3f}: ({orig_h}, {orig_w}) -> ({new_h}, {new_w})')
-
-img_ds = resize(img, output_shape, order=3, preserve_range=True, anti_aliasing=True)
-img_ds = img_ds.astype(img.dtype)
-
-tifffile.imwrite('${prefix}/downscaled.tif', img_ds, compression='zlib')
-json.dump({
-    'scale': scale,
-    'orig_h': orig_h,
-    'orig_w': orig_w,
-    'new_h': new_h,
-    'new_w': new_w,
-    'diameter': diameter,
-    'diam_mean': diam_mean
-}, open('${prefix}/scale_info.json', 'w'))
-print(f'Done: downscaled.tif written, shape={img_ds.shape}')
-"
-
+    downscale_morphology.py \\
+        --image ${image} \\
+        --diameter ${diameter} \\
+        --diam-mean ${diam_mean} \\
+        --prefix ${prefix}
     """
 
     stub:

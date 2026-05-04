@@ -36,22 +36,10 @@ process EXTRACT_DAPI {
     prefix = task.ext.prefix ?: "${meta.id}"
     def channel_index = task.ext.channel_index ?: 0
     """
-    python3 - ${image} ${prefix}_dapi.tif ${channel_index} <<'PYEOF'
-import sys, tifffile, numpy as np
-
-image_path, output_path, channel_idx = sys.argv[1], sys.argv[2], int(sys.argv[3])
-img = tifffile.imread(image_path)
-orig_shape = img.shape
-
-if img.ndim == 3:
-    img = img[channel_idx]
-elif img.ndim == 4:
-    img = img[0, channel_idx]
-
-tifffile.imwrite(output_path, img)
-print(f'Input shape: {orig_shape} -> extracted channel {channel_idx}: {img.shape}')
-PYEOF
-
+    extract_dapi.py \\
+        --input ${image} \\
+        --output ${prefix}_dapi.tif \\
+        --channel-index ${channel_index}
     """
 
     stub:
