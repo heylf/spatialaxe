@@ -107,7 +107,7 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
         ch_imp_seg_inputs = ch_bundle_path
             .combine(qupath_polygons)
             .combine(alignment_csv)
-            .map { meta, bundle, polygons_geojson, alignment_csv ->
+            .map { meta, bundle, polygons_geojson, alignment_csv_file ->
                 tuple(
                     meta,
                     bundle,
@@ -115,7 +115,7 @@ workflow XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE {
                     [],
                     polygons_geojson,
                     polygons_geojson,
-                    alignment_csv,
+                    alignment_csv_file,
                     ch_coordinate_space.val,
                 )
             }

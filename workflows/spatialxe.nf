@@ -307,11 +307,11 @@ workflow SPATIALXE {
 
         // gene panel to use if only --relabel_genes is provided
         ch_gene_panel = ch_input.map { meta, bundle, _image ->
-            def gene_panel = file(
+            def gene_panel_file = file(
                 bundle.toString().replaceFirst(/\/$/, '') + "/gene_panel.json",
                 checkIfExists: true
             )
-            return [meta, gene_panel]
+            return [meta, gene_panel_file]
         }
     }
 
