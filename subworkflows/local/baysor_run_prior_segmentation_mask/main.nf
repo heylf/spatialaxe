@@ -13,6 +13,11 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
     ch_transcripts_file // channel: [ val(meta), ["path-to-transcripts.parquet"] ]
     ch_segmentation_mask   // channel: [ ["path-to-prior-segmentation-mask"] ]
     ch_config              // channel: [ "path-to-xenium.toml" ]
+    max_x                  // value: spatial filter upper x bound
+    max_y                  // value: spatial filter upper y bound
+    min_qv                 // value: minimum transcript QV
+    min_x                  // value: spatial filter lower x bound
+    min_y                  // value: spatial filter lower y bound
 
     main:
 
@@ -23,14 +28,14 @@ workflow BAYSOR_RUN_PRIOR_SEGMENTATION_MASK {
 
     // Always preprocess transcripts.parquet to CSV for Baysor 0.7.1 compatibility.
     // Baysor's Julia Parquet.jl cannot read zstd-compressed parquet files from Xenium bundles.
-    // Also applies optional spatial/QV filtering when params.filter_transcripts is true.
+    // Also applies optional spatial/QV filtering when filter_transcripts is true.
     BAYSOR_PREPROCESS_TRANSCRIPTS(
         ch_transcripts_file,
-        params.min_qv,
-        params.max_x,
-        params.min_x,
-        params.max_y,
-        params.min_y,
+        min_qv,
+        max_x,
+        min_x,
+        max_y,
+        min_y,
     )
     ch_transcripts = BAYSOR_PREPROCESS_TRANSCRIPTS.out.transcripts_file
 

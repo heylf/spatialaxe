@@ -13,8 +13,13 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeni
 
 workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     take:
-    ch_morphology_image // channel: [ val(meta), ["path-to-morphology.ome.tiff"] ]
-    ch_bundle_path      // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    ch_morphology_image        // channel: [ val(meta), ["path-to-morphology.ome.tiff"] ]
+    ch_bundle_path             // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    cellpose_downscale         // value: bool
+    cellpose_model             // value: path to cellpose model (or null)
+    nucleus_segmentation_only  // value: bool
+    sharpen_tiff               // value: bool
+    stardist_nuclei_model      // value: stardist pretrained model name
 
     main:
 
@@ -22,11 +27,11 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     ch_coordinate_space = channel.value("pixels")
 
     // Use empty list when no model is provided; path input for official cellpose module
-    cellpose_model = params.cellpose_model ? file(params.cellpose_model) : []
-    stardist_nuclei_model = params.stardist_nuclei_model ?: '2D_versatile_fluo'
+    cellpose_model_path = cellpose_model ? file(cellpose_model) : []
+    stardist_model = stardist_nuclei_model ?: '2D_versatile_fluo'
 
     // sharpen morphology tiff if param - sharpen_tiff is true
-    if (params.sharpen_tiff) {
+    if (sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
 
@@ -39,7 +44,7 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     // Optional pre-downscale for large images to avoid cellpose OOM
     // Only needed when running cellpose for cells (not nucleus_segmentation_only)
-    if (params.cellpose_downscale && !params.nucleus_segmentation_only) {
+    if (cellpose_downscale && !nucleus_segmentation_only) {
 
         DOWNSCALE_MORPHOLOGY(ch_image)
 
@@ -53,14 +58,14 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     }
 
     // run cellpose on morphology tiff (or downscaled version)
-    if (!params.nucleus_segmentation_only) {
-        CELLPOSE_CELLS(ch_cellpose_input, cellpose_model)
+    if (!nucleus_segmentation_only) {
+        CELLPOSE_CELLS(ch_cellpose_input, cellpose_model_path)
     }
 
     // StarDist for nuclei — extract DAPI first, then run on original resolution
     EXTRACT_DAPI(ch_image)
 
-    STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_nuclei_model, []])
+    STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_model, []])
 
     // Convert StarDist mask to uint32 for XeniumRanger compatibility
     CONVERT_MASK_UINT32(STARDIST_NUCLEI.out.mask)
@@ -69,9 +74,9 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
 
     // Upscale cellpose cells mask back to original resolution if downscaled
     // StarDist nuclei mask is already at original resolution (no upscale needed)
-    if (params.cellpose_downscale) {
+    if (cellpose_downscale) {
 
-        if (!params.nucleus_segmentation_only) {
+        if (!nucleus_segmentation_only) {
             ch_cells_for_upscale = CELLPOSE_CELLS.out.mask
                 .combine(ch_scale_info, by: 0)
             UPSCALE_CELLS(ch_cells_for_upscale)
@@ -80,13 +85,13 @@ workflow CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF {
     }
     else {
 
-        if (!params.nucleus_segmentation_only) {
+        if (!nucleus_segmentation_only) {
             ch_cells_mask = CELLPOSE_CELLS.out.mask
         }
     }
 
     // run import-segmentation with cellpose results
-    if (params.nucleus_segmentation_only) {
+    if (nucleus_segmentation_only) {
 
         ch_imp_seg_inputs = ch_bundle_path
             .combine(ch_nuclei_mask, by: 0)

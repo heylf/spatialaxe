@@ -25,15 +25,27 @@ include { UTILS_NEXTFLOW_PIPELINE } from '../../nf-core/utils_nextflow_pipeline'
 
 workflow PIPELINE_INITIALISATION {
     take:
-    version           // boolean: Display version and exit
-    validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
-    nextflow_cli_args // array: List of positional nextflow CLI args
-    outdir            // string: The output directory where the results will be saved
-    input             // string: Path to input samplesheet
-    help              // boolean: Display help message and exit
-    help_full         // boolean: Show the full help message
-    show_hidden       // boolean: Show hidden parameters in the help message
+    version                    // boolean: Display version and exit
+    validate_params            // boolean: Boolean whether to validate parameters against the schema at runtime
+    monochrome_logs            // boolean: Do not use coloured log outputs
+    nextflow_cli_args          // array: List of positional nextflow CLI args
+    outdir                     // string: The output directory where the results will be saved
+    input                      // string: Path to input samplesheet
+    help                       // boolean: Display help message and exit
+    help_full                  // boolean: Show the full help message
+    show_hidden                // boolean: Show hidden parameters in the help message
+    gene_panel                 // string: path to gene panel
+    gene_synonyms              // string: path to gene synonyms
+    image_seg_methods          // list: valid image-mode segmentation methods
+    method                     // string: chosen segmentation method
+    mode                       // string: pipeline mode
+    nucleus_segmentation_only  // boolean
+    offtarget_probe_tracking   // boolean
+    probes_fasta               // string: path to probes fasta
+    reference_annotations      // string: path to reference annotations
+    relabel_genes              // boolean
+    segmentation_mask          // string: path to segmentation mask
+    transcript_seg_methods     // list: valid coordinate-mode segmentation methods
 
     main:
 
@@ -91,11 +103,25 @@ workflow PIPELINE_INITIALISATION {
     //
     // Custom validation for pipeline parameters
     //
-    validateInputParameters()
+    validateInputParameters(
+        input,
+        mode,
+        method,
+        image_seg_methods,
+        transcript_seg_methods,
+        relabel_genes,
+        gene_panel,
+        nucleus_segmentation_only,
+        segmentation_mask,
+        offtarget_probe_tracking,
+        probes_fasta,
+        reference_annotations,
+        gene_synonyms,
+    )
     log.info("✅ Pipeline parameters validated.")
 
     //
-    // Create channel from input file provided through params.input
+    // Create channel from input file provided through --input
     //
     try {
 
@@ -180,7 +206,21 @@ workflow PIPELINE_COMPLETION {
 //
 // Check and validate pipeline parameters
 //
-def validateInputParameters() {
+def validateInputParameters(
+    input,
+    mode,
+    method,
+    image_seg_methods,
+    transcript_seg_methods,
+    relabel_genes,
+    gene_panel,
+    nucleus_segmentation_only,
+    segmentation_mask,
+    offtarget_probe_tracking,
+    probes_fasta,
+    reference_annotations,
+    gene_synonyms
+) {
 
     // check if conda profile is provided
     if (workflow.profile.contains('conda')) {
@@ -189,52 +229,52 @@ def validateInputParameters() {
     }
 
     // check if the samplesheet provided with the test config is assets/samplesheet.csv
-    if (workflow.profile.contains('test') && !"${params.input}".endsWith("assets/samplesheet.csv")) {
+    if (workflow.profile.contains('test') && !"${input}".endsWith("assets/samplesheet.csv")) {
         log.error("❌ Error: Use the samplesheet at: ${projectDir}/assets/samplesheet.csv with `--input` when running the pipeline in test profile.")
         exit(1)
     }
 
     // check if the segmentation method provided is valid for a mode
-    if (params.mode == 'image' && params.method) {
-        if (!params.image_seg_methods.contains(params.method)) {
-            log.error("❌ Error: Invalid segmentation method: ${params.method} provided for the `image` based mode. Options: ${params.image_seg_methods}")
+    if (mode == 'image' && method) {
+        if (!image_seg_methods.contains(method)) {
+            log.error("❌ Error: Invalid segmentation method: ${method} provided for the `image` based mode. Options: ${image_seg_methods}")
             exit(1)
         }
     }
 
-    if (params.mode == 'coordinate' && params.method) {
-        if (!params.transcript_seg_methods.contains(params.method)) {
-            log.error("❌ Error: Invalid segmentation method: `${params.method}` provided for the `coordinate` based mode. Options: ${params.transcript_seg_methods}")
+    if (mode == 'coordinate' && method) {
+        if (!transcript_seg_methods.contains(method)) {
+            log.error("❌ Error: Invalid segmentation method: `${method}` provided for the `coordinate` based mode. Options: ${transcript_seg_methods}")
             exit(1)
         }
     }
 
     // check if --relabel_genes is true but --gene_panel is not provided
-    if (params.relabel_genes && !params.gene_panel) {
+    if (relabel_genes && !gene_panel) {
         log.warn("⚠️  Relabel genes is enabled, but gene panel is not provided with the `--gene_panel`. Using `gene_panel.json` in the xenium bundle.")
     }
 
     // check if --relabel_genes is true but --gene_panel is not provided
-    if (params.gene_panel && !params.relabel_genes) {
+    if (gene_panel && !relabel_genes) {
         log.warn("⚠️  Gene panel provided, but relabel genes is disabled. Using `gene_panel.json` only to generate metadata.")
     }
 
     // check if segmentation method is xeniumranger and nucleus_ony_segmentation is enabled
-    if (params.method == 'xeniumranger' && !params.nucleus_segmentation_only) {
+    if (method == 'xeniumranger' && !nucleus_segmentation_only) {
         log.warn("⚠️  Nucleus segmentation is disabled. Running xeniumranger resegment module to redefine xenium bundle without nucleus segmentation.")
         log.warn("⚠️  Use --nucleus_segmentation_only to enable nucleus segmentation to redefine xenium bundle with import-segmentation module.")
     }
 
     // check if segmentation mask is provided in image mode and baysor method
-    if (params.mode == 'image' && params.method == 'baysor') {
-        if (!params.segmentation_mask) {
-            log.warn("⚠️  Missing segmentation mask with `--segmentation_mask` when pipeline is run in ${params.mode} and with the ${params.method}. Running in coordinate mode.")
+    if (mode == 'image' && method == 'baysor') {
+        if (!segmentation_mask) {
+            log.warn("⚠️  Missing segmentation mask with `--segmentation_mask` when pipeline is run in ${mode} and with the ${method}. Running in coordinate mode.")
         }
     }
 
     // check if required arguments are provided for off-target probe tracking
-    if (!params.mode && params.offtarget_probe_tracking) {
-        if(!params.probes_fasta || !params.reference_annotations || !params.gene_synonyms) {
+    if (!mode && offtarget_probe_tracking) {
+        if(!probes_fasta || !reference_annotations || !gene_synonyms) {
             log.error("❌ Error: Missing required param(s) for off-target-proebe detection.")
             exit(1)
         }

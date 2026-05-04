@@ -55,19 +55,32 @@ include { OPT_FLIP_TRACK_STAT                              } from '../subworkflo
 workflow SPATIALXE {
     take:
     ch_samplesheet                       // channel: samplesheet read in from --input
+    alignment_csv
+    baysor_config
     baysor_prior
+    baysor_scale
     baysor_tiling
+    baysor_tiling_scale
     buffer_samples
     buffer_size
+    cell_segmentation_only
+    cellpose_downscale
     cellpose_model
+    expansion_distance
     features
     gene_panel
     gene_synonyms
+    max_x
+    max_y
     method
+    min_qv
+    min_x
+    min_y
     mode
     multiqc_config
     multiqc_logo
     multiqc_methods_description
+    nucleus_segmentation_only
     offtarget_probe_tracking
     outdir
     probes_fasta
@@ -75,7 +88,10 @@ workflow SPATIALXE {
     reference_annotations
     relabel_genes
     run_qc
+    segger_model
     segmentation_mask
+    sharpen_tiff
+    stardist_nuclei_model
     tiling
     xeniumranger_only
 
@@ -342,7 +358,11 @@ workflow SPATIALXE {
     if (mode == 'image' && xeniumranger_only) {
 
         XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE(
-            ch_bundle_path
+            ch_bundle_path,
+            alignment_csv,
+            expansion_distance,
+            nucleus_segmentation_only,
+            qupath_polygons,
         )
         ch_redefined_bundle = XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE.out.redefined_bundle
         ch_coordinate_space = XENIUMRANGER_IMPORT_SEGMENTATION_REDEFINE_BUNDLE.out.coordinate_space
@@ -365,6 +385,16 @@ workflow SPATIALXE {
                 ch_transcripts_file,
                 ch_exp_metadata,
                 ch_config,
+                cell_segmentation_only,
+                cellpose_model,
+                max_x,
+                max_y,
+                min_qv,
+                min_x,
+                min_y,
+                nucleus_segmentation_only,
+                sharpen_tiff,
+                stardist_nuclei_model,
             )
             ch_redefined_bundle = CELLPOSE_BAYSOR_IMPORT_SEGMENTATION.out.redefined_bundle
             ch_coordinate_space = CELLPOSE_BAYSOR_IMPORT_SEGMENTATION.out.coordinate_space
@@ -374,7 +404,8 @@ workflow SPATIALXE {
         if (method == 'xeniumranger') {
 
             XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF(
-                ch_bundle_path
+                ch_bundle_path,
+                nucleus_segmentation_only,
             )
             ch_redefined_bundle = XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF.out.redefined_bundle
             ch_coordinate_space = XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF.out.coordinate_space
@@ -389,6 +420,11 @@ workflow SPATIALXE {
                     ch_transcripts_file,
                     ch_segmentation_mask,
                     ch_config,
+                    max_x,
+                    max_y,
+                    min_qv,
+                    min_x,
+                    min_y,
                 )
             }
             ch_redefined_bundle = BAYSOR_RUN_PRIOR_SEGMENTATION_MASK.out.redefined_bundle
@@ -401,6 +437,11 @@ workflow SPATIALXE {
             CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF(
                 ch_morphology_image,
                 ch_bundle_path,
+                cellpose_downscale,
+                cellpose_model,
+                nucleus_segmentation_only,
+                sharpen_tiff,
+                stardist_nuclei_model,
             )
             ch_redefined_bundle = CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF.out.redefined_bundle
             ch_coordinate_space = CELLPOSE_RESOLIFT_MORPHOLOGY_OME_TIF.out.coordinate_space
@@ -412,6 +453,8 @@ workflow SPATIALXE {
             STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF(
                 ch_morphology_image,
                 ch_bundle_path,
+                sharpen_tiff,
+                stardist_nuclei_model,
             )
             ch_redefined_bundle = STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF.out.redefined_bundle
             ch_coordinate_space = STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF.out.coordinate_space
@@ -451,6 +494,7 @@ workflow SPATIALXE {
             SEGGER_CREATE_TRAIN_PREDICT(
                 ch_bundle_path,
                 ch_transcripts_file,
+                segger_model,
             )
             ch_redefined_bundle = SEGGER_CREATE_TRAIN_PREDICT.out.redefined_bundle
             ch_coordinate_space = SEGGER_CREATE_TRAIN_PREDICT.out.coordinate_space
@@ -473,6 +517,15 @@ workflow SPATIALXE {
                 ch_morphology_image,
                 ch_config,
                 ch_prior_mask,
+                baysor_config,
+                baysor_scale,
+                baysor_tiling,
+                baysor_tiling_scale,
+                max_x,
+                max_y,
+                min_qv,
+                min_x,
+                min_y,
             )
             ch_redefined_bundle = BAYSOR_RUN_TRANSCRIPTS_PARQUET.out.redefined_bundle
             ch_coordinate_space = BAYSOR_RUN_TRANSCRIPTS_PARQUET.out.coordinate_space
@@ -494,6 +547,9 @@ workflow SPATIALXE {
             ch_bundle_path,
             ch_redefined_bundle,
             ch_coordinate_space,
+            cell_segmentation_only,
+            mode,
+            nucleus_segmentation_only,
         )
     }
 
@@ -531,6 +587,11 @@ workflow SPATIALXE {
             BAYSOR_GENERATE_SEGFREE(
                 ch_transcripts_file,
                 ch_config,
+                max_x,
+                max_y,
+                min_qv,
+                min_x,
+                min_y,
             )
         }
 
@@ -540,6 +601,7 @@ workflow SPATIALXE {
             FICTURE_PREPROCESS_MODEL(
                 ch_transcripts_file,
                 ch_features,
+                features,
             )
         }
     }

@@ -10,8 +10,10 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeni
 
 workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
     take:
-    ch_morphology_image // channel: [ val(meta), ["path-to-morphology.ome.tiff"] ]
-    ch_bundle_path      // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    ch_morphology_image    // channel: [ val(meta), ["path-to-morphology.ome.tiff"] ]
+    ch_bundle_path         // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    sharpen_tiff           // value: bool
+    stardist_nuclei_model  // value: stardist pretrained model name
 
     main:
 
@@ -19,10 +21,10 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
     ch_coordinate_space = channel.value("pixels")
 
     // Use default model when no model is provided
-    stardist_nuclei_model = params.stardist_nuclei_model ?: '2D_versatile_fluo'
+    stardist_model = stardist_nuclei_model ?: '2D_versatile_fluo'
 
     // sharpen morphology tiff if param - sharpen_tiff is true
-    if (params.sharpen_tiff) {
+    if (sharpen_tiff) {
 
         RESOLIFT(ch_morphology_image)
 
@@ -37,7 +39,7 @@ workflow STARDIST_RESOLIFT_MORPHOLOGY_OME_TIF {
     EXTRACT_DAPI(ch_image)
 
     // Run StarDist nuclei segmentation on DAPI channel
-    STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_nuclei_model, []])
+    STARDIST_NUCLEI(EXTRACT_DAPI.out.dapi, [stardist_model, []])
 
     // Convert mask to uint32 for XeniumRanger compatibility
     CONVERT_MASK_UINT32(STARDIST_NUCLEI.out.mask)

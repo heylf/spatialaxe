@@ -7,7 +7,8 @@ include { XENIUMRANGER_IMPORT_SEGMENTATION } from '../../../modules/nf-core/xeni
 
 workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
     take:
-    ch_bundle_path // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    ch_bundle_path             // channel: [ val(meta), ["path-to-xenium-bundle"] ]
+    nucleus_segmentation_only  // value: bool
 
     main:
 
@@ -25,7 +26,7 @@ workflow XENIUMRANGER_RESEGMENT_MORPHOLOGY_OME_TIF {
     }
 
     // adjust the nuclear expansion distance without altering nuclei detection
-    if (params.nucleus_segmentation_only) {
+    if (nucleus_segmentation_only) {
 
         def ch_imp_seg_inputs = ch_bundle_path
             .join(XENIUMRANGER_RESEGMENT.out.outs, by: 0)

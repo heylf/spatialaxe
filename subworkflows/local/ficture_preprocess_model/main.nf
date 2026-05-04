@@ -12,6 +12,7 @@ workflow FICTURE_PREPROCESS_MODEL {
     take:
     ch_transcripts_file // channel: [ val(meta), [ "transcripts.parquet" ] ]
     ch_features            // channel: [ ["features"] ]
+    features               // value: path to features list (or null)
 
     main:
 
@@ -24,7 +25,7 @@ workflow FICTURE_PREPROCESS_MODEL {
     FICTURE_PREPROCESS(ch_transcripts, ch_features)
 
     // run the ficture wrapper pipeline
-    ch_features_clean = params.features ? FICTURE_PREPROCESS.out.features : channel.value([])
+    ch_features_clean = features ? FICTURE_PREPROCESS.out.features : channel.value([])
     FICTURE(
         FICTURE_PREPROCESS.out.transcripts,
         FICTURE_PREPROCESS.out.coordinate_minmax,
