@@ -27,7 +27,7 @@ process SEGGER2XR {
     def min_transcripts = task.ext.min_transcripts_per_cell ?: 3
 
     """
-    segger2xr.py \\
+    utility_segger2xr.py \\
         --transcripts ${transcripts} \\
         --prefix ${meta.id} \\
         --min-transcripts ${min_transcripts}

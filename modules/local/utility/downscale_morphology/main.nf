@@ -41,7 +41,7 @@ process DOWNSCALE_MORPHOLOGY {
     def diam_mean = 30
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    downscale_morphology.py \\
+    utility_downscale_morphology.py \\
         --image ${image} \\
         --diameter ${diameter} \\
         --diam-mean ${diam_mean} \\
