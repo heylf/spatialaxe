@@ -3,8 +3,8 @@ process BAYSOR_PREVIEW {
     label 'process_medium'
 
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/97/97ecad2ae9a81cf12e8d690dfa9ca5cb0f36a0d57245f9fbb0113d15ce0e95f9/data' :
-        'community.wave.seqera.io/library/baysor:0.7.1--b8eb77d1f3f580df' }"
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ac/ac0d3ff0eccb4d861d4bccff00a0582f610ef2e8e37fc684db6b9436193a0bb6/data' :
+        'community.wave.seqera.io/library/baysor_python:3ef186887d7a5e32' }"
 
     input:
     tuple val(meta), path(transcripts), path(config)
