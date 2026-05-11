@@ -2,9 +2,7 @@ process BAYSOR_PREVIEW {
     tag "${meta.id}"
     label 'process_medium'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ac/ac0d3ff0eccb4d861d4bccff00a0582f610ef2e8e37fc684db6b9436193a0bb6/data' :
-        'community.wave.seqera.io/library/baysor_python:3ef186887d7a5e32' }"
+    container "khersameesh24/baysor:0.7.1"
 
     input:
     tuple val(meta), path(transcripts), path(config)
