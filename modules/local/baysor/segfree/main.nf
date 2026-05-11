@@ -2,7 +2,7 @@ process BAYSOR_SEGFREE {
     tag "${meta.id}"
     label 'process_high'
 
-    container "khersameesh24/baysor:0.7.1"
+    container "nf-core/baysor:0.7.1"
 
     input:
     tuple val(meta), path(transcripts), path(config)

@@ -23,17 +23,18 @@ process PROSEG {
 
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
+    def format = task.ext.format ?: 'xenium'
 
     // check for platform values
-    if (!(params.format in ['xenium', 'cosmx', 'merscope'])) {
-        error("${params.format} is an invalid platform type. Please specify xenium, cosmx, or merscope")
+    if (!(format in ['xenium', 'cosmx', 'merscope'])) {
+        error("${format} is an invalid platform type. Please specify xenium, cosmx, or merscope")
     }
 
     """
     mkdir -p ${prefix}
 
     proseg \\
-        --${params.format} \\
+        --${format} \\
         ${transcripts} \\
         --nthreads ${task.cpus} \\
         --output-expected-counts ${prefix}/expected-counts.csv.gz \\

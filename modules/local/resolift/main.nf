@@ -2,7 +2,7 @@ process RESOLIFT {
     tag "${meta.id}"
     label 'process_low'
 
-    container "khersameesh24/resolift:1.0.0"
+    container "nf-core/resolift:1.0.0"
 
     input:
     tuple val(meta), path(morphology_tiff)

@@ -2,7 +2,7 @@ process BAYSOR_RUN {
     tag "${meta.id}"
     label 'process_high'
 
-    container "khersameesh24/baysor:0.7.1"
+    container "nf-core/baysor:0.7.1"
 
     input:
     tuple val(meta), path(transcripts), path(prior_segmentation), path(config), val(scale)
@@ -41,7 +41,7 @@ process BAYSOR_RUN {
         "--plot",
         "--polygon-format=GeometryCollectionLegacy",
         args
-    ].findAll { it }
+    ].findAll { cmd -> cmd }
 
     """
     export JULIA_NUM_THREADS=${task.cpus}

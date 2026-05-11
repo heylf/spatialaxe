@@ -135,8 +135,7 @@ workflow PIPELINE_INITIALISATION {
     }
     catch (Exception e) {
 
-        log.error("❌ Samplesheet validation failed: ${e.message}")
-        exit(1)
+        error("❌ Samplesheet validation failed: ${e.message}")
     }
 
 
@@ -194,7 +193,7 @@ workflow PIPELINE_COMPLETION {
     }
 
     workflow.onError {
-        log.error("❌ Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
+        error("❌ Pipeline failed. Please refer to troubleshooting docs: https://nf-co.re/docs/usage/troubleshooting")
     }
 }
 
@@ -224,28 +223,24 @@ def validateInputParameters(
 
     // check if conda profile is provided
     if (workflow.profile.contains('conda')) {
-        log.error("❌ Error: `nf-core/spatialxe` does not support running the pipeline with profile: conda ")
-        exit(1)
+        error("❌ Error: `nf-core/spatialxe` does not support running the pipeline with profile: conda ")
     }
 
     // check if the samplesheet provided with the test config is assets/samplesheet.csv
     if (workflow.profile.contains('test') && !"${input}".endsWith("assets/samplesheet.csv")) {
-        log.error("❌ Error: Use the samplesheet at: ${projectDir}/assets/samplesheet.csv with `--input` when running the pipeline in test profile.")
-        exit(1)
+        error("❌ Error: Use the samplesheet at: ${projectDir}/assets/samplesheet.csv with `--input` when running the pipeline in test profile.")
     }
 
     // check if the segmentation method provided is valid for a mode
     if (mode == 'image' && method) {
         if (!image_seg_methods.contains(method)) {
-            log.error("❌ Error: Invalid segmentation method: ${method} provided for the `image` based mode. Options: ${image_seg_methods}")
-            exit(1)
+            error("❌ Error: Invalid segmentation method: ${method} provided for the `image` based mode. Options: ${image_seg_methods}")
         }
     }
 
     if (mode == 'coordinate' && method) {
         if (!transcript_seg_methods.contains(method)) {
-            log.error("❌ Error: Invalid segmentation method: `${method}` provided for the `coordinate` based mode. Options: ${transcript_seg_methods}")
-            exit(1)
+            error("❌ Error: Invalid segmentation method: `${method}` provided for the `coordinate` based mode. Options: ${transcript_seg_methods}")
         }
     }
 
@@ -275,11 +270,9 @@ def validateInputParameters(
     // check if required arguments are provided for off-target probe tracking
     if (!mode && offtarget_probe_tracking) {
         if(!probes_fasta || !reference_annotations || !gene_synonyms) {
-            log.error("❌ Error: Missing required param(s) for off-target-proebe detection.")
-            exit(1)
+            error("❌ Error: Missing required param(s) for off-target-proebe detection.")
         }
-        log.error("❌ Error: Use --mode qc and --offtraget_probe_tracking to run off-target probe tracking.")
-        exit(1)
+        error("❌ Error: Use --mode qc and --offtraget_probe_tracking to run off-target probe tracking.")
     }
 }
 
@@ -344,8 +337,7 @@ def validateXeniumBundle(ch_samplesheet) {
             return true
         }
         if (!requiredExist) {
-            log.error("❌ Missing file(s) at bundle path provided in the samplesheet: ${missing_required_files}")
-            exit(1)
+            error("❌ Missing file(s) at bundle path provided in the samplesheet: ${missing_required_files}")
         }
 
         def optionalExist = bundle_optional_files.every { filename ->

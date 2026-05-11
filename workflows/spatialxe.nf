@@ -176,8 +176,7 @@ workflow SPATIALXE {
 
         def bundle_path = file(bundle)
         if( !bundle_path.exists() ) {
-            log.error("❌ Check if the path to the xenium bundle exists.")
-            exit(1)
+            error("❌ Check if the path to the xenium bundle exists.")
         }
         return [meta, bundle]
     }
@@ -386,7 +385,7 @@ workflow SPATIALXE {
                 ch_exp_metadata,
                 ch_config,
                 cell_segmentation_only,
-                cellpose_model,
+                ch_cellpose_model,
                 max_x,
                 max_y,
                 min_qv,
@@ -438,7 +437,7 @@ workflow SPATIALXE {
                 ch_morphology_image,
                 ch_bundle_path,
                 cellpose_downscale,
-                cellpose_model,
+                ch_cellpose_model,
                 nucleus_segmentation_only,
                 sharpen_tiff,
                 stardist_nuclei_model,
@@ -685,9 +684,9 @@ workflow SPATIALXE {
         )
 
         MULTIQC_PRE_XR_RUN (
-            ch_multiqc_files.collect().map { [it] }
-                .combine(ch_multiqc_configs.map { [it] })
-                .combine(ch_multiqc_logo.toList().map { [it] })
+            ch_multiqc_files.collect().map { mqc_files -> [mqc_files] }
+                .combine(ch_multiqc_configs.map { mqc_configs -> [mqc_configs] })
+                .combine(ch_multiqc_logo.toList().map { mqc_logo -> [mqc_logo] })
                 .map { files, configs, logo ->
                     [ [id: 'multiqc_pre_xr'], files, configs, logo ? logo[0] : [], [], [] ]
                 }
@@ -700,9 +699,9 @@ workflow SPATIALXE {
         )
 
         MULTIQC_POST_XR_RUN (
-            ch_multiqc_files.collect().map { [it] }
-                .combine(ch_multiqc_configs.map { [it] })
-                .combine(ch_multiqc_logo.toList().map { [it] })
+            ch_multiqc_files.collect().map { mqc_files -> [mqc_files] }
+                .combine(ch_multiqc_configs.map { mqc_configs -> [mqc_configs] })
+                .combine(ch_multiqc_logo.toList().map { mqc_logo -> [mqc_logo] })
                 .map { files, configs, logo ->
                     [ [id: 'multiqc_post_xr'], files, configs, logo ? logo[0] : [], [], [] ]
                 }
@@ -738,9 +737,9 @@ workflow SPATIALXE {
 
 
         MULTIQC (
-            ch_multiqc_files.collect().map { [it] }
-                .combine(ch_multiqc_configs.map { [it] })
-                .combine(ch_multiqc_logo.toList().map { [it] })
+            ch_multiqc_files.collect().map { mqc_files -> [mqc_files] }
+                .combine(ch_multiqc_configs.map { mqc_configs -> [mqc_configs] })
+                .combine(ch_multiqc_logo.toList().map { mqc_logo -> [mqc_logo] })
                 .map { files, configs, logo ->
                     [ [id: 'multiqc'], files, configs, logo ? logo[0] : [], [], [] ]
                 }

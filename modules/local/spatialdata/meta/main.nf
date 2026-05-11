@@ -20,7 +20,7 @@ process SPATIALDATA_META {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit(1, "SPATIALDATA_META module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        error("SPATIALDATA_META module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"
@@ -37,7 +37,7 @@ process SPATIALDATA_META {
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit(1, "SPATIALDATA_META module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        error("SPATIALDATA_META module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"

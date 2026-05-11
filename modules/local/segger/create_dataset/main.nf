@@ -23,10 +23,11 @@ process SEGGER_CREATE_DATASET {
 
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
+    def format = task.ext.format ?: 'xenium'
 
     // check for platform values
-    if (!(params.format in ['xenium'])) {
-        error("${params.format} is an invalid platform type.")
+    if (!(format in ['xenium'])) {
+        error("${format} is an invalid platform type.")
     }
 
     """
@@ -36,9 +37,7 @@ process SEGGER_CREATE_DATASET {
     segger_create_dataset.py \\
         --bundle-dir ${base_dir} \\
         --output-dir ${prefix} \\
-        --sample-type ${params.format} \\
-        --tile-width ${params.tile_width} \\
-        --tile-height ${params.tile_height} \\
+        --sample-type ${format} \\
         --n-workers ${task.cpus} \\
         ${args}
     """
