@@ -250,7 +250,7 @@ workflow SPATIALXE {
 
     // get custom cellpose model if provided with the --cellpose_model for the cellpose method
     if (cellpose_model) {
-        ch_cellpose_model = channel.fromPath(
+        cellpose_model = channel.fromPath(
                 cellpose_model,
                 checkIfExists: true
             )
@@ -385,7 +385,7 @@ workflow SPATIALXE {
                 ch_exp_metadata,
                 ch_config,
                 cell_segmentation_only,
-                ch_cellpose_model,
+                cellpose_model,
                 max_x,
                 max_y,
                 min_qv,
@@ -437,7 +437,7 @@ workflow SPATIALXE {
                 ch_morphology_image,
                 ch_bundle_path,
                 cellpose_downscale,
-                ch_cellpose_model,
+                cellpose_model,
                 nucleus_segmentation_only,
                 sharpen_tiff,
                 stardist_nuclei_model,
