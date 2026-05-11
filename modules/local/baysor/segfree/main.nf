@@ -2,7 +2,9 @@ process BAYSOR_SEGFREE {
     tag "${meta.id}"
     label 'process_high'
 
-    container "nf-core/baysor:0.7.1"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/97/97ecad2ae9a81cf12e8d690dfa9ca5cb0f36a0d57245f9fbb0113d15ce0e95f9/data' :
+        'community.wave.seqera.io/library/baysor:0.7.1--b8eb77d1f3f580df' }"
 
     input:
     tuple val(meta), path(transcripts), path(config)
