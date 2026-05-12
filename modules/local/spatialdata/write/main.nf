@@ -22,9 +22,10 @@ process SPATIALDATA_WRITE {
     script:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit(1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        error("SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
+    def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
 
     """
@@ -34,13 +35,13 @@ process SPATIALDATA_WRITE {
         --output-folder ${outputfolder} \\
         --segmented-object ${segmented_object} \\
         --coordinate-space ${coordinate_space} \\
-        --format ${params.format}
+        ${args}
     """
 
     stub:
     // Exit if running this module with -profile conda / -profile mamba
     if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
-        exit(1, "SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
+        error("SPATIALDATA_WRITE module does not support Conda. Please use Docker / Singularity / Podman instead.")
     }
 
     prefix = task.ext.prefix ?: "${meta.id}"
