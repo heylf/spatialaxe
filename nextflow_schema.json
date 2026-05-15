@@ -219,7 +219,8 @@
                 "format": {
                     "type": "string",
                     "default": "xenium",
-                    "description": "Preset value for the proseg segmentation method."
+                    "enum": ["xenium", "cosmx", "merscope"],
+                    "description": "Input data platform. Used by proseg, segger, and spatialdata modules."
                 },
                 "image_seg_methods": {
                     "type": "array",

@@ -23,18 +23,12 @@ process PROSEG {
 
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def format = task.ext.format ?: 'xenium'
-
-    // check for platform values
-    if (!(format in ['xenium', 'cosmx', 'merscope'])) {
-        error("${format} is an invalid platform type. Please specify xenium, cosmx, or merscope")
-    }
 
     """
     mkdir -p ${prefix}
 
     proseg \\
-        --${format} \\
+        ${args} \\
         ${transcripts} \\
         --nthreads ${task.cpus} \\
         --output-expected-counts ${prefix}/expected-counts.csv.gz \\
@@ -45,8 +39,7 @@ process PROSEG {
         --output-cell-polygons ${prefix}/cell-polygons.geojson.gz \\
         --output-cell-polygon-layers ${prefix}/cell-polygons-layers.geojson.gz \\
         --output-union-cell-polygons ${prefix}/union-cell-polygons.geojson.gz \\
-        --output-spatialdata ${prefix}/proseg-output.zarr \\
-        ${args}
+        --output-spatialdata ${prefix}/proseg-output.zarr
     """
 
     stub:

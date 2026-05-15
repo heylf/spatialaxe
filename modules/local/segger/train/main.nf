@@ -22,14 +22,11 @@ process SEGGER_TRAIN {
     }
 
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
     def script_path = "/workspace/segger_dev/src/segger/cli/train_model.py"
     prefix = task.ext.prefix ?: "${meta.id}"
-    // Scale GPU count with retries: 4 → 8 (capped at params.devices)
     def gpu_count = 2 * task.attempt
     def cuda_visible = gpu_count == 1 ? "export CUDA_VISIBLE_DEVICES=0" : ""
     def accelerator = task.accelerator ? 'gpu' : 'auto'
-    def num_devices = task.devices ?: 0
 
     """
     # Set numba cache directory to avoid caching issues in container
@@ -38,7 +35,7 @@ process SEGGER_TRAIN {
 
     # GPU detection logging
     echo "=== GPU Detection (SEGGER_TRAIN) ==="
-    echo "Requested devices: ${gpu_count} (attempt ${task.attempt}, max ${num_devices})"
+    echo "Requested devices: ${gpu_count} (attempt ${task.attempt})"
     echo "Accelerator: ${accelerator}"
     nvidia-smi 2>/dev/null && echo "GPU available: yes" || echo "GPU available: no (nvidia-smi failed)"
     python3 -c "import torch; print(f'PyTorch CUDA available: {torch.cuda.is_available()}'); print(f'CUDA device count: {torch.cuda.device_count()}')" 2>/dev/null || echo "PyTorch CUDA check failed"
@@ -51,8 +48,7 @@ process SEGGER_TRAIN {
         --sample_tag ${prefix} \\
         --devices ${gpu_count} \\
         --accelerator ${accelerator} \\
-        ${args} \\
-        ${args2}
+        ${args}
     """
 
     stub:

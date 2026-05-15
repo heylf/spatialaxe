@@ -3,13 +3,13 @@
         "content": [
             {
                 "BAYSOR_PREPROCESS_TRANSCRIPTS": {
-                    "python": "3.14.4"
+                    "python": "3.14.3"
                 },
                 "BAYSOR_SEGFREE": {
-                    "baysor": "0.7.1"
+                    "baysor": "unknown"
                 },
                 "UNTAR": {
-                    "untar": 1.34
+                    "untar": 1.35
                 },
                 "Workflow": {
                     "nf-core/spatialxe": "v1.0.0"
@@ -51,7 +51,7 @@
                 "transcripts.parquet:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-04-29T19:35:23.216079554",
+        "timestamp": "2026-05-15T16:40:35.28744235",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "25.10.4"
