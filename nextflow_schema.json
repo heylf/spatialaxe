@@ -419,11 +419,6 @@
                     "type": "integer",
                     "description": "Number of sample(s) to process at a time from a multi-sample samplesheet. Works if buffered_samples is true.",
                     "default": 1
-                },
-                "restrict_concurrency": {
-                    "type": "boolean",
-                    "description": "Restrict parallelizing a process. Eg. restrict running cellpose cell and nuclei segmentation together if the resources are limited.",
-                    "default": false
                 }
             }
         },

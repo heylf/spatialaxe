@@ -3,31 +3,31 @@
         "content": [
             {
                 "PROSEG2BAYSOR": {
-                    "proseg": "2.0.4"
+                    "proseg": "3.1.0"
                 },
                 "PROSEG": {
-                    "proseg": "2.0.4"
+                    "proseg": "3.1.0"
                 },
                 "SPATIALDATA_MERGE_RAW_REDEFINED": {
-                    "spatialdata": null
+                    "spatialdata": "0.7.2"
                 },
                 "SPATIALDATA_META": {
-                    "spatialdata": null
+                    "spatialdata": "0.7.2"
                 },
                 "SPATIALDATA_WRITE_RAW_BUNDLE": {
-                    "spatialdata": null
+                    "spatialdata": "0.7.2"
                 },
                 "SPATIALDATA_WRITE_REDEFINED_BUNDLE": {
-                    "spatialdata": null
+                    "spatialdata": "0.7.2"
                 },
                 "UNTAR": {
-                    "untar": 1.35
+                    "untar": 1.34
                 },
                 "Workflow": {
                     "nf-core/spatialxe": "v1.0.0"
                 },
                 "XENIUMRANGER_IMPORT_SEGMENTATION": {
-                    "xeniumranger": null
+                    "xeniumranger": "4.0.1.1"
                 }
             },
             [
@@ -106,10 +106,10 @@
                 "experiment.xenium:md5,d41d8cd98f00b204e9800998ecf8427e"
             ]
         ],
-        "timestamp": "2026-05-15T16:39:58.063123543",
         "meta": {
-            "nf-test": "0.9.5",
-            "nextflow": "25.10.4"
-        }
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-03-22T19:55:52.515294044"
     }
 }
