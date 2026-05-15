@@ -92,20 +92,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Free disk space for heavy container pulls (xeniumranger:4.0 ships CUDA libs ~5-10GB)
-        shell: bash
-        run: |
-          set -x
-          df -h /
-          df -h /var/lib/docker 2>/dev/null || true
-          # Drop any stale docker state from runner reuse
-          sudo docker system prune -af --volumes || true
-          # Drop preinstalled tool caches that nf-test doesn't need (best-effort on self-hosted runners)
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL || true
-          sudo rm -rf /usr/local/share/boost /usr/local/share/powershell || true
-          df -h /
-          df -h /var/lib/docker 2>/dev/null || true
-
       - name: Run nf-test
         id: run_nf_test
         uses: ./.github/actions/nf-test
