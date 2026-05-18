@@ -34,6 +34,7 @@ workflow PIPELINE_INITIALISATION {
     help                       // boolean: Display help message and exit
     help_full                  // boolean: Show the full help message
     show_hidden                // boolean: Show hidden parameters in the help message
+    format                     // string: input data platform (xenium | cosmx | merscope)
     gene_panel                 // string: path to gene panel
     gene_synonyms              // string: path to gene synonyms
     image_seg_methods          // list: valid image-mode segmentation methods
@@ -107,6 +108,7 @@ workflow PIPELINE_INITIALISATION {
         input,
         mode,
         method,
+        format,
         image_seg_methods,
         transcript_seg_methods,
         relabel_genes,
@@ -206,6 +208,7 @@ def validateInputParameters(
     input,
     mode,
     method,
+    format,
     image_seg_methods,
     transcript_seg_methods,
     relabel_genes,
@@ -239,6 +242,16 @@ def validateInputParameters(
         if (!transcript_seg_methods.contains(method)) {
             error("❌ Error: Invalid segmentation method: `${method}` provided for the `coordinate` based mode. Options: ${transcript_seg_methods}")
         }
+    }
+
+    // check method-format compatibility (schema enum constrains the universe; this enforces the method-specific subset)
+    def valid_segger_formats = ['xenium']
+    def valid_proseg_formats = ['xenium', 'cosmx', 'merscope']
+    if (method == 'segger' && !(format in valid_segger_formats)) {
+        error("❌ Error: Invalid --format '${format}' for segger. Valid: ${valid_segger_formats}")
+    }
+    if (method == 'proseg' && !(format in valid_proseg_formats)) {
+        error("❌ Error: Invalid --format '${format}' for proseg. Valid: ${valid_proseg_formats}")
     }
 
     // check if --relabel_genes is true but --gene_panel is not provided
