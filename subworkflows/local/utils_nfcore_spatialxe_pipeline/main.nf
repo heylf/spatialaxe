@@ -139,12 +139,9 @@ workflow PIPELINE_INITIALISATION {
     }
 
 
-    //
-    // Check and validate xenium bundle
-    //
-    if (!workflow.profile.contains('test')) {
-        validateXeniumBundle(ch_samplesheet)
-    }
+    // Xenium bundle file-presence validation now runs in the main workflow
+    // (workflows/spatialxe.nf) AFTER UNTAR staging, so it works uniformly for
+    // both directory inputs and tarball inputs.
 
     emit:
     samplesheet = ch_samplesheet
@@ -273,86 +270,6 @@ def validateInputParameters(
             error("❌ Error: Missing required param(s) for off-target-proebe detection.")
         }
         error("❌ Error: Use --mode qc and --offtraget_probe_tracking to run off-target probe tracking.")
-    }
-}
-
-//
-// Check and validate xenium bundle
-//
-def validateXeniumBundle(ch_samplesheet) {
-
-    // define xenium bundle directory structure - required files
-    def bundle_required_files = [
-        "cell_boundaries.csv.gz",
-        "cell_boundaries.parquet",
-        "cell_feature_matrix.h5",
-        "cell_feature_matrix.zarr.zip",
-        "cells.csv.gz",
-        "cells.parquet",
-        "cells.zarr.zip",
-        "experiment.xenium",
-        "gene_panel.json",
-        "metrics_summary.csv",
-        "morphology.ome.tif",
-        "morphology_focus/",
-        "nucleus_boundaries.csv.gz",
-        "nucleus_boundaries.parquet",
-        "transcripts.parquet",
-        "transcripts.zarr.zip",
-    ]
-
-    // bundle optional files
-    def bundle_optional_files = [
-        "analysis.tar.gz",
-        "analysis.zarr.zip",
-        "analysis_summary.html"
-    ]
-
-    // get bundle path (keep raw string for remote-path detection)
-    def ch_bundle_info = ch_samplesheet.map { _meta, bundle, _image ->
-        def rawPath = bundle.toString().replaceFirst(/\/$/, '')
-        def bundle_path = file(rawPath)
-        return [rawPath, bundle_path]
-    }
-
-    // Skip file-level validation for remote paths (S3, GS, AZ) because
-    // file().exists() is unreliable on cloud storage during initialization
-    // (Fusion mounts s3://bucket as /bucket, breaking startsWith checks).
-    // Files will be validated at task staging time instead.
-    ch_bundle_info.map { rawPath, path ->
-        if (rawPath.startsWith('s3://') || rawPath.startsWith('gs://') || rawPath.startsWith('az://')) {
-            log.info("Skipping bundle file validation for remote path: ${rawPath}")
-            return
-        }
-
-        def missing_required_files = []
-        def missing_optional_files = []
-
-        def requiredExist = bundle_required_files.every { filename ->
-            def fullPath = file("${path}/${filename}")
-            if (!fullPath.exists()) {
-                missing_required_files.add(filename)
-                return false
-            }
-            return true
-        }
-        if (!requiredExist) {
-            error("❌ Missing file(s) at bundle path provided in the samplesheet: ${missing_required_files}")
-        }
-
-        def optionalExist = bundle_optional_files.every { filename ->
-            def fullPath = file("${path}/${filename}")
-            if (!fullPath.exists()) {
-                missing_optional_files.add(filename)
-                return false
-            }
-            return true
-        }
-        if (!optionalExist) {
-            log.warn("⚠️ Missing optional file(s) at bundle path provided in the samplesheet: ${missing_optional_files}")
-        }
-
-        log.info("✅ Xenium bundle validated.\n")
     }
 }
 

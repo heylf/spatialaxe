@@ -171,13 +171,51 @@ workflow SPATIALXE {
         }
     }
 
+    // validate xenium bundle POST-staging — works uniformly for production
+    // directories and for tarball inputs that the UNTAR step has just extracted
+    def bundle_required_files = [
+        "cell_boundaries.csv.gz",
+        "cell_boundaries.parquet",
+        "cell_feature_matrix.h5",
+        "cell_feature_matrix.zarr.zip",
+        "cells.csv.gz",
+        "cells.parquet",
+        "cells.zarr.zip",
+        "experiment.xenium",
+        "gene_panel.json",
+        "metrics_summary.csv",
+        "morphology.ome.tif",
+        "morphology_focus/",
+        "nucleus_boundaries.csv.gz",
+        "nucleus_boundaries.parquet",
+        "transcripts.parquet",
+        "transcripts.zarr.zip",
+    ]
+    def bundle_optional_files = [
+        "analysis.tar.gz",
+        "analysis.zarr.zip",
+        "analysis_summary.html",
+    ]
+
     // path to bundle input
     ch_bundle_path = ch_input.map { meta, bundle, _image ->
 
         def bundle_path = file(bundle)
         if( !bundle_path.exists() ) {
-            error("❌ Check if the path to the xenium bundle exists.")
+            error("❌ Xenium bundle does not exist: ${bundle}")
         }
+
+        def missing_required = bundle_required_files.findAll { !file("${bundle_path}/${it}").exists() }
+        if (missing_required) {
+            error("❌ Missing required file(s) in xenium bundle '${bundle}': ${missing_required}")
+        }
+
+        def missing_optional = bundle_optional_files.findAll { !file("${bundle_path}/${it}").exists() }
+        if (missing_optional) {
+            log.warn("⚠️ Missing optional file(s) in xenium bundle '${bundle}': ${missing_optional}")
+        }
+
+        log.info("✅ Xenium bundle validated: ${bundle}")
         return [meta, bundle]
     }
 
