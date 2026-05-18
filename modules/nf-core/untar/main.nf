@@ -49,6 +49,19 @@ process UNTAR {
     prefix = task.ext.prefix ?: (meta.id ? "${meta.id}" : archive.toString().replaceFirst(/\.[^\.]+(.gz)?$/, ""))
     """
     mkdir ${prefix}
+    ## Emit a valid empty file. nf-test's snapshot md5 path decompresses .gz files,
+    ## so a 0-byte .gz (from `touch`) throws EOF in GZIPInputStream and the snapshot
+    ## falls back to dumping non-deterministic File metadata (freeSpace, etc).
+    ## `: | gzip -n` produces a 20-byte deterministic empty gzip that md5s consistently.
+    emit_stub() {
+        local f="\$1"
+        if [[ "\$f" == *.gz ]]; then
+            : | gzip -n > "\$f"
+        else
+            touch "\$f"
+        fi
+    }
+
     ## Dry-run untaring the archive to get the files and place all in prefix
     if [[ \$(tar -taf ${archive} | grep -o -P "^.*?\\/" | uniq | wc -l) -eq 1 ]]; then
         ## Single top-level dir in the archive: mirror `--strip-components 1` from the real
@@ -60,7 +73,7 @@ process UNTAR {
             if [[ \$(echo "\${i}" | grep -E "/\$") == "" ]];
             then
                 mkdir -p ${prefix}/\$(dirname "\$stripped")
-                touch ${prefix}/\$stripped
+                emit_stub ${prefix}/\$stripped
             else
                 mkdir -p ${prefix}/\$stripped
             fi
@@ -70,7 +83,7 @@ process UNTAR {
         do
             if [[ \$(echo "\${i}" | grep -E "/\$") == "" ]];
             then
-                touch ${prefix}/\${i}
+                emit_stub ${prefix}/\${i}
             else
                 mkdir -p ${prefix}/\${i}
             fi
