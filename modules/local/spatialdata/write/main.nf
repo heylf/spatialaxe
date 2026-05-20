@@ -14,7 +14,7 @@ process SPATIALDATA_WRITE {
 
     output:
     tuple val(meta), path("spatialdata/${prefix}/${outputfolder}"), emit: spatialdata
-    tuple val("${task.process}"), val('spatialdata'), eval('python3 -c "import spatialdata; print(spatialdata.__version__)"'), topic: versions, emit: versions_spatialdata
+    tuple val("${task.process}"), val('spatialdata'), eval("pip show spatialdata | sed -n 's/^Version: //p'"), topic: versions, emit: versions_spatialdata
 
     when:
     task.ext.when == null || task.ext.when

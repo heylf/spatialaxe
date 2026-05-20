@@ -1,7 +1,6 @@
 process SEGGER_CREATE_DATASET {
     tag "${meta.id}"
     label 'process_xl'
-    maxForks params.restrict_concurrency ? 1 : 0
 
     container "quay.io/dongzehe/segger:1.0.14"
 
@@ -23,12 +22,6 @@ process SEGGER_CREATE_DATASET {
 
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def format = task.ext.format ?: 'xenium'
-
-    // check for platform values
-    if (!(format in ['xenium'])) {
-        error("${format} is an invalid platform type.")
-    }
 
     """
     export NUMBA_CACHE_DIR=\$PWD/.numba_cache
@@ -37,7 +30,6 @@ process SEGGER_CREATE_DATASET {
     segger_create_dataset.py \\
         --bundle-dir ${base_dir} \\
         --output-dir ${prefix} \\
-        --sample-type ${format} \\
         --n-workers ${task.cpus} \\
         ${args}
     """

@@ -105,6 +105,7 @@ workflow {
         params.help,
         params.help_full,
         params.show_hidden,
+        params.format,
         params.gene_panel,
         params.gene_synonyms,
         params.image_seg_methods,
