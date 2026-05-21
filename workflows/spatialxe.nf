@@ -205,12 +205,12 @@ workflow SPATIALXE {
             error("❌ Xenium bundle does not exist: ${bundle}")
         }
 
-        def missing_required = bundle_required_files.findAll { !file("${bundle_path}/${it}").exists() }
+        def missing_required = bundle_required_files.findAll { check -> !file("${bundle_path}/${check}").exists() }
         if (missing_required) {
             error("❌ Missing required file(s) in xenium bundle '${bundle}': ${missing_required}")
         }
 
-        def missing_optional = bundle_optional_files.findAll { !file("${bundle_path}/${it}").exists() }
+        def missing_optional = bundle_optional_files.findAll { check -> !file("${bundle_path}/${check}").exists() }
         if (missing_optional) {
             log.warn("⚠️ Missing optional file(s) in xenium bundle '${bundle}': ${missing_optional}")
         }
