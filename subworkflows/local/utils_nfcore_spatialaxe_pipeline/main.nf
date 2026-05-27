@@ -1,5 +1,5 @@
 //
-// Subworkflow with functionality specific to the nf-core/spatialxe pipeline
+// Subworkflow with functionality specific to the nf-core/spatialaxe pipeline
 //
 
 /*
@@ -70,7 +70,7 @@ workflow PIPELINE_INITIALISATION {
 \033[0;34m  |\\ | |__  __ /  ` /  \\ |__) |__         \033[0;33m}  {\033[0m
 \033[0;34m  | \\| |       \\__, \\__/ |  \\ |___     \033[0;32m\\`-._,-`-,\033[0m
                                         \033[0;32m`._,._,\'\033[0m
-\033[0;35m  nf-core/spatialxe ${workflow.manifest.version}\033[0m
+\033[0;35m  nf-core/spatialaxe ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------\033[0m-
 """
     after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/', '')}" }.join("\n")}${workflow.manifest.doi ? "\n" : ""}
@@ -78,7 +78,7 @@ workflow PIPELINE_INITIALISATION {
     https://doi.org/10.1038/s41587-020-0439-x
 
 * Software dependencies
-    https://github.com/nf-core/spatialxe/blob/master/CITATIONS.md
+    https://github.com/nf-core/spatialaxe/blob/master/CITATIONS.md
 """
     command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --mode <MODE> --outdir <OUTDIR>"
 
@@ -142,7 +142,7 @@ workflow PIPELINE_INITIALISATION {
 
 
     // Xenium bundle file-presence validation now runs in the main workflow
-    // (workflows/spatialxe.nf) AFTER UNTAR staging, so it works uniformly for
+    // (workflows/spatialaxe.nf) AFTER UNTAR staging, so it works uniformly for
     // both directory inputs and tarball inputs.
 
     emit:
@@ -223,7 +223,7 @@ def validateInputParameters(
 
     // check if conda profile is provided
     if (workflow.profile.contains('conda')) {
-        error("❌ Error: `nf-core/spatialxe` does not support running the pipeline with profile: conda ")
+        error("❌ Error: `nf-core/spatialaxe` does not support running the pipeline with profile: conda ")
     }
 
     // check if the samplesheet provided with the test config is assets/samplesheet.csv
