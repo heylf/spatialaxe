@@ -20,12 +20,12 @@
 
 ## Introduction
 
-**nf-core/spatialaxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium data. The current plan for the pipeline implementation is shown in the metromap below. **The pipeline is under active developement and changes might occure frequently**.
+**nf-core/spatialaxe** is a bioinformatics best-practice processing and quality control pipeline for Xenium (and soon Atera) data. The current plan for the pipeline implementation is shown in the metromap below. **The pipeline is under active developement and changes might occure frequently**.
 
 ![nf-core/spatialaxe-metromap](docs/images/spatialaxe-metromap.png)
 
 > [!NOTE]
-> We are currently testing the pipeline for the [10x Atera system](https://www.10xgenomics.com/platforms/atera).
+> We are currently extending the pipeline for the [10x Atera system](https://www.10xgenomics.com/platforms/atera).
 
 ## Tools supported
 
