@@ -12,12 +12,12 @@
                     "untar": 1.34
                 },
                 "Workflow": {
-                    "nf-core/spatialxe": "v1.0.0"
+                    "nf-core/spatialaxe": "v1.0.0"
                 }
             },
             [
                 "pipeline_info",
-                "pipeline_info/nf_core_spatialxe_software_mqc_versions.yml",
+                "pipeline_info/nf_core_spatialaxe_software_mqc_versions.yml",
                 "segfree",
                 "segfree/baysor",
                 "segfree/baysor/preprocess",
