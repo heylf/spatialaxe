@@ -470,7 +470,7 @@
                 },
                 "test_data_base": {
                     "type": "string",
-                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/spatialaxe",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/spatialxe",
                     "description": "Base path / URL for data used in the test profiles."
                 }
             }
