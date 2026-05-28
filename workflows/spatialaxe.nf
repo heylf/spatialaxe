@@ -12,7 +12,7 @@ include { paramsSummaryMultiqc                             } from '../subworkflo
 
 // nf-core functionality
 include { softwareVersionsToYAML                           } from '../subworkflows/nf-core/utils_nfcore_pipeline'
-include { methodsDescriptionText                           } from '../subworkflows/local/utils_nfcore_spatialxe_pipeline'
+include { methodsDescriptionText                           } from '../subworkflows/local/utils_nfcore_spatialaxe_pipeline'
 include { paramsSummaryMap                                 } from 'plugin/nf-schema'
 
 // nf-core modules
@@ -52,7 +52,7 @@ include { OPT_FLIP_TRACK_STAT                              } from '../subworkflo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-workflow SPATIALXE {
+workflow SPATIALAXE {
     take:
     ch_samplesheet                       // channel: samplesheet read in from --input
     alignment_csv
@@ -99,7 +99,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - GENERATE INPUT CHANNELS
+        SPATIALAXE - GENERATE INPUT CHANNELS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
@@ -130,7 +130,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - DATA STAGING
+        SPATIALAXE - DATA STAGING
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
@@ -354,7 +354,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - RELABEL GENES
+        SPATIALAXE - RELABEL GENES
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
@@ -373,7 +373,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - DATA PREVIEW
+        SPATIALAXE - DATA PREVIEW
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     // run baysor preview if `generate_preview ` is true
@@ -388,7 +388,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - XENIUMRANGER LAYER
+        SPATIALAXE - XENIUMRANGER LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     // run only xeniumranger import segmentation with changes xr specific params
@@ -408,7 +408,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - IMAGE-BASED SEGMENTATION LAYER
+        SPATIALAXE - IMAGE-BASED SEGMENTATION LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     if (mode == 'image') {
@@ -500,7 +500,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - TRANSCRIPT-BASED SEGMENTATION LAYER
+        SPATIALAXE - TRANSCRIPT-BASED SEGMENTATION LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     if (mode == 'coordinate') {
@@ -573,7 +573,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - SPATIALDATA / METADATA LAYER
+        SPATIALAXE - SPATIALDATA / METADATA LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
@@ -592,7 +592,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - QC LAYER
+        SPATIALAXE - QC LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
 
@@ -613,7 +613,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - SEGMENTATION-FREE LAYER
+        SPATIALAXE - SEGMENTATION-FREE LAYER
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     if (mode == 'segfree') {
@@ -647,7 +647,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - COLLATE & SAVE SOFTWARE VERSIONS
+        SPATIALAXE - COLLATE & SAVE SOFTWARE VERSIONS
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     // Collect versions published via topic channels (local modules)
@@ -659,7 +659,7 @@ workflow SPATIALXE {
     softwareVersionsToYAML(ch_versions.mix(ch_topic_versions))
         .collectFile(
             storeDir: "${outdir}/pipeline_info",
-            name: 'nf_core_' + 'spatialxe_software_' + 'mqc_' + 'versions.yml',
+            name: 'nf_core_' + 'spatialaxe_software_' + 'mqc_' + 'versions.yml',
             sort: true,
             newLine: true,
         )
@@ -667,7 +667,7 @@ workflow SPATIALXE {
 
     /*
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        SPATIALXE - MultiQC
+        SPATIALAXE - MultiQC
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     */
     ch_multiqc_config = channel.fromPath(

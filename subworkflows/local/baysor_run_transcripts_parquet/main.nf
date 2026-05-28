@@ -103,7 +103,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         XENIUM_PATCH_STITCH ( RECONSTRUCT_PATCHES.out.patches_dir )
 
         // Step 6: xeniumranger import-segmentation (tiled)
-        // spatialxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units
+        // spatialaxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units
         ch_xr = ch_bundle_path
             .combine(XENIUM_PATCH_STITCH.out.xr_polygons_transcript, by: 0)
             .map {
@@ -146,7 +146,7 @@ workflow BAYSOR_RUN_TRANSCRIPTS_PARQUET {
         BAYSOR_RUN(ch_baysor_input)
 
         // xeniumranger import-segmentation (non-tiled)
-        // spatialxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units
+        // spatialaxe signature: meta, bundle, transcript_assignment, viz_polygons, nuclei, cells, coordinate_transform, units
         ch_xr = ch_bundle_path
             .combine(BAYSOR_RUN.out.segmentation, by: 0)
             .map { meta, bundle, segmentation_csv, polygons2d ->
