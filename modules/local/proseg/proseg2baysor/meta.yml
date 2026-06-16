@@ -45,10 +45,17 @@ output:
         type: file
         description: Transcript ids, genes, revised positions, assignment probability
         pattern: "xr-transcript-metadata.csv"
-  - - versions:
-      type: file
-      description: File containing software versions
-      pattern: "versions.yml"
+topics:
+  versions_proseg:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - python:
+          type: string
+          description: The tool name
+      - "proseg --version | sed 's/proseg //'":
+          type: eval
+          description: The expression to obtain the version of the tool
 
 authors:
   - "@khersameesh24"

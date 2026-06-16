@@ -32,10 +32,17 @@ output:
     - datasetdir:
         description: |
           Directory to save the processed Segger dataset (in PyTorch Geometric format).
-  - - versions:
-        type: file
-        description: File containing software versions
-        pattern: "versions.yml"
+topics:
+  versions_segger:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - python:
+          type: string
+          description: The tool name
+      - "pip show segger | sed -n 's/^Version: //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
 
 authors:
   - "@tobiaspk"

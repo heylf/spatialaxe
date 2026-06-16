@@ -2,6 +2,8 @@ name: "baysor_segfree"
 description: Extract neighborhood composition vectors (NVCs) from a dataset.
 keywords:
   - neighborhood
+  - baysor
+  - segmentation_free
 tools:
   - "baysor":
     description: "Baysor is a tool that segments cells using spatial gene expression maps. Optionally, segmentation masks can be given as additional input."
@@ -46,6 +48,18 @@ output:
     description: |
       Log file with summary statistics
     pattern: "ncvs_segfree_log.log"
+
+topics:
+  versions_baysor:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - python:
+          type: string
+          description: The tool name
+      - "baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown":
+          type: eval
+          description: The expression to obtain the version of the tool
 
 authors:
   - "@sebgoti8"
