@@ -34,15 +34,15 @@ input:
 output:
   ncvs:
     - - meta:
-      type: map
-      description: |
-        Groovy Map containing sample information
-        e.g. [ id:'test' ]
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test' ]
     - "${prefix}/ncvs.loom":
-      type: file
-      description: |
-        Segmenation file in loom format
-      pattern: "${prefix}/ncvs.loom"
+        type: file
+        description: |
+          Segmenation file in loom format
+        pattern: "${prefix}/ncvs.loom"
 
   versions_baysor:
     - - ${task.process}:
@@ -54,7 +54,6 @@ output:
       - "baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown":
           type: eval
           description: The expression to obtain the version of the tool
-
 
 topics:
   versions:
