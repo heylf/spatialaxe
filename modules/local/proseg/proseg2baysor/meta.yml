@@ -49,9 +49,9 @@ output:
             Groovy Map containing run information
             e.g. `[ id:'run_id']`
     - "${prefix}/transcript-metadata.csv":
-          type: file
-          description: Transcript ids, genes, revised positions, assignment probability
-          pattern: "xr-transcript-metadata.csv"
+        type: file
+        description: Transcript ids, genes, revised positions, assignment probability
+        pattern: "xr-transcript-metadata.csv"
   versions_proseg:
     - - ${task.process}:
           type: string

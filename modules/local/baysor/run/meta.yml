@@ -76,15 +76,15 @@ output:
     pattern: "segmentation_cell_stats.csv"
 
   - versions_baysor:
-    - - ${task.process}:
-          type: string
-          description: The process the versions were collected from
-      - python:
-          type: string
-          description: The tool name
-      - "baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown":
-          type: eval
-          description: The expression to obtain the version of the tool
+      - - ${task.process}:
+            type: string
+            description: The process the versions were collected from
+        - python:
+            type: string
+            description: The tool name
+        - "baysor --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown":
+            type: eval
+            description: The expression to obtain the version of the tool
 
 topics:
   versions:

@@ -38,9 +38,9 @@ output:
             Groovy Map containing sample information
             e.g. [ id:'test' ]
     - "preview.html":
-          type: file
-          description: segmentation preview
-          pattern: "preview.html"
+        type: file
+        description: segmentation preview
+        pattern: "preview.html"
   versions_baysor:
     - - ${task.process}:
           type: string

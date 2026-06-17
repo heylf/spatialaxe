@@ -37,19 +37,19 @@ output:
             Groovy Map containing run information
             e.g. [id:'sample']
     - "*processed_transcripts.tsv.gz":
-          type: file
-          description: Transcirpt file used for FICTURE
-          pattern: "processed_transcripts.tsv.gz"
+        type: file
+        description: Transcirpt file used for FICTURE
+        pattern: "processed_transcripts.tsv.gz"
   coordinate_minmax:
     - "*coordinate_minmax.tsv":
-          type: file
-          description: Listing the min and max of the coordinates used for FICTURE
-          pattern: "coordinate_minmax.tsv"
+        type: file
+        description: Listing the min and max of the coordinates used for FICTURE
+        pattern: "coordinate_minmax.tsv"
   features:
     - "*feature.clean.tsv.gz":
-          type: file
-          description: Another file contains the (unique) names of genes that should be used for FICUTRE
-          pattern: "feature.clean.tsv.gz"
+        type: file
+        description: Another file contains the (unique) names of genes that should be used for FICUTRE
+        pattern: "feature.clean.tsv.gz"
   versions_ficture:
     - - ${task.process}:
           type: string
