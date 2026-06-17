@@ -32,12 +32,28 @@ input:
         type: file
         description: Another file contains the (unique) names of genes that should be used in analysis. The required columns is just gene (including the header), the naming of genes should match the gene column in the transcript file. If your data contain negative control probes or if you would like to remove certain genes this is where you can specify.
 output:
-  - results:
-      type: file
-      description: Files containing the results of FICTURE
-      pattern: "${meta.id}/results/*"
-topics:
+  results:
+    - - meta:
+        type: map
+        description: |
+          Groovy Map containing run information
+          e.g. [id:'sample']
+    - results:
+        type: file
+        description: Files containing the results of FICTURE
+        pattern: "${meta.id}/results/*"
   versions_ficture:
+    - - ${task.process}:
+          type: string
+          description: The process the versions were collected from
+      - python:
+          type: string
+          description: The tool name
+      - "pip show ficture | sed -n 's/^Version: //p'":
+          type: eval
+          description: The expression to obtain the version of the tool
+topics:
+  versions:
     - - ${task.process}:
           type: string
           description: The process the versions were collected from

@@ -1,15 +1,31 @@
 {
     "versions_stub": {
-        "content": null,
-        "timestamp": "2026-06-17T10:57:59.488545662",
+        "content": [
+            [
+                [
+                    "BAYSOR_CREATE_DATASET",
+                    "baysor",
+                    "0.7.1"
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-17T13:16:19.929465332",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.2"
         }
     },
     "versions": {
-        "content": null,
-        "timestamp": "2026-06-17T10:57:49.73564258",
+        "content": [
+            [
+                [
+                    "BAYSOR_CREATE_DATASET",
+                    "baysor",
+                    "0.7.1"
+                ]
+            ]
+        ],
+        "timestamp": "2026-06-17T13:16:11.036406226",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.2"
