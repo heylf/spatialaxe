@@ -6,7 +6,7 @@ process SPOQC_MODEL {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.0"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
