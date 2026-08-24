@@ -19,6 +19,7 @@ Initial release of nf-core/spatialaxe, created with the [nf-core](https://nf-co.
 - samplesheet redefinition: `sample,bundle,image,annotation,stainings`, samplesheet allows for two additional optional columns `annotation,stainings` that are useful for the QC subworkflow.
 - `spatialdata_write_meta_merge/main.nf`: Change to subworkflow to account for proper `qc` mode.
 - Change to `bin/spatialdata_write.py`: Adding an `all` mode to set all available features to `True`, which is important for QC.
+- Added `traffic_light_output_hqcr.parquet`: Adding traffic light output file to spoQC.
 
 ### `Fixed`
 
