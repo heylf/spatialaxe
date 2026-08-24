@@ -225,14 +225,15 @@ nextflow_process {
                 input[7] = SPOQC_CELL.out.tmp.map { it[1] }
                 input[8] = SPOQC_HQCR_IDENT.out.mask.map { it[1] }
                 input[9] = SPOQC_HQCR_IDENT.out.mask_smoothed.map { it[1] }
-                input[10] = SPOQC_HQTR_QV.out.tmp.map { it[1] }
-                input[11] = SPOQC_HQTR_AC.out.tmp.map { it[1] }
-                input[12] = SPOQC_HQTR_METRICES.out.metrices.map { it[1] }
-                input[13] = SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { it[1] }
-                input[14] = SPOQC_HQTR_CLUSTERING.out.mask.map { it[1] }
-                input[15] = SPOQC_HQPR_METRICES.out.metrices.map { _meta, _staining, p -> p }.collect()
-                input[16] = SPOQC_HQPR_REFINEMENT.out.mask_smoothed.map { _meta, _staining, p -> p }.collect()
-                input[17] = SPOQC_HQPR_CLUSTERING.out.mask.map { _meta, _staining, p -> p }.collect()
+                input[10] = SPOQC_HQCR_IDENT.out.traffic_light.map { it[1] }
+                input[11] = SPOQC_HQTR_QV.out.tmp.map { it[1] }
+                input[12] = SPOQC_HQTR_AC.out.tmp.map { it[1] }
+                input[13] = SPOQC_HQTR_METRICES.out.metrices.map { it[1] }
+                input[14] = SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { it[1] }
+                input[15] = SPOQC_HQTR_CLUSTERING.out.mask.map { it[1] }
+                input[16] = SPOQC_HQPR_METRICES.out.metrices.map { _meta, _staining, p -> p }.collect()
+                input[17] = SPOQC_HQPR_REFINEMENT.out.mask_smoothed.map { _meta, _staining, p -> p }.collect()
+                input[18] = SPOQC_HQPR_CLUSTERING.out.mask.map { _meta, _staining, p -> p }.collect()
                 """
             }
         }
@@ -264,14 +265,15 @@ nextflow_process {
                 input[7] = SPOQC_CELL.out.tmp.map { it[1] }
                 input[8] = SPOQC_HQCR_IDENT.out.mask.map { it[1] }
                 input[9] = SPOQC_HQCR_IDENT.out.mask_smoothed.map { it[1] }
-                input[10] = SPOQC_HQTR_QV.out.tmp.map { it[1] }
-                input[11] = SPOQC_HQTR_AC.out.tmp.map { it[1] }
-                input[12] = SPOQC_HQTR_METRICES.out.metrices.map { it[1] }
-                input[13] = SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { it[1] }
-                input[14] = SPOQC_HQTR_CLUSTERING.out.mask.map { it[1] }
-                input[15] = SPOQC_HQPR_METRICES.out.metrices.map { _meta, _staining, p -> p }.collect()
-                input[16] = SPOQC_HQPR_REFINEMENT.out.mask_smoothed.map { _meta, _staining, p -> p }.collect()
-                input[17] = SPOQC_HQPR_CLUSTERING.out.mask.map { _meta, _staining, p -> p }.collect()
+                input[10] = SPOQC_HQCR_IDENT.out.traffic_light.map { it[1] }
+                input[11] = SPOQC_HQTR_QV.out.tmp.map { it[1] }
+                input[12] = SPOQC_HQTR_AC.out.tmp.map { it[1] }
+                input[13] = SPOQC_HQTR_METRICES.out.metrices.map { it[1] }
+                input[14] = SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { it[1] }
+                input[15] = SPOQC_HQTR_CLUSTERING.out.mask.map { it[1] }
+                input[16] = SPOQC_HQPR_METRICES.out.metrices.map { _meta, _staining, p -> p }.collect()
+                input[17] = SPOQC_HQPR_REFINEMENT.out.mask_smoothed.map { _meta, _staining, p -> p }.collect()
+                input[18] = SPOQC_HQPR_CLUSTERING.out.mask.map { _meta, _staining, p -> p }.collect()
                 """
             }
         }

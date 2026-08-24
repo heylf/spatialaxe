@@ -86,6 +86,17 @@ output:
           description: Smoothed HQCR mask
           pattern: "hqcr_output_mask_smoothed_raw.parquet"
           ontologies: []
+  traffic_light:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample' ]
+      - "traffic_light":
+          type: file
+          description: Per-cell HQCR traffic-light QC status
+          pattern: "traffic_light_output_hqcr.parquet"
+          ontologies: []
   versions_spoqc:
     - - "${task.process}":
           type: string

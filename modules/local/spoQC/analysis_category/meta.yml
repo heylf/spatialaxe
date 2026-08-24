@@ -68,6 +68,11 @@ input:
       description: Smoothed HQCR mask from SPOQC_HQCR_IDENT
       pattern: "hqcr_output_mask_smoothed_raw.parquet"
       ontologies: []
+  - traffic_light_hqcr:
+      type: file
+      description: HQCR traffic-light QC status from SPOQC_HQCR_IDENT
+      pattern: "traffic_light_output_hqcr.parquet"
+      ontologies: []
   - qv:
       type: directory
       description: HQTR quality-value probability output from SPOQC_HQTR_QV

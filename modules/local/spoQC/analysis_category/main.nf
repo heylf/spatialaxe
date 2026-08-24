@@ -19,6 +19,7 @@ process SPOQC_ANALYSIS_CATEGORY {
     path(tmp_cell, stageAs: "spoQC_tmp/cellqc_output_hqcr.parquet")
     path(mask_hqcr, stageAs: "spoQC_tmp/hqcr_output_mask_raw.parquet")
     path(mask_smoothed_hqcr, stageAs: "spoQC_tmp/hqcr_output_mask_smoothed_raw.parquet")
+    path(traffic_light_hqcr, stageAs: "spoQC_tmp/traffic_light_output_hqcr.parquet")
     path(qv, stageAs: "spoQC_tmp/hqtr_output_qv_prob")
     path(ac, stageAs: "spoQC_tmp/hqtr_output_ac_prob")
     path(metrices_hqtr, stageAs: "spoQC_tmp/metrices/hqtr")

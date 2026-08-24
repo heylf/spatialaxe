@@ -22,6 +22,7 @@ process SPOQC_HQCR_IDENT {
     tuple val(meta), path("./report/hqcr/hqcr_ident")                             , emit: report
     tuple val(meta), path("./spoQC_tmp/hqcr_output_mask_raw.parquet")             , emit: mask
     tuple val(meta), path("./spoQC_tmp/hqcr_output_mask_smoothed_raw.parquet")    , emit: mask_smoothed
+    tuple val(meta), path("./spoQC_tmp/traffic_light_output_hqcr.parquet")        , emit: traffic_light
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -57,5 +58,6 @@ process SPOQC_HQCR_IDENT {
     mkdir -p ./spoQC_tmp
     touch ./spoQC_tmp/hqcr_output_mask_raw.parquet
     touch ./spoQC_tmp/hqcr_output_mask_smoothed_raw.parquet
+    touch ./spoQC_tmp/traffic_light_output_hqcr.parquet
     """
 }

@@ -374,6 +374,7 @@ workflow SPOQC {
         .join(SPOQC_CELL.out.tmp, by: 0)
         .join(SPOQC_HQCR_IDENT.out.mask, by: 0)
         .join(SPOQC_HQCR_IDENT.out.mask_smoothed, by: 0)
+        .join(SPOQC_HQCR_IDENT.out.traffic_light, by: 0)
         .join(SPOQC_HQTR_QV.out.tmp, by: 0)
         .join(SPOQC_HQTR_AC.out.tmp, by: 0)
         .join(SPOQC_HQTR_METRICES.out.metrices, by: 0)
@@ -384,7 +385,7 @@ workflow SPOQC {
         .join(ch_files_hqpr_masks, by: 0, remainder: true)
         .multiMap { meta, spatialdata, annotation,
                     general, bubble, doublet, void_qc, cell,
-                    hqcr_mask, hqcr_mask_smoothed,
+                    hqcr_mask, hqcr_mask_smoothed, hqcr_traffic_light,
                     hqtr_qv, hqtr_ac, hqtr_metrices, hqtr_mask_smoothed, hqtr_mask,
                     hqpr_metrics, hqpr_masks_smoothed, hqpr_masks ->
             sd:                  [meta, spatialdata]
@@ -396,6 +397,7 @@ workflow SPOQC {
             cell_tmp:            cell
             hqcr_mask:           hqcr_mask
             hqcr_mask_smoothed:  hqcr_mask_smoothed
+            hqcr_traffic_light:  hqcr_traffic_light
             hqtr_qv:             hqtr_qv
             hqtr_ac:             hqtr_ac
             hqtr_metrices:       hqtr_metrices
@@ -418,6 +420,7 @@ workflow SPOQC {
         ch_analysis_inputs.cell_tmp,
         ch_analysis_inputs.hqcr_mask,
         ch_analysis_inputs.hqcr_mask_smoothed,
+        ch_analysis_inputs.hqcr_traffic_light,
         ch_analysis_inputs.hqtr_qv,
         ch_analysis_inputs.hqtr_ac,
         ch_analysis_inputs.hqtr_metrices,
@@ -439,6 +442,7 @@ workflow SPOQC {
         ch_analysis_inputs.cell_tmp,
         ch_analysis_inputs.hqcr_mask,
         ch_analysis_inputs.hqcr_mask_smoothed,
+        ch_analysis_inputs.hqcr_traffic_light,
         ch_analysis_inputs.hqtr_qv,
         ch_analysis_inputs.hqtr_ac,
         ch_analysis_inputs.hqtr_metrices,
@@ -460,6 +464,7 @@ workflow SPOQC {
         ch_analysis_inputs.cell_tmp,
         ch_analysis_inputs.hqcr_mask,
         ch_analysis_inputs.hqcr_mask_smoothed,
+        ch_analysis_inputs.hqcr_traffic_light,
         ch_analysis_inputs.hqtr_qv,
         ch_analysis_inputs.hqtr_ac,
         ch_analysis_inputs.hqtr_metrices,
