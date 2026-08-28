@@ -17,6 +17,7 @@ process SPOQC_HQCR_IDENT {
     path(tmp_doublet, stageAs: "./spoQC_tmp/doubletqc_output_hqcr.parquet")
     path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet")
     path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet")
+    val(spoqc_doublet_prior_std)
 
     output:
     tuple val(meta), path("./report/hqcr/hqcr_ident")                             , emit: report
@@ -44,6 +45,7 @@ process SPOQC_HQCR_IDENT {
         -n ${task.cpus} \\
         -s ${step}  \\
         --dataset ${meta.id} \\
+        --doublet_prior_std ${spoqc_doublet_prior_std} \\
         ${args}
     """
 
