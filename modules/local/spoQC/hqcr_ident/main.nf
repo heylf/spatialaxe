@@ -37,7 +37,7 @@ process SPOQC_HQCR_IDENT {
     }
 
     def args = task.ext.args ?: ''
-    def arg_spoqc_doublet_prior_mean = spoqc_doublet_prior_mean ? "--doublet_prior_mean ${spoqc_doublet_prior_mean}": ""
+    def arg_spoqc_doublet_prior_mean = spoqc_doublet_prior_mean != '' ? "--doublet_prior_mean ${spoqc_doublet_prior_mean}": ""
 
     """
     python3 -m spoqc \\
