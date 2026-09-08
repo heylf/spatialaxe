@@ -18,6 +18,7 @@ process SPOQC_HQCR_IDENT {
     path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet")
     path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet")
     val(spoqc_doublet_prior_std)
+    val(spoqc_doublet_prior_mean)
 
     output:
     tuple val(meta), path("./report/hqcr/hqcr_ident")                             , emit: report
@@ -36,6 +37,7 @@ process SPOQC_HQCR_IDENT {
     }
 
     def args = task.ext.args ?: ''
+    def arg_spoqc_doublet_prior_mean = spoqc_doublet_prior_mean ? "--doublet_prior_mean ${spoqc_doublet_prior_mean}": ""
 
     """
     python3 -m spoqc \\
@@ -46,6 +48,7 @@ process SPOQC_HQCR_IDENT {
         -s ${step}  \\
         --dataset ${meta.id} \\
         --doublet_prior_std ${spoqc_doublet_prior_std} \\
+        ${arg_spoqc_doublet_prior_mean} \\
         ${args}
     """
 

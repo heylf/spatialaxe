@@ -80,7 +80,8 @@ workflow NFCORE_SPATIALAXE {
         params.tiling,
         params.xeniumranger_only,
         params.spoqc,
-        params.spoqc_doublet_prior_std
+        params.spoqc_doublet_prior_std,
+        params.spoqc_doublet_prior_mean,
     )
     emit:
     multiqc_report = SPATIALAXE.out.multiqc_report // channel: /path/to/multiqc_report.html

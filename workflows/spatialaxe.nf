@@ -98,6 +98,7 @@ workflow SPATIALAXE {
     xeniumranger_only
     spoqc
     spoqc_doublet_prior_std
+    spoqc_doublet_prior_mean
 
     main:
 
@@ -666,6 +667,7 @@ workflow SPATIALAXE {
                 ch_annotation,
                 ch_stainings,
                 spoqc_doublet_prior_std,
+                spoqc_doublet_prior_mean,
             )
         }
 
