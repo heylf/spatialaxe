@@ -29,7 +29,7 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // spoQC report subfolders: checked for existence only (see spoqc/** exclusion above)
             def spoqc_report_dirs = [
-                "ambientqc", "analysis", "annotation", "bubbleqc", "cellcycleqc",
+                "ambientqc", "analysis", "annotation", "cellcycleqc",
                 "cellqc", "combine_masks", "doubletqc", "generalqc", "hqcr",
                 "hqpr", "hqtr", "modelqc", "transcriptqc", "voidqc", "whole_slide_qc"
             ]
@@ -73,7 +73,7 @@ nextflow_pipeline {
             def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
             // spoQC report subfolders: checked for existence only (see spoqc/** exclusion above)
             def spoqc_report_dirs = [
-                "ambientqc", "analysis", "annotation", "bubbleqc", "cellcycleqc",
+                "ambientqc", "analysis", "annotation", "cellcycleqc",
                 "cellqc", "combine_masks", "doubletqc", "generalqc", "hqcr",
                 "hqpr", "hqtr", "modelqc", "transcriptqc", "voidqc", "whole_slide_qc"
             ]

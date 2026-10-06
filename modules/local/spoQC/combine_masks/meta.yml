@@ -33,7 +33,7 @@ input:
   - - mask_hqcr:
         type: file
         description: HQCR raw mask from SPOQC_HQCR_IDENT
-        pattern: "hqcr_output_mask_raw.parquet"
+        pattern: "mask_raw_output_hqcr.parquet"
         ontologies: []
     - staining_idx_hqcr:
         type: integer
@@ -49,7 +49,7 @@ input:
   - - mask_hqtr:
         type: directory
         description: HQTR raw mask from SPOQC_HQTR_CLUSTERING
-        pattern: "hqtr_output_mask_raw"
+        pattern: "mask_raw_output_hqtr"
         ontologies: []
     - staining_idx_hqtr:
         type: integer
@@ -57,7 +57,7 @@ input:
   - - mask_smoothed_hqcr:
         type: file
         description: Smoothed HQCR mask from SPOQC_HQCR_IDENT
-        pattern: "hqcr_output_mask_smoothed_raw.parquet"
+        pattern: "mask_smoothed_raw_output_hqcr.parquet"
         ontologies: []
     - staining_idx_smoothed_hqcr:
         type: integer
@@ -73,7 +73,7 @@ input:
   - - mask_smoothed_hqtr:
         type: directory
         description: Smoothed HQTR mask from SPOQC_HQTR_REFINEMENT
-        pattern: "hqtr_output_mask_smoothed_raw"
+        pattern: "mask_smoothed_raw_output_hqtr"
         ontologies: []
     - staining_idx_smoothed_hqtr:
         type: integer

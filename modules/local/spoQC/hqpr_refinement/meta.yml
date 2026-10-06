@@ -66,7 +66,7 @@ output:
       - "mask_smoothed":
           type: directory
           description: Per-staining smoothed HQPR mask
-          pattern: "spoQC_tmp/hqpr_${staining}_output_mask_smoothed_raw"
+          pattern: "spoQC_tmp/mask_smoothed_raw_output_hqpr_${staining}"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":

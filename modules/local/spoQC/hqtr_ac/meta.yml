@@ -53,7 +53,7 @@ output:
       - "tmp":
           type: directory
           description: HQTR ambient-contamination probability output
-          pattern: "hqtr_output_ac_prob"
+          pattern: "ac_density_output_hqtr"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":

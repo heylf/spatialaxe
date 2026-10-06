@@ -1,6 +1,6 @@
 name: spoqc_hqpr_celltype
 description: |
-  Run per-staining high-quality pixel region (HQPR) cell-type QC, combining the general/bubble/doublet/void/cell QC outputs with the HQPR probability and mask.
+  Run per-staining high-quality pixel region (HQPR) cell-type QC, combining the general/doublet/void/cell QC outputs with the HQPR probability and mask.
 keywords:
   - spatial transcriptomics
   - quality control
@@ -47,13 +47,6 @@ input:
     - staining_idx_g:
         type: integer
         description: Staining index carried alongside tmp_general to align the per-staining combined channel (Groovy var `_stain_g`)
-  - - tmp_bubble:
-        type: file
-        description: Bubble QC parquet output from SPOQC_BUBBLE, tagged with the staining index
-        ontologies: []
-    - staining_idx_b:
-        type: integer
-        description: Staining index carried alongside tmp_bubble to align the per-staining combined channel (Groovy var `_stain_b`)
   - - tmp_doublet:
         type: file
         description: Doublet QC parquet output from SPOQC_DOUBLET, tagged with the staining index

@@ -9,7 +9,7 @@ Initial release of nf-core/spatialaxe, created with the [nf-core](https://nf-co.
 
 ### `Added`
 
-- Added the entire **spoQC tool and subworkflow**: `subworkflows/local/spoqc/main.nf` plus 31 new local modules under `modules/local/spoQC/` (`ambient`, `analysis_category`, `analysis_cluster`, `analysis_overview`, `annotation`, `bubble`, `cell`, `cellcycle`, `combine_masks`, `doublet`, `finalreport`, `general`, `hqcr_celltype`, `hqcr_ident`, `hqpr_bounding_box`, `hqpr_celltype`, `hqpr_clustering`, `hqpr_metrices`, `hqpr_refinement`, `hqtr_ac`, `hqtr_bounding_box`, `hqtr_celltype`, `hqtr_clustering`, `hqtr_metrices`, `hqtr_qv`, `hqtr_refinement`, `marker`, `model`, `transcript`, `void`, `whole_slide`), each with its own `main.nf`, `meta.yml`, and nf-test suite (`tests/main.nf.test` + snapshot).
+- Added the entire **spoQC tool and subworkflow**: `subworkflows/local/spoqc/main.nf` plus 30 new local modules under `modules/local/spoQC/` (`ambient`, `analysis_category`, `analysis_cluster`, `analysis_overview`, `annotation`, `cell`, `cellcycle`, `combine_masks`, `doublet`, `finalreport`, `general`, `hqcr_celltype`, `hqcr_ident`, `hqpr_bounding_box`, `hqpr_celltype`, `hqpr_clustering`, `hqpr_metrices`, `hqpr_refinement`, `hqtr_ac`, `hqtr_bounding_box`, `hqtr_celltype`, `hqtr_clustering`, `hqtr_metrices`, `hqtr_qv`, `hqtr_refinement`, `marker`, `model`, `transcript`, `void`, `whole_slide`), each with its own `main.nf`, `meta.yml`, and nf-test suite (`tests/main.nf.test` + snapshot).
 - Wired spoQC into `workflows/spatialaxe.nf`.
 - Added `bin/spatialdata_write.py` support for spoQC's SpatialData output.
 - New test configs: `conf/tests/test_spoqc.config` and `conf/tests/test_full_spoqc.config`

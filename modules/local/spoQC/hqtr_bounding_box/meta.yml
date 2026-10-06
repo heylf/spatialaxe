@@ -31,7 +31,12 @@ input:
   - edge_strength:
       type: directory
       description: HQTR spatially smoothed mask (edge-strength input) from SPOQC_HQTR_REFINEMENT
-      pattern: "hqtr_output_mask_smoothed_raw"
+      pattern: "mask_smoothed_raw_output_hqtr"
+      ontologies: []
+  - metrices:
+      type: directory
+      description: HQTR metrics directory from SPOQC_HQTR_METRICES
+      pattern: "spoQC_tmp/metrices/hqtr"
       ontologies: []
 output:
   report:

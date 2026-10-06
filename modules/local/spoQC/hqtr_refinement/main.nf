@@ -6,16 +6,16 @@ process SPOQC_HQTR_REFINEMENT {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
     val(step)
-    path(mask, stageAs: "./spoQC_tmp/hqtr_output_mask_raw")
+    path(mask, stageAs: "./spoQC_tmp/mask_raw_output_hqtr")
 
     output:
     tuple val(meta), path("./report/hqtr/hqtr_refinement")                   , emit: report
-    tuple val(meta), path("./spoQC_tmp/hqtr_output_mask_smoothed_raw")       , emit: mask_smoothed
+    tuple val(meta), path("./spoQC_tmp/mask_smoothed_raw_output_hqtr")       , emit: mask_smoothed
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -48,7 +48,7 @@ process SPOQC_HQTR_REFINEMENT {
 
     """
     mkdir -p ./report/hqtr/hqtr_refinement
-    mkdir -p ./spoQC_tmp/hqtr_output_mask_smoothed_raw
+    mkdir -p ./spoQC_tmp/mask_smoothed_raw_output_hqtr
     """
 
 }

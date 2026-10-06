@@ -7,21 +7,20 @@ process SPOQC_HQCR_CELLTYPE {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
     path(annotation, stageAs: "*")
     val(step)
     path(tmp_general, stageAs: "./spoQC_tmp/generalqc_output_hqcr.parquet")
-    path(tmp_bubble, stageAs: "./spoQC_tmp/bubbleqc_output_hqcr.parquet")
     path(tmp_doublet, stageAs: "./spoQC_tmp/doubletqc_output_hqcr.parquet")
     path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet")
     path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet")
 
     output:
     tuple val(meta), path("./report/hqcr/hqcr_celltype")                                       , emit: report
-    tuple val(meta), path("./spoQC_tmp/hqcr_output_mask_smoothed_celltype_refined.parquet")    , emit: mask
+    tuple val(meta), path("./spoQC_tmp/mask_smoothed_celltype_refined_output_hqcr.parquet")    , emit: mask
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -57,7 +56,7 @@ process SPOQC_HQCR_CELLTYPE {
     """
     mkdir -p ./report/hqcr/hqcr_celltype
     mkdir -p ./spoQC_tmp
-    touch ./spoQC_tmp/hqcr_output_mask_smoothed_celltype_refined.parquet
+    touch ./spoQC_tmp/mask_smoothed_celltype_refined_output_hqcr.parquet
     """
 
 }

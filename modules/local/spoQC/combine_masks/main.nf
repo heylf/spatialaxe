@@ -6,17 +6,17 @@ process SPOQC_COMBINE_MASKS {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*"), val(_stain_sd)
     val(step)
-    tuple path(mask_hqcr, stageAs: "spoQC_tmp/hqcr_output_mask_raw.parquet"), val(_stain_hqcr)
+    tuple path(mask_hqcr, stageAs: "spoQC_tmp/mask_raw_output_hqcr.parquet"), val(_stain_hqcr)
     tuple val(staining), path(mask_hqpr, stageAs: "spoQC_tmp/*")
-    tuple path(mask_hqtr, stageAs: "spoQC_tmp/hqtr_output_mask_raw"), val(_stain_hqtr)
-    tuple path(mask_smoothed_hqcr, stageAs: "spoQC_tmp/hqcr_output_mask_smoothed_raw.parquet"), val(_stain_smoothed_hqcr)
+    tuple path(mask_hqtr, stageAs: "spoQC_tmp/mask_raw_output_hqtr"), val(_stain_hqtr)
+    tuple path(mask_smoothed_hqcr, stageAs: "spoQC_tmp/mask_smoothed_raw_output_hqcr.parquet"), val(_stain_smoothed_hqcr)
     tuple val(_s), path(mask_smoothed_hqpr, stageAs: "spoQC_tmp/*")
-    tuple path(mask_smoothed_hqtr, stageAs: "spoQC_tmp/hqtr_output_mask_smoothed_raw"), val(_stain_smoothed_hqtr)
+    tuple path(mask_smoothed_hqtr, stageAs: "spoQC_tmp/mask_smoothed_raw_output_hqtr"), val(_stain_smoothed_hqtr)
 
     output:
     tuple val(meta), path("report/combine_masks/${staining}")    , emit: report

@@ -6,12 +6,13 @@ process SPOQC_HQTR_BOUNDING_BOX {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
     val(step)
-    path(edge_strength, stageAs: "./spoQC_tmp/hqtr_output_mask_smoothed_raw")
+    path(edge_strength, stageAs: "./spoQC_tmp/mask_smoothed_raw_output_hqtr")
+    path(metrices, stageAs: "spoQC_tmp/metrices/hqtr")
 
     output:
     tuple val(meta), path("./report/hqtr/hqtr_bounding_box")                   , emit: report

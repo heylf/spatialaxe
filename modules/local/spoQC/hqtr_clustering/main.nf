@@ -7,7 +7,7 @@ process SPOQC_HQTR_CLUSTERING {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
@@ -18,7 +18,7 @@ process SPOQC_HQTR_CLUSTERING {
 
     output:
     tuple val(meta), path("report/hqtr/hqtr_clustering")                 , emit: report
-    tuple val(meta), path("spoQC_tmp/hqtr_output_mask_raw")              , emit: mask
+    tuple val(meta), path("spoQC_tmp/mask_raw_output_hqtr")              , emit: mask
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -51,7 +51,7 @@ process SPOQC_HQTR_CLUSTERING {
 
     """
     mkdir -p report/hqtr/hqtr_clustering
-    mkdir -p spoQC_tmp/hqtr_output_mask_raw
+    mkdir -p spoQC_tmp/mask_raw_output_hqtr
     """
 
 }

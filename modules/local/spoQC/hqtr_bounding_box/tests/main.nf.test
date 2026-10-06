@@ -108,6 +108,7 @@ nextflow_process {
                 input[0] = SPATIALDATA_WRITE.out.spatialdata
                 input[1] = "hqtr_bounding_box"
                 input[2] = SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { it[1] }
+                input[3] = SPOQC_HQTR_METRICES.out.metrices.map { it[1] }
                 """
             }
         }
@@ -131,6 +132,7 @@ nextflow_process {
                 input[0] = SPATIALDATA_WRITE.out.spatialdata
                 input[1] = "hqtr_bounding_box"
                 input[2] = SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { it[1] }
+                input[3] = SPOQC_HQTR_METRICES.out.metrices.map { it[1] }
                 """
             }
         }

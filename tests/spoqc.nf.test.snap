@@ -20,9 +20,6 @@
                 "SPOQC_ANNOTATION": {
                     "spoqc": "0.1.0"
                 },
-                "SPOQC_BUBBLE": {
-                    "spoqc": "0.1.0"
-                },
                 "SPOQC_CELL": {
                     "spoqc": "0.1.0"
                 },
@@ -500,9 +497,6 @@
                     "spoqc": "0.1.0"
                 },
                 "SPOQC_ANNOTATION": {
-                    "spoqc": "0.1.0"
-                },
-                "SPOQC_BUBBLE": {
                     "spoqc": "0.1.0"
                 },
                 "SPOQC_CELL": {

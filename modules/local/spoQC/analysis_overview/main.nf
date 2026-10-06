@@ -6,24 +6,24 @@ process SPOQC_ANALYSIS_OVERVIEW {
     label 'spoqc'
 
 
-    container "heylf/spoqc:0.0.1"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
     path(annotation, stageAs: "*")
     val(step)
     path(tmp_general, stageAs: "spoQC_tmp/generalqc_output_hqcr.parquet")
-    path(tmp_bubble, stageAs: "spoQC_tmp/bubbleqc_output_hqcr.parquet")
     path(tmp_doublet, stageAs: "spoQC_tmp/doubletqc_output_hqcr.parquet")
     path(tmp_void, stageAs: "spoQC_tmp/voidqc_output_hqcr.parquet")
     path(tmp_cell, stageAs: "spoQC_tmp/cellqc_output_hqcr.parquet")
-    path(mask_hqcr, stageAs: "spoQC_tmp/hqcr_output_mask_raw.parquet")
-    path(mask_smoothed_hqcr, stageAs: "spoQC_tmp/hqcr_output_mask_smoothed_raw.parquet")
-    path(qv, stageAs: "spoQC_tmp/hqtr_output_qv_prob")
-    path(ac, stageAs: "spoQC_tmp/hqtr_output_ac_prob")
+    path(mask_hqcr, stageAs: "spoQC_tmp/mask_raw_output_hqcr.parquet")
+    path(mask_smoothed_hqcr, stageAs: "spoQC_tmp/mask_smoothed_raw_output_hqcr.parquet")
+    path(traffic_light_hqcr, stageAs: "spoQC_tmp/traffic_light_output_hqcr.parquet")
+    path(qv, stageAs: "spoQC_tmp/qv_density_output_hqtr")
+    path(ac, stageAs: "spoQC_tmp/ac_density_output_hqtr")
     path(metrices_hqtr, stageAs: "spoQC_tmp/metrices/hqtr")
-    path(mask_smoothed_hqtr, stageAs: "spoQC_tmp/hqtr_output_mask_smoothed_raw")
-    path(mask_hqtr, stageAs: "spoQC_tmp/hqtr_output_mask_raw")
+    path(mask_smoothed_hqtr, stageAs: "spoQC_tmp/mask_smoothed_raw_output_hqtr")
+    path(mask_hqtr, stageAs: "spoQC_tmp/mask_raw_output_hqtr")
     path(metrices_hqpr, stageAs: "spoQC_tmp/metrices/hqpr/*")
     path(mask_smoothed_hqpr, stageAs: "spoQC_tmp/*")
     path(mask_hqpr, stageAs: "spoQC_tmp/*")

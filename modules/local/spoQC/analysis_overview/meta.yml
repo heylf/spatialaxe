@@ -39,11 +39,6 @@ input:
       description: General QC parquet output from SPOQC_GENERAL
       pattern: "generalqc_output_hqcr.parquet"
       ontologies: []
-  - tmp_bubble:
-      type: file
-      description: Bubble QC parquet output from SPOQC_BUBBLE
-      pattern: "bubbleqc_output_hqcr.parquet"
-      ontologies: []
   - tmp_doublet:
       type: file
       description: Doublet QC parquet output from SPOQC_DOUBLET
@@ -62,22 +57,27 @@ input:
   - mask_hqcr:
       type: file
       description: HQCR raw mask from SPOQC_HQCR_IDENT
-      pattern: "hqcr_output_mask_raw.parquet"
+      pattern: "mask_raw_output_hqcr.parquet"
       ontologies: []
   - mask_smoothed_hqcr:
       type: file
       description: Smoothed HQCR mask from SPOQC_HQCR_IDENT
-      pattern: "hqcr_output_mask_smoothed_raw.parquet"
+      pattern: "mask_smoothed_raw_output_hqcr.parquet"
+      ontologies: []
+  - traffic_light_hqcr:
+      type: file
+      description: HQCR traffic-light classification from SPOQC_HQCR_IDENT
+      pattern: "traffic_light_output_hqcr.parquet"
       ontologies: []
   - qv:
       type: directory
       description: HQTR quality-value probability output from SPOQC_HQTR_QV
-      pattern: "hqtr_output_qv_prob"
+      pattern: "qv_density_output_hqtr"
       ontologies: []
   - ac:
       type: directory
       description: HQTR ambient-contamination probability output from SPOQC_HQTR_AC
-      pattern: "hqtr_output_ac_prob"
+      pattern: "ac_density_output_hqtr"
       ontologies: []
   - metrices_hqtr:
       type: directory
@@ -87,12 +87,12 @@ input:
   - mask_smoothed_hqtr:
       type: directory
       description: Smoothed HQTR mask from SPOQC_HQTR_REFINEMENT
-      pattern: "hqtr_output_mask_smoothed_raw"
+      pattern: "mask_smoothed_raw_output_hqtr"
       ontologies: []
   - mask_hqtr:
       type: directory
       description: HQTR raw mask from SPOQC_HQTR_CLUSTERING
-      pattern: "hqtr_output_mask_raw"
+      pattern: "mask_raw_output_hqtr"
       ontologies: []
   - metrices_hqpr:
       type: directory
