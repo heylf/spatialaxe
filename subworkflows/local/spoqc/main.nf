@@ -433,7 +433,6 @@ workflow SPOQC {
         ch_analysis_inputs.cell_tmp,
         ch_analysis_inputs.hqcr_mask,
         ch_analysis_inputs.hqcr_mask_smoothed,
-        ch_analysis_inputs.hqcr_traffic_light,
         ch_analysis_inputs.hqtr_qv,
         ch_analysis_inputs.hqtr_ac,
         ch_analysis_inputs.hqtr_metrices,
