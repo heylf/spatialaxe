@@ -137,7 +137,6 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
       - `unsupervised_cell_annotation.tsv` unsupervised cell-type annotation, generated only when no annotation file was supplied as input
     - `whole_slide_qc/` whole-slide QC overview report
     - `generalqc/` general-purpose QC report
-    - `bubbleqc/` bubble-artifact QC report
     - `doubletqc/` doublet-detection QC report
     - `voidqc/` void/empty-region QC report
     - `cellqc/` cell-level QC report
@@ -170,16 +169,17 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
     - `staining_log.txt` log of the stainings processed by spoQC
     - `report.html` final self-contained HTML report aggregating every spoQC step above
   - `spoQC_tmp/` intermediate data consumed by later spoQC steps
-    - `generalqc_output_hqcr.parquet`, `bubbleqc_output_hqcr.parquet`, `doubletqc_output_hqcr.parquet`, `voidqc_output_hqcr.parquet`, `cellqc_output_hqcr.parquet` per-step HQCR contribution scores
+    - `generalqc_output_hqcr.parquet`, `doubletqc_output_hqcr.parquet`, `voidqc_output_hqcr.parquet`, `cellqc_output_hqcr.parquet` per-step HQCR contribution scores
     - `ambient_output_genes.parquet` ambient RNA gene-signal estimate
-    - `hqcr_output_mask_raw.parquet` / `hqcr_output_mask_smoothed_raw.parquet` combined raw/smoothed HQCR mask
-    - `hqcr_output_mask_smoothed_celltype_refined.parquet` cell-type-refined smoothed HQCR mask
+    - `mask_raw_output_hqcr.parquet` / `mask_smoothed_raw_output_hqcr.parquet` combined raw/smoothed HQCR mask
+    - `traffic_light_output_hqcr.parquet` HQCR traffic-light classification
+    - `mask_smoothed_celltype_refined_output_hqcr.parquet` cell-type-refined smoothed HQCR mask
     - `metrices/hqpr/${staining}/` per-staining HQPR metrics
-    - `hqpr_${staining}_output_mask_raw/` / `hqpr_${staining}_output_mask_smoothed_raw/` per-staining raw/smoothed HQPR mask
+    - `mask_raw_output_hqpr_${staining}/` / `mask_smoothed_raw_output_hqpr_${staining}/` per-staining raw/smoothed HQPR mask
     - `metrices/hqtr/` HQTR metrics
-    - `hqtr_output_ac_prob/` HQTR ambient-contamination probabilities
-    - `hqtr_output_qv_prob/` HQTR quality-value probabilities
-    - `hqtr_output_mask_raw/` / `hqtr_output_mask_smoothed_raw/` raw/smoothed HQTR mask
+    - `ac_density_output_hqtr/` HQTR ambient-contamination probabilities
+    - `qv_density_output_hqtr/` HQTR quality-value probabilities
+    - `mask_raw_output_hqtr/` / `mask_smoothed_raw_output_hqtr/` raw/smoothed HQTR mask
 - `multiqc/`
   - `multiqc_report.html`: a standalone HTML file that can be viewed in your web browser.
   - `multiqc_data/`: directory containing parsed statistics from the different tools used in the pipeline.

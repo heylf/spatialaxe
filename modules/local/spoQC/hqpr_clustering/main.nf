@@ -7,7 +7,7 @@ process SPOQC_HQPR_CLUSTERING {
     label 'spoqc'
 
 
-    container "heylf/spoqc_dev:0.1.0"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*"), val(_stain_sd)
@@ -16,7 +16,7 @@ process SPOQC_HQPR_CLUSTERING {
 
     output:
     tuple val(meta), val(staining), path("report/hqpr/hqpr_clustering/${staining}")               , emit: report
-    tuple val(meta), val(staining), path("spoQC_tmp/hqpr_${staining}_output_mask_raw")            , emit: mask
+    tuple val(meta), val(staining), path("spoQC_tmp/mask_raw_output_hqpr_${staining}")            , emit: mask
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -50,7 +50,7 @@ process SPOQC_HQPR_CLUSTERING {
 
     """
     mkdir -p report/hqpr/hqpr_clustering/${staining}
-    mkdir -p spoQC_tmp/hqpr_${staining}_output_mask_raw
+    mkdir -p spoQC_tmp/mask_raw_output_hqpr_${staining}
     """
 
 }

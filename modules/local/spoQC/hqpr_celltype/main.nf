@@ -7,14 +7,13 @@ process SPOQC_HQPR_CELLTYPE {
     label 'spoqc'
 
 
-    container "heylf/spoqc_dev:0.1.0"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*"), val(_stain_sd)
     tuple path(annotation, stageAs: "*"), val(_stain_ann)
     val(step)
     tuple path(tmp_general, stageAs: "./spoQC_tmp/generalqc_output_hqcr.parquet"), val(_stain_g)
-    tuple path(tmp_bubble, stageAs: "./spoQC_tmp/bubbleqc_output_hqcr.parquet"), val(_stain_b)
     tuple path(tmp_doublet, stageAs: "./spoQC_tmp/doubletqc_output_hqcr.parquet"), val(_stain_d)
     tuple path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet"), val(_stain_v)
     tuple path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet"), val(_stain_c)

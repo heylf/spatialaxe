@@ -1,6 +1,6 @@
 name: spoqc_hqcr_ident
 description: |
-  Identify high-quality cell regions (HQCR) by combining the general/bubble/doublet/void/cell QC outputs into a smoothed mask.
+  Identify high-quality cell regions (HQCR) by combining the general/doublet/void/cell QC outputs into a smoothed mask.
 keywords:
   - spatial transcriptomics
   - quality control
@@ -32,11 +32,6 @@ input:
       type: file
       description: General QC parquet output from SPOQC_GENERAL
       pattern: "generalqc_output_hqcr.parquet"
-      ontologies: []
-  - tmp_bubble:
-      type: file
-      description: Bubble QC parquet output from SPOQC_BUBBLE
-      pattern: "bubbleqc_output_hqcr.parquet"
       ontologies: []
   - tmp_doublet:
       type: file
@@ -73,7 +68,7 @@ output:
       - "mask":
           type: file
           description: Raw HQCR mask
-          pattern: "hqcr_output_mask_raw.parquet"
+          pattern: "mask_raw_output_hqcr.parquet"
           ontologies: []
   mask_smoothed:
     - - meta:
@@ -84,7 +79,18 @@ output:
       - "mask_smoothed":
           type: file
           description: Smoothed HQCR mask
-          pattern: "hqcr_output_mask_smoothed_raw.parquet"
+          pattern: "mask_smoothed_raw_output_hqcr.parquet"
+          ontologies: []
+  traffic_light:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'sample' ]
+      - "traffic_light":
+          type: file
+          description: HQCR traffic-light classification
+          pattern: "traffic_light_output_hqcr.parquet"
           ontologies: []
   traffic_light:
     - - meta:

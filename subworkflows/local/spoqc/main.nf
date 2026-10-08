@@ -7,7 +7,6 @@ include { SPATIALDATA_WRITE as SPATIALDATA_WRITE_RAW_BUNDLE       } from '../../
 include { SPOQC_ANNOTATION       } from '../../../modules/local/spoQC/annotation/main'
 include { SPOQC_WHOLE_SLIDE       } from '../../../modules/local/spoQC/whole_slide/main'
 include { SPOQC_GENERAL       } from '../../../modules/local/spoQC/general/main'
-include { SPOQC_BUBBLE       } from '../../../modules/local/spoQC/bubble/main'
 include { SPOQC_DOUBLET       } from '../../../modules/local/spoQC/doublet/main'
 include { SPOQC_VOID       } from '../../../modules/local/spoQC/void/main'
 include { SPOQC_CELL       } from '../../../modules/local/spoQC/cell/main'
@@ -99,11 +98,6 @@ workflow SPOQC {
         "whole_slide_qc",
     )
 
-    SPOQC_BUBBLE(
-        ch_sd,
-        "bubbleqc",
-    )
-
     SPOQC_DOUBLET(
         ch_sd_annotation.sd,
         ch_sd_annotation.annotation,
@@ -133,7 +127,6 @@ workflow SPOQC {
         ch_sd,
         "hqcr_ident",
         SPOQC_GENERAL.out.tmp.map { _meta, f -> f },
-        SPOQC_BUBBLE.out.tmp.map { _meta, f -> f },
         SPOQC_DOUBLET.out.tmp.map { _meta, f -> f },
         SPOQC_VOID.out.tmp.map { _meta, f -> f },
         SPOQC_CELL.out.tmp.map { _meta, f -> f },
@@ -146,7 +139,6 @@ workflow SPOQC {
         ch_sd_annotation.annotation,
         "hqcr_celltype",
         SPOQC_GENERAL.out.tmp.map { _meta, f -> f },
-        SPOQC_BUBBLE.out.tmp.map { _meta, f -> f },
         SPOQC_DOUBLET.out.tmp.map { _meta, f -> f },
         SPOQC_VOID.out.tmp.map { _meta, f -> f },
         SPOQC_CELL.out.tmp.map { _meta, f -> f },
@@ -234,7 +226,6 @@ workflow SPOQC {
         ch_sd_annotation_stainings.annotation,
         "hqpr_celltype",
         SPOQC_GENERAL.out.tmp.combine(ch_stainings, by: 0).map { _meta, f, staining -> [f, staining] },
-        SPOQC_BUBBLE.out.tmp.combine(ch_stainings, by: 0).map { _meta, f, staining -> [f, staining] },
         SPOQC_DOUBLET.out.tmp.combine(ch_stainings, by: 0).map { _meta, f, staining -> [f, staining] },
         SPOQC_VOID.out.tmp.combine(ch_stainings, by: 0).map { _meta, f, staining -> [f, staining] },
         SPOQC_CELL.out.tmp.combine(ch_stainings, by: 0).map { _meta, f, staining -> [f, staining] },
@@ -278,6 +269,7 @@ workflow SPOQC {
         ch_sd,
         "hqtr_bounding_box",
         SPOQC_HQTR_REFINEMENT.out.mask_smoothed.map { _meta, f -> f },
+        SPOQC_HQTR_METRICES.out.metrices.map { _meta, f -> f },
     )
 
     SPOQC_HQTR_CELLTYPE(
@@ -285,7 +277,6 @@ workflow SPOQC {
         ch_sd_annotation.annotation,
         "hqtr_celltype",
         SPOQC_GENERAL.out.tmp.map { _meta, f -> f },
-        SPOQC_BUBBLE.out.tmp.map { _meta, f -> f },
         SPOQC_DOUBLET.out.tmp.map { _meta, f -> f },
         SPOQC_VOID.out.tmp.map { _meta, f -> f },
         SPOQC_CELL.out.tmp.map { _meta, f -> f },
@@ -372,7 +363,6 @@ workflow SPOQC {
     ch_sd
         .join(ch_annotation_path, by: 0, remainder: true)
         .join(SPOQC_GENERAL.out.tmp, by: 0)
-        .join(SPOQC_BUBBLE.out.tmp, by: 0)
         .join(SPOQC_DOUBLET.out.tmp, by: 0)
         .join(SPOQC_VOID.out.tmp, by: 0)
         .join(SPOQC_CELL.out.tmp, by: 0)
@@ -388,14 +378,13 @@ workflow SPOQC {
         .join(ch_files_hqpr_masks_smoothed, by: 0, remainder: true)
         .join(ch_files_hqpr_masks, by: 0, remainder: true)
         .multiMap { meta, spatialdata, annotation,
-                    general, bubble, doublet, void_qc, cell,
+                    general, doublet, void_qc, cell,
                     hqcr_mask, hqcr_mask_smoothed, hqcr_traffic_light,
                     hqtr_qv, hqtr_ac, hqtr_metrices, hqtr_mask_smoothed, hqtr_mask,
                     hqpr_metrics, hqpr_masks_smoothed, hqpr_masks ->
             sd:                  [meta, spatialdata]
             annotation:          annotation ?: []
             general_tmp:         general
-            bubble_tmp:          bubble
             doublet_tmp:         doublet
             void_tmp:            void_qc
             cell_tmp:            cell
@@ -418,7 +407,6 @@ workflow SPOQC {
         ch_analysis_inputs.annotation,
         "analysis_overview",
         ch_analysis_inputs.general_tmp,
-        ch_analysis_inputs.bubble_tmp,
         ch_analysis_inputs.doublet_tmp,
         ch_analysis_inputs.void_tmp,
         ch_analysis_inputs.cell_tmp,
@@ -440,7 +428,6 @@ workflow SPOQC {
         ch_analysis_inputs.annotation,
         "analysis_category",
         ch_analysis_inputs.general_tmp,
-        ch_analysis_inputs.bubble_tmp,
         ch_analysis_inputs.doublet_tmp,
         ch_analysis_inputs.void_tmp,
         ch_analysis_inputs.cell_tmp,
@@ -462,7 +449,6 @@ workflow SPOQC {
         ch_analysis_inputs.annotation,
         "analysis_cluster",
         ch_analysis_inputs.general_tmp,
-        ch_analysis_inputs.bubble_tmp,
         ch_analysis_inputs.doublet_tmp,
         ch_analysis_inputs.void_tmp,
         ch_analysis_inputs.cell_tmp,

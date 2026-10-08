@@ -7,7 +7,7 @@ process SPOQC_ANNOTATION {
     label 'spoqc'
 
 
-    container "heylf/spoqc_dev:0.1.0"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")

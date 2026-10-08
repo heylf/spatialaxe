@@ -1,6 +1,6 @@
 name: spoqc_hqcr_celltype
 description: |
-  Refine the high-quality cell region (HQCR) mask using cell-type information, combining the general/bubble/doublet/void/cell QC outputs.
+  Refine the high-quality cell region (HQCR) mask using cell-type information, combining the general/doublet/void/cell QC outputs.
 keywords:
   - spatial transcriptomics
   - quality control
@@ -39,11 +39,6 @@ input:
       description: General QC parquet output from SPOQC_GENERAL
       pattern: "generalqc_output_hqcr.parquet"
       ontologies: []
-  - tmp_bubble:
-      type: file
-      description: Bubble QC parquet output from SPOQC_BUBBLE
-      pattern: "bubbleqc_output_hqcr.parquet"
-      ontologies: []
   - tmp_doublet:
       type: file
       description: Doublet QC parquet output from SPOQC_DOUBLET
@@ -79,7 +74,7 @@ output:
       - "mask":
           type: file
           description: Cell-type-refined, smoothed HQCR mask
-          pattern: "hqcr_output_mask_smoothed_celltype_refined.parquet"
+          pattern: "mask_smoothed_celltype_refined_output_hqcr.parquet"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":

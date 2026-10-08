@@ -31,7 +31,7 @@ input:
   - mask:
       type: directory
       description: HQTR raw mask from SPOQC_HQTR_CLUSTERING
-      pattern: "hqtr_output_mask_raw"
+      pattern: "mask_raw_output_hqtr"
       ontologies: []
 output:
   report:
@@ -50,10 +50,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'sample' ]
-      - "hqtr_output_mask_smoothed_raw":
+      - "mask_smoothed_raw_output_hqtr":
           type: directory
           description: Smoothed HQTR mask
-          pattern: "hqtr_output_mask_smoothed_raw"
+          pattern: "mask_smoothed_raw_output_hqtr"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":

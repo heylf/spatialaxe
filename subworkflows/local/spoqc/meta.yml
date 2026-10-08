@@ -2,7 +2,7 @@
 name: "spoqc"
 description: |
   Builds a raw SpatialData object from a 10x Xenium bundle and runs the full spoQC quality-control
-  toolkit against it: general/bubble/doublet/void/cell/ambient QC, high-quality cell region (HQCR),
+  toolkit against it: general/doublet/void/cell/ambient QC, high-quality cell region (HQCR),
   high-quality pixel region (HQPR) and high-quality transcript region (HQTR) mask
   identification/clustering/refinement, mask combination, transcript/cell-cycle/model QC, and the
   downstream overview/category/cluster analysis reports.
@@ -19,7 +19,6 @@ components:
   - spoQC/annotation
   - spoQC/general
   - spoQC/whole_slide
-  - spoQC/bubble
   - spoQC/doublet
   - spoQC/void
   - spoQC/cell

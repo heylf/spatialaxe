@@ -7,19 +7,18 @@ process SPOQC_HQTR_CELLTYPE {
     label 'spoqc'
 
 
-    container "heylf/spoqc_dev:0.1.0"
+    container "heylf/spoqc_dev:0.1.1"
 
     input:
     tuple val(meta), path(spatialdata, stageAs: "*")
     path(annotation, stageAs: "*")
     val(step)
     path(tmp_general, stageAs: "./spoQC_tmp/generalqc_output_hqcr.parquet")
-    path(tmp_bubble, stageAs: "./spoQC_tmp/bubbleqc_output_hqcr.parquet")
     path(tmp_doublet, stageAs: "./spoQC_tmp/doubletqc_output_hqcr.parquet")
     path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet")
     path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet")
-    path(mask, stageAs: "./spoQC_tmp/hqtr_output_mask_raw")
-    path(mask_smoothed, stageAs: "./spoQC_tmp/hqtr_output_mask_smoothed_raw")
+    path(mask, stageAs: "./spoQC_tmp/mask_raw_output_hqtr")
+    path(mask_smoothed, stageAs: "./spoQC_tmp/mask_smoothed_raw_output_hqtr")
 
     output:
     tuple val(meta), path("./report/hqtr/hqtr_celltype")                 , emit: report

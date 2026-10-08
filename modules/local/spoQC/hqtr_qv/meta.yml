@@ -45,10 +45,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'sample' ]
-      - "hqtr_output_qv_prob":
+      - "qv_density_output_hqtr":
           type: directory
           description: HQTR quality-value probability output
-          pattern: "hqtr_output_qv_prob"
+          pattern: "qv_density_output_hqtr"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":

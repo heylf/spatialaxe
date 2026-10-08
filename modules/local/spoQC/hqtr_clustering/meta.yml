@@ -60,10 +60,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'sample' ]
-      - "hqtr_output_mask_raw":
+      - "mask_raw_output_hqtr":
           type: directory
           description: HQTR raw probability mask
-          pattern: "hqtr_output_mask_raw"
+          pattern: "mask_raw_output_hqtr"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":
