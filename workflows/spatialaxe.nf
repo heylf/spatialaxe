@@ -97,6 +97,8 @@ workflow SPATIALAXE {
     tiling
     xeniumranger_only
     spoqc
+    spoqc_doublet_prior_std
+    spoqc_doublet_prior_mean
 
     main:
 
@@ -664,6 +666,8 @@ workflow SPATIALAXE {
                 SPATIALDATA_WRITE_META_MERGE.out.sd_raw_bundle,
                 ch_annotation,
                 ch_stainings,
+                spoqc_doublet_prior_std,
+                spoqc_doublet_prior_mean,
             )
         }
 

@@ -70,6 +70,11 @@ input:
       description: HQCR traffic-light classification from SPOQC_HQCR_IDENT
       pattern: "traffic_light_output_hqcr.parquet"
       ontologies: []
+  - traffic_light_hqcr:
+      type: file
+      description: HQCR traffic-light QC status from SPOQC_HQCR_IDENT
+      pattern: "traffic_light_output_hqcr.parquet"
+      ontologies: []
   - qv:
       type: directory
       description: HQTR quality-value probability output from SPOQC_HQTR_QV

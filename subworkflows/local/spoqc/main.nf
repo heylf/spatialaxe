@@ -44,9 +44,11 @@ include { SPOQC_FINALREPORT       } from '../../../modules/local/spoQC/finalrepo
 workflow SPOQC {
 
     take:
-    ch_sd                   // channel: [ val(meta), [ "path-to-spatialdata-bundle" ] ]
-    ch_annotation_src       // channel: [ val(meta), "path-to-annotation-file" ]
-    ch_stainings            // channel: [ val(meta), val(staining) ] - one item per sample x its own staining
+    ch_sd                       // channel: [ val(meta), [ "path-to-spatialdata-bundle" ] ]
+    ch_annotation_src           // channel: [ val(meta), "path-to-annotation-file" ]
+    ch_stainings                // channel: [ val(meta), val(staining) ] - one item per sample x its own staining
+    spoqc_doublet_prior_std     // val
+    spoqc_doublet_prior_mean    // val
 
     main:
 
@@ -128,6 +130,8 @@ workflow SPOQC {
         SPOQC_DOUBLET.out.tmp.map { _meta, f -> f },
         SPOQC_VOID.out.tmp.map { _meta, f -> f },
         SPOQC_CELL.out.tmp.map { _meta, f -> f },
+        spoqc_doublet_prior_std,
+        spoqc_doublet_prior_mean,
     )
 
     SPOQC_HQCR_CELLTYPE(
@@ -429,6 +433,7 @@ workflow SPOQC {
         ch_analysis_inputs.cell_tmp,
         ch_analysis_inputs.hqcr_mask,
         ch_analysis_inputs.hqcr_mask_smoothed,
+        ch_analysis_inputs.hqcr_traffic_light,
         ch_analysis_inputs.hqtr_qv,
         ch_analysis_inputs.hqtr_ac,
         ch_analysis_inputs.hqtr_metrices,
