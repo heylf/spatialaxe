@@ -1,11 +1,7 @@
 
 process SPOQC_HQTR_QV {
     tag "$meta.id"
-    label 'process_xl_cpus'
-    label 'process_xl_mem'
-    label 'process_mid_time'
-    label 'spoqc'
-
+    label 'process_dkfz_xl'
 
     container "heylf/spoqc_dev:0.1.1"
 
