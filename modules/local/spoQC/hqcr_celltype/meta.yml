@@ -37,22 +37,22 @@ input:
   - tmp_general:
       type: file
       description: General QC parquet output from SPOQC_GENERAL
-      pattern: "generalqc_output_hqcr.parquet"
+      pattern: "spoQC_tmp/metrices/hqcr/generalqc_output_hqcr.parquet"
       ontologies: []
   - tmp_doublet:
       type: file
       description: Doublet QC parquet output from SPOQC_DOUBLET
-      pattern: "doubletqc_output_hqcr.parquet"
+      pattern: "spoQC_tmp/metrices/hqcr/doubletqc_output_hqcr.parquet"
       ontologies: []
   - tmp_void:
       type: file
       description: Void QC parquet output from SPOQC_VOID
-      pattern: "voidqc_output_hqcr.parquet"
+      pattern: "spoQC_tmp/metrices/hqcr/voidqc_output_hqcr.parquet"
       ontologies: []
   - tmp_cell:
       type: file
       description: Cell QC parquet output from SPOQC_CELL
-      pattern: "cellqc_output_hqcr.parquet"
+      pattern: "spoQC_tmp/metrices/hqcr/cellqc_output_hqcr.parquet"
       ontologies: []
 output:
   report:

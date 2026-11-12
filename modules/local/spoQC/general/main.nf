@@ -15,8 +15,8 @@ process SPOQC_GENERAL {
     val(step)
 
     output:
-    tuple val(meta), path("./report/generalqc")                          , emit: report
-    tuple val(meta), path("./spoQC_tmp/generalqc_output_hqcr.parquet")   , emit: tmp
+    tuple val(meta), path("./report/generalqc")                                        , emit: report
+    tuple val(meta), path("./spoQC_tmp/metrices/hqcr/generalqc_output_hqcr.parquet")   , emit: tmp
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -51,8 +51,8 @@ process SPOQC_GENERAL {
 
     """
     mkdir -p ./report/generalqc
-    mkdir -p ./spoQC_tmp
-    touch ./spoQC_tmp/generalqc_output_hqcr.parquet
+    mkdir -p ./spoQC_tmp/metrices/hqcr
+    touch ./spoQC_tmp/metrices/hqcr/generalqc_output_hqcr.parquet
     """
 
 }

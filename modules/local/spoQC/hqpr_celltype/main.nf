@@ -13,10 +13,10 @@ process SPOQC_HQPR_CELLTYPE {
     tuple val(meta), path(spatialdata, stageAs: "*"), val(_stain_sd)
     tuple path(annotation, stageAs: "*"), val(_stain_ann)
     val(step)
-    tuple path(tmp_general, stageAs: "./spoQC_tmp/generalqc_output_hqcr.parquet"), val(_stain_g)
-    tuple path(tmp_doublet, stageAs: "./spoQC_tmp/doubletqc_output_hqcr.parquet"), val(_stain_d)
-    tuple path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet"), val(_stain_v)
-    tuple path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet"), val(_stain_c)
+    tuple path(tmp_general, stageAs: "./spoQC_tmp/metrices/hqcr/generalqc_output_hqcr.parquet"), val(_stain_g)
+    tuple path(tmp_doublet, stageAs: "./spoQC_tmp/metrices/hqcr/doubletqc_output_hqcr.parquet"), val(_stain_d)
+    tuple path(tmp_void, stageAs: "./spoQC_tmp/metrices/hqcr/voidqc_output_hqcr.parquet"), val(_stain_v)
+    tuple path(tmp_cell, stageAs: "./spoQC_tmp/metrices/hqcr/cellqc_output_hqcr.parquet"), val(_stain_c)
     tuple val(staining), path(mask, stageAs: "spoQC_tmp/*"), path(mask_smoothed, stageAs: "spoQC_tmp/*")
 
     output:

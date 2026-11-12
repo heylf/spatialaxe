@@ -13,10 +13,10 @@ process SPOQC_HQCR_CELLTYPE {
     tuple val(meta), path(spatialdata, stageAs: "*")
     path(annotation, stageAs: "*")
     val(step)
-    path(tmp_general, stageAs: "./spoQC_tmp/generalqc_output_hqcr.parquet")
-    path(tmp_doublet, stageAs: "./spoQC_tmp/doubletqc_output_hqcr.parquet")
-    path(tmp_void, stageAs: "./spoQC_tmp/voidqc_output_hqcr.parquet")
-    path(tmp_cell, stageAs: "./spoQC_tmp/cellqc_output_hqcr.parquet")
+    path(tmp_general, stageAs: "./spoQC_tmp/metrices/hqcr/generalqc_output_hqcr.parquet")
+    path(tmp_doublet, stageAs: "./spoQC_tmp/metrices/hqcr/doubletqc_output_hqcr.parquet")
+    path(tmp_void, stageAs: "./spoQC_tmp/metrices/hqcr/voidqc_output_hqcr.parquet")
+    path(tmp_cell, stageAs: "./spoQC_tmp/metrices/hqcr/cellqc_output_hqcr.parquet")
 
     output:
     tuple val(meta), path("./report/hqcr/hqcr_celltype")                                       , emit: report

@@ -48,7 +48,7 @@ output:
           type: file
           description: |
             Per-cell void QC parquet output, consumed by the HQCR identification/cell-type and downstream analysis steps.
-          pattern: "voidqc_output_hqcr.parquet"
+          pattern: "spoQC_tmp/metrices/hqcr/voidqc_output_hqcr.parquet"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":

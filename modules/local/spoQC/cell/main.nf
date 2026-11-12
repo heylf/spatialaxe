@@ -14,8 +14,8 @@ process SPOQC_CELL {
     val(step)
 
     output:
-    tuple val(meta), path("./report/cellqc")                             , emit: report
-    tuple val(meta), path("./spoQC_tmp/cellqc_output_hqcr.parquet")      , emit: tmp
+    tuple val(meta), path("./report/cellqc")                                           , emit: report
+    tuple val(meta), path("./spoQC_tmp/metrices/hqcr/cellqc_output_hqcr.parquet")      , emit: tmp
     tuple val("${task.process}"), val('spoqc'), eval("spoqc --version 2>&1 | grep -oP '\\d+\\.\\d+\\.\\d+' || echo unknown"), topic: versions, emit: versions_spoqc
 
     when:
@@ -48,8 +48,8 @@ process SPOQC_CELL {
 
     """
     mkdir -p ./report/cellqc
-    mkdir -p ./spoQC_tmp
-    touch ./spoQC_tmp/cellqc_output_hqcr.parquet
+    mkdir -p ./spoQC_tmp/metrices/hqcr
+    touch ./spoQC_tmp/metrices/hqcr/cellqc_output_hqcr.parquet
     """
 
 }

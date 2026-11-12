@@ -54,7 +54,7 @@ output:
           type: file
           description: |
             Per-cell general QC parquet output, consumed by the HQCR identification/cell-type and downstream analysis steps.
-          pattern: "generalqc_output_hqcr.parquet"
+          pattern: "spoQC_tmp/metrices/hqcr/generalqc_output_hqcr.parquet"
           ontologies: []
   versions_spoqc:
     - - "${task.process}":
