@@ -482,6 +482,8 @@ workflow SPOQC {
     ch_report_hqpr_bounding_box = SPOQC_HQPR_BOUNDING_BOX.out.report
         .map { meta, _staining, p -> [meta, p] }
         .groupTuple(by: 0)
+    ch_report_hqpr_celltype = SPOQC_HQPR_CELLTYPE.out.report
+        .groupTuple(by: 0)
     ch_report_combine_masks = SPOQC_COMBINE_MASKS.out.report
         .groupTuple(by: 0)
 
@@ -496,7 +498,7 @@ workflow SPOQC {
         .join(ch_report_hqpr_clustering, by: 0, remainder: true)
         .join(ch_report_hqpr_refinement, by: 0, remainder: true)
         .join(ch_report_hqpr_bounding_box, by: 0, remainder: true)
-        .join(SPOQC_HQPR_CELLTYPE.out.report, by: 0)
+        .join(ch_report_hqpr_celltype, by: 0, remainder: true)
         .join(SPOQC_HQTR_METRICES.out.report, by: 0)
         .join(SPOQC_HQTR_AC.out.report, by: 0)
         .join(SPOQC_HQTR_QV.out.report, by: 0)
@@ -532,7 +534,7 @@ workflow SPOQC {
             report_hqpr_clustering:   report_hqpr_clustering ?: []
             report_hqpr_refinement:   report_hqpr_refinement ?: []
             report_hqpr_bounding_box: report_hqpr_bounding_box ?: []
-            report_hqpr_celltype:     report_hqpr_celltype
+            report_hqpr_celltype:     report_hqpr_celltype ?: []
             report_hqtr_metrices:     report_hqtr_metrices
             report_hqtr_ac:           report_hqtr_ac
             report_hqtr_qv:           report_hqtr_qv
