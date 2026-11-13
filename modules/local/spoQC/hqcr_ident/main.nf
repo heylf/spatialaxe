@@ -36,6 +36,7 @@ process SPOQC_HQCR_IDENT {
     }
 
     def args = task.ext.args ?: ''
+    def arg_spoqc_doublet_prior_std = spoqc_doublet_prior_std != '' ? "--doublet_prior_std ${spoqc_doublet_prior_std}": ""
     def arg_spoqc_doublet_prior_mean = spoqc_doublet_prior_mean != '' ? "--doublet_prior_mean ${spoqc_doublet_prior_mean}": ""
 
     """
@@ -46,7 +47,7 @@ process SPOQC_HQCR_IDENT {
         -n ${task.cpus} \\
         -s ${step}  \\
         --dataset ${meta.id} \\
-        --doublet_prior_std ${spoqc_doublet_prior_std} \\
+        ${arg_spoqc_doublet_prior_std} \\
         ${arg_spoqc_doublet_prior_mean} \\
         ${args}
     """
