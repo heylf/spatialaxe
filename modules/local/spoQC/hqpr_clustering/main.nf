@@ -1,9 +1,7 @@
 
 process SPOQC_HQPR_CLUSTERING {
     tag "${meta.id}_${staining}"
-    label 'process_xl_cpus'
-    label 'process_xl_mem'
-    label 'process_xl_time'
+    label 'process_dkfz_xl'
     label 'spoqc'
 
 
